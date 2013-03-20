@@ -1,0 +1,10 @@
+
+prefix=C:\ibex-2.0
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: ibex
+Description: A C++ library for interval-based algorithm design
+Version: 2.0.0alpha
+Cflags: -I${includedir}/ibex -Ic:\Ibex\soplex-1.7.0\src
+Libs: -L${libdir} -Lc:\Ibex\soplex-1.7.0\lib -libex -lsoplex
