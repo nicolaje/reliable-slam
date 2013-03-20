@@ -1,0 +1,13 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\interval.o
+./release\iboolean.o
+./release\box.o
+./release\repere.o
+./release\particula.o
+./release\landmark.o
+./release\arquivos.o
+./release\moc_mainwindow.o
+./release\moc_repere.o
+);

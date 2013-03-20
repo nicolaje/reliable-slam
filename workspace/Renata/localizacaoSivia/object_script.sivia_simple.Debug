@@ -1,0 +1,13 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\interval.o
+./debug\iboolean.o
+./debug\box.o
+./debug\repere.o
+./debug\particula.o
+./debug\landmark.o
+./debug\arquivos.o
+./debug\moc_mainwindow.o
+./debug\moc_repere.o
+);
