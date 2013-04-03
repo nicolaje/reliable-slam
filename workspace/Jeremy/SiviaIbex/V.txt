@@ -1,7 +1,0 @@
-function V(x1,x2) 
-  
-  return(
-	0.5*x2*x2-cos(x1)
-  ); 
-
-end 
