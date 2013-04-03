@@ -1,0 +1,8 @@
+function gradV(x1,x2) 
+  
+  return(
+	sin(x1);
+	x2
+  ); 
+
+end 
