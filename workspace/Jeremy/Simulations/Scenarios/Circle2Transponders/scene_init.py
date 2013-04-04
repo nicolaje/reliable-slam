@@ -14,9 +14,9 @@ sub=Submarine()
 
 # Pose(x, y, z(depth), orientation)
 pose_pure=Pose()
-pose.add_stream('socket')
+pose_pure.add_stream('socket')
 sub.append(pose_pure)
-pose.frequency(sensors_freq)
+pose_pure.frequency(sensors_freq)
 
 # IMU(radial speed, linear accelerations)
 imu_pure=IMU()
@@ -63,3 +63,15 @@ loch_doppler_noisy=Velocity()
 loch_doppler_noisy.add_stream('socket')
 sub.append(loch_doppler_noisy)
 loch_doppler_noisy.frequency(sensors_freq)
+
+#############
+# Actuators #
+#############
+
+# V,W controller
+motion=MotionVW()
+sub.append(motion)
+
+sub.translate(z=0.5)
+
+env=Environment('../../Models/SimpleOceanGround.blend')
