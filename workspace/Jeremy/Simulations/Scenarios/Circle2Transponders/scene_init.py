@@ -74,4 +74,14 @@ sub.append(motion)
 
 sub.translate(z=0.5)
 
+###############
+# Environment #
+###############
+
+transponder1=Robot('../../Models/Transponder.blend')
+transponder1.translate(x=20)
+
+transponder2=Robot('../../Models/Transponder.blend')
+transponder2.translate(x=-20)
+
 env=Environment('../../Models/SimpleOceanGround.blend')
