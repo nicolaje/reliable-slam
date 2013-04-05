@@ -1,10 +1,16 @@
 from morse.builder import *
 
-######################
-# Tunable parameters #
-######################
-sensors_freq=1       # 1Hz enough for now
-######################
+#########################
+# Tunable parameters    #
+#########################
+sensors_freq=1          # 1 Hz enough for now
+orientation_std=0.01    # 0.01 °
+gyro_std=0.01           # 0.01 °/s
+accelero_std=0.001*9.81 # 1 mg
+pinger_std=0.03         # 0.03 m
+pressure_std=0.15       # 0.15 m
+loch_doppler_std=0.04   # 0.04 m/s
+#########################
 
 sub=Submarine()
 
@@ -53,6 +59,7 @@ imu_noisy=IMU()
 imu_noisy.add_stream('socket')
 sub.append(imu_noisy)
 imu_noisy.frequency(sensors_freq)
+imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=0.01, accel_std=0.001*9.81
 
 # Proximity Sensor(pinger)
 pinger_noisy=Proximity()
