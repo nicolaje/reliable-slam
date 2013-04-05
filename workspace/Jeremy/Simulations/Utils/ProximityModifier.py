@@ -19,7 +19,9 @@ class ProximityModifier(AbstractModifier):
 
     def modify(self):
         try:
+            print(self.data['near_objects']['transponder2'])
             for s in self.data['near_objects']:
-                print(s)
+                self.data['near_objects'][s]=\
+                random.gauss(self.data['near_objects'][s], self._dist_std_dev)
         except KeyError as detail:
             self.key_error(detail)

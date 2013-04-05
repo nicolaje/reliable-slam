@@ -29,6 +29,7 @@ pinger_pure=Proximity()
 pinger_pure.add_stream('socket')
 sub.append(pinger_pure)
 pinger_pure.frequency(sensors_freq)
+pinger_pure.properties(Range=100)
 
 # Velocity (Loch-Doppler): vx, vy, vz
 loch_doppler_pure=Velocity()
@@ -58,6 +59,7 @@ pinger_noisy=Proximity()
 pinger_noisy.add_stream('socket')
 sub.append(pinger_noisy)
 pinger_noisy.frequency(sensors_freq)
+pinger_noisy.properties(Range=100)
 pinger_noisy.alter('', 'ProximityModifier.ProximityModifier')
 
 # Velocity (Loch-Doppler): vx, vy, vz
