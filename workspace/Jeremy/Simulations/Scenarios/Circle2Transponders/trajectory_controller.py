@@ -1,32 +1,37 @@
 import time
 import pymorse
 from datetime import datetime
+from time import sleep
 from math import *
 
 ######################
 # Tunable parameters #
 ######################
-duration=10          # 10s
+duration=30          # 10s
+radius=30	     # radius of the circle the robot moves on
 ######################
 
 # func(t) defines the trajectory
 # as a function of time
-def func(t):
-	v=1
-	w=2*pi*duration/t
-	return [v, w]
+#def func(t):
+#	v=0.5
+#	w=2*pi*t
+#	return [v, cos(w*1./4.)]
 	
 with pymorse.Morse() as simu:
-	print(simu.robots)
-	print(simu.list_robots())
-	#motion=simu.sub.motion
-	time=datetime.now()
-	delta=0
+#	print(simu.robots)
+	motion=simu.sub.motion
+	motion.publish({'v':2*pi*radius/60, 'w':2*pi/60}) # 1 round per minute
+	sleep(60)
 	simu.quit()
-	# Control the trajectory for 
-	#while delta < duration:
-	#	print('T: '+t)
-	#	[v, w]=func(delta)
-	#	motion.set_speed(v,w)
-	#	now=datetime.now()
-	#	delta=delta+now.seconds+now.microseconds/1000000
+#	time=datetime.now()
+#	delta=0	
+	# Control the trajectory
+#	while delta < duration:
+#		print('T: %i'%delta)
+#		[v, w]=func(delta)
+#		motion.publish({'v':v ,'w':w})
+#		now=datetime.now()
+#		delta=(now-time).seconds+(now-time).microseconds/1000000
+#		print(delta)
+#		sleep(0.5)

@@ -57,7 +57,8 @@ imu_noisy.frequency(sensors_freq)
 pinger_noisy=Proximity()
 pinger_noisy.add_stream('socket')
 sub.append(pinger_noisy)
-pinger_pure.frequency(sensors_freq)
+pinger_noisy.frequency(sensors_freq)
+pinger_noisy.alter('', 'ProximityModifier.ProximityModifier')
 
 # Velocity (Loch-Doppler): vx, vy, vz
 loch_doppler_noisy=Velocity()
@@ -71,9 +72,11 @@ loch_doppler_noisy.frequency(sensors_freq)
 
 # V,W controller
 motion=MotionVW()
+motion.add_stream('socket')
+motion.add_stream('service')
 sub.append(motion)
 
-sub.translate(z=0.5)
+sub.translate(z=0.5,y=-30)
 
 ####################
 # Environment      #
