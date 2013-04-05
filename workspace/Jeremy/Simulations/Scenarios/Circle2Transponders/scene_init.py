@@ -62,7 +62,7 @@ imu_noisy=IMU()
 imu_noisy.add_stream('socket')
 sub.append(imu_noisy)
 imu_noisy.frequency(sensors_freq)
-imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=gyro_std, accel_std=accelero_std
+imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=gyro_std, accel_std=accelero_std)
 
 # Proximity Sensor(pinger)
 pinger_noisy=Proximity()
@@ -77,6 +77,7 @@ loch_doppler_noisy=Velocity()
 loch_doppler_noisy.add_stream('socket')
 sub.append(loch_doppler_noisy)
 loch_doppler_noisy.frequency(sensors_freq)
+loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
 
 #############
 # Actuators #
