@@ -19,7 +19,6 @@ class ProximityModifier(AbstractModifier):
 
     def modify(self):
         try:
-            print(self.data['near_objects']['transponder2'])
             for s in self.data['near_objects']:
                 self.data['near_objects'][s]=\
                 random.gauss(self.data['near_objects'][s], self._dist_std_dev)

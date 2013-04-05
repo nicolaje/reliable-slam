@@ -1,9 +1,12 @@
 from morse.builder import *
 
 #########################
+#			#
 # Tunable parameters    #
+#			#
 #########################
 sensors_freq=1          # 1 Hz enough for now
+range_pinger=100	# the pinger can detect transponders up to 100 m
 orientation_std=0.01    # 0.01 °
 gyro_std=0.01           # 0.01 °/s
 accelero_std=0.001*9.81 # 1 mg
@@ -35,7 +38,7 @@ pinger_pure=Proximity()
 pinger_pure.add_stream('socket')
 sub.append(pinger_pure)
 pinger_pure.frequency(sensors_freq)
-pinger_pure.properties(Range=100)
+pinger_pure.properties(Range=range_pinger)
 
 # Velocity (Loch-Doppler): vx, vy, vz
 loch_doppler_pure=Velocity()
@@ -52,21 +55,21 @@ pose_noisy=Pose()
 pose_noisy.add_stream('socket')
 sub.append(pose_noisy)
 pose_noisy.frequency(sensors_freq)
-pose_noisy.alter('', 'morse.modifiers.pose_noise.PoseNoiseModifier', pos_std=0.15, rot_std=0.01) #{'yaw':0.02, 'roll':0.01, 'pitch':0.01})
+pose_noisy.alter('', 'morse.modifiers.pose_noise.PoseNoiseModifier', pos_std=pressure_std, rot_std=orientation_std)
 
 # IMU Noisy
 imu_noisy=IMU()
 imu_noisy.add_stream('socket')
 sub.append(imu_noisy)
 imu_noisy.frequency(sensors_freq)
-imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=0.01, accel_std=0.001*9.81
+imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=gyro_std, accel_std=accelero_std
 
 # Proximity Sensor(pinger)
 pinger_noisy=Proximity()
 pinger_noisy.add_stream('socket')
 sub.append(pinger_noisy)
 pinger_noisy.frequency(sensors_freq)
-pinger_noisy.properties(Range=100)
+pinger_noisy.properties(Range=range_pinger)
 pinger_noisy.alter('', 'ProximityModifier.ProximityModifier')
 
 # Velocity (Loch-Doppler): vx, vy, vz
