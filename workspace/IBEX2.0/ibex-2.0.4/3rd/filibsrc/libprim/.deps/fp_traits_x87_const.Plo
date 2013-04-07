@@ -1,0 +1,7 @@
+fp_traits_x87_const.lo: ../fp_traits/fp_traits_x87_const.cpp \
+ ../fp_traits/fp_traits_x87_const.hpp \
+ ../rounding_control/rounding_control_config.hpp
+
+../fp_traits/fp_traits_x87_const.hpp:
+
+../rounding_control/rounding_control_config.hpp:

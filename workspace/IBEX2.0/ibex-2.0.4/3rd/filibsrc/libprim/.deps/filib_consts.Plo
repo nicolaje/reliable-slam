@@ -1,0 +1,4 @@
+filib_consts.lo: ../interval/stdfun/filib_consts.cpp \
+ ../interval/stdfun/filib_consts.hpp
+
+../interval/stdfun/filib_consts.hpp:

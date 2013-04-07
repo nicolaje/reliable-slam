@@ -1,0 +1,200 @@
+# project ibex-lib (2.0.0alpha) configured on Sat Apr  6 19:40:29 2013 by
+# waf 1.7.5 (abi 98, python 20703c2 on linux2)
+# using ./waf configure --enable-shared --with-jni
+#
+----------------------------------------
+Setting top to
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4
+----------------------------------------
+Setting out to
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__
+----------------------------------------
+Checking for 'g++' (c++ compiler)
+find program=['g++', 'c++'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='CXX' -> '/usr/bin/g++'
+find program=['ar'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='AR' -> '/usr/bin/ar'
+/usr/bin/g++
+----------------------------------------
+Checking for 'gcc' (c compiler)
+find program=['gcc', 'cc'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='CC' -> '/usr/bin/gcc'
+(tool ar is already loaded, skipping)
+/usr/bin/gcc
+----------------------------------------
+Checking for program bison
+/usr/bin/bison
+find program=['bison'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='BISON' -> '/usr/bin/bison'
+----------------------------------------
+Checking for program flex
+/usr/bin/flex
+find program=['flex'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='FLEX' -> '/usr/bin/flex'
+----------------------------------------
+Checking for compiler flags -O3
+==>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_02446fa4d3109ab3543a477080a1fda6/test.cpp -> __build__/.conf_check_02446fa4d3109ab3543a477080a1fda6/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-DNDEBUG=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_02446fa4d3109ab3543a477080a1fda6/testbuild/test.cpp.1.o -> __build__/.conf_check_02446fa4d3109ab3543a477080a1fda6/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_02446fa4d3109ab3543a477080a1fda6/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+-------------------------------------------
+Checking for compiler flags -Wno-deprecated
+==>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_0e592b36fb27182e2464cd0337a7afc6/test.cpp -> __build__/.conf_check_0e592b36fb27182e2464cd0337a7afc6/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-DNDEBUG=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_0e592b36fb27182e2464cd0337a7afc6/testbuild/test.cpp.1.o -> __build__/.conf_check_0e592b36fb27182e2464cd0337a7afc6/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_0e592b36fb27182e2464cd0337a7afc6/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+-------------------------------------------
+Candidate directory for lib Soplex
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0
+-------------------------------------------
+Checking for header soplex.h
+==>
+#include <soplex.h>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_16a921ca5b486f329fcf7003ed95ec2a/test.cpp -> __build__/.conf_check_16a921ca5b486f329fcf7003ed95ec2a/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_16a921ca5b486f329fcf7003ed95ec2a/testbuild/test.cpp.1.o -> __build__/.conf_check_16a921ca5b486f329fcf7003ed95ec2a/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_16a921ca5b486f329fcf7003ed95ec2a/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+yes
+-------------------------------------------
+Checking for library soplex
+==>
+
+						#include <soplex.h>
+						int main (int argc, char* argv[]) {
+							soplex::SPxLP lp;
+							lp.read(std::cin);
+							return 0;
+						}
+					
+<==
+[1/2] [32mcxx: __build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/test.cpp -> __build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '-DHAVE_SOPLEX_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/testbuild/test.cpp.1.o -> __build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib', '-lsoplex']
+err: /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib/libsoplex.so: undefined reference to `gzopen'
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib/libsoplex.so: undefined reference to `gzclose'
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib/libsoplex.so: undefined reference to `gzwrite'
+/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib/libsoplex.so: undefined reference to `gzread'
+collect2: error: ld returned 1 exit status
+
+from /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4: Test does not build: Traceback (most recent call last):
+  File "/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/.waf-1.7.5-f6a5ffc696be5d2549129d9fd105b5a3/waflib/Tools/c_config.py", line 451, in run_c_code
+    bld.compile()
+  File "/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/.waf-1.7.5-f6a5ffc696be5d2549129d9fd105b5a3/waflib/Build.py", line 198, in compile
+    raise Errors.BuildError(self.producer.error)
+BuildError: Build failed
+ -> task in 'testprog' failed (exit status 1): 
+	{task 32425232: cxxprogram test.cpp.1.o -> testprog}
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_fd7b1772d184e93b3a00f23653c9eb15/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib', '-lsoplex']
+
+no
+from /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4: The configuration failed
+-------------------------------------------
+Checking for library ['soplex', 'z']
+==>
+
+						#include <soplex.h>
+						int main (int argc, char* argv[]) {
+							soplex::SPxLP lp;
+							lp.read(std::cin);
+							return 0;
+						}
+					
+<==
+[1/2] [32mcxx: __build__/.conf_check_5b1234db34aa7c2e0d8fdfee15678f77/test.cpp -> __build__/.conf_check_5b1234db34aa7c2e0d8fdfee15678f77/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '-DHAVE_SOPLEX_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_5b1234db34aa7c2e0d8fdfee15678f77/testbuild/test.cpp.1.o -> __build__/.conf_check_5b1234db34aa7c2e0d8fdfee15678f77/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_5b1234db34aa7c2e0d8fdfee15678f77/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/lib', '-lsoplex', '-lz']
+yes
+-------------------------------------------
+Checking for header jni.h
+==>
+#include <jni.h>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_e5a9bf18b9d0bb89cf462db22a7e545c/test.cpp -> __build__/.conf_check_e5a9bf18b9d0bb89cf462db22a7e545c/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/usr/lib/jvm/jdk1.7.0_03/include', '-I/usr/lib/jvm/jdk1.7.0_03/include/linux', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '-DHAVE_SOPLEX_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_e5a9bf18b9d0bb89cf462db22a7e545c/testbuild/test.cpp.1.o -> __build__/.conf_check_e5a9bf18b9d0bb89cf462db22a7e545c/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_e5a9bf18b9d0bb89cf462db22a7e545c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib/jvm/jdk1.7.0_03/jre/lib/amd64/server', '-ljvm']
+yes
+-------------------------------------------
+Checking for java sdk
+/usr/lib/jvm/jdk1.7.0_03/
+-------------------------------------------------------
+Checking for program /usr/lib/jvm/jdk1.7.0_03/bin/javac
+/usr/lib/jvm/jdk1.7.0_03/bin/javac
+find program=['/usr/lib/jvm/jdk1.7.0_03/bin/javac'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='JAVAC' -> '/usr/lib/jvm/jdk1.7.0_03/bin/javac'
+-------------------------------------------------------
+Checking for program /usr/lib/jvm/jdk1.7.0_03/bin/javah
+/usr/lib/jvm/jdk1.7.0_03/bin/javah
+find program=['/usr/lib/jvm/jdk1.7.0_03/bin/javah'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='JAVAH' -> '/usr/lib/jvm/jdk1.7.0_03/bin/javah'
+-------------------------------------------------------
+Checking for program /usr/lib/jvm/jdk1.7.0_03/bin/jar
+/usr/lib/jvm/jdk1.7.0_03/bin/jar
+find program=['/usr/lib/jvm/jdk1.7.0_03/bin/jar'] paths=['/sbin', '/opt/ros/fuerte/share/ros/bin', '/opt/ros/fuerte/bin', '/sbin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/local/games', '/usr/games'] var='JAR' -> '/usr/lib/jvm/jdk1.7.0_03/bin/jar'
+-------------------------------------------------------
+Checking for header interval/interval.hpp
+==>
+#include <interval/interval.hpp>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_ce2f2a603c9367988a45c2f7f9b4567a/test.cpp -> __build__/.conf_check_ce2f2a603c9367988a45c2f7f9b4567a/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '-DHAVE_SOPLEX_H=1', '-DHAVE_JNI_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_ce2f2a603c9367988a45c2f7f9b4567a/testbuild/test.cpp.1.o -> __build__/.conf_check_ce2f2a603c9367988a45c2f7f9b4567a/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_ce2f2a603c9367988a45c2f7f9b4567a/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L3rd', '-Lsrc']
+yes
+-------------------------------------------------------
+Checking for library ['prim']
+==>
+
+int main(int argc, char **argv) {
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: __build__/.conf_check_462953aedb7bda783e494bd878c8c944/test.cpp -> __build__/.conf_check_462953aedb7bda783e494bd878c8c944/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O3', '-Wno-deprecated', '-I/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/soplex-1.7.0/src', '-DNDEBUG=1', '-DHAVE_SOPLEX_H=1', '-DHAVE_JNI_H=1', '-DHAVE_INTERVAL_INTERVAL_HPP=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: __build__/.conf_check_462953aedb7bda783e494bd878c8c944/testbuild/test.cpp.1.o -> __build__/.conf_check_462953aedb7bda783e494bd878c8c944/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/IBEX2.0/ibex-2.0.4/__build__/.conf_check_462953aedb7bda783e494bd878c8c944/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L3rd', '-Lsrc', '-lprim']
+yes
