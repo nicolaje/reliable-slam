@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# We want Python to find our own modules
+export PYTHONPATH=../../Utils:$PYTHONPATH
+
 # Run the scene
 optirun morse run scene_init.py &
 sleep 10s
@@ -9,4 +12,4 @@ sleep 10s
 #sleep 1s
 
 # Control the trajectory
-python trajectory_controller.py
+python3.3 trajectory_controller.py
