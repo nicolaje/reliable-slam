@@ -7,9 +7,8 @@ export PYTHONPATH=../../Utils:$PYTHONPATH
 optirun morse run scene_init.py &
 sleep 10s
 
-# Run the datalogger
-#python data_logger.py &
-#sleep 1s
-
 # Control the trajectory
-python3.3 trajectory_controller.py
+python3.3 circle.py
+
+# Run the datalogger
+python3.3 data_logger.py out 10

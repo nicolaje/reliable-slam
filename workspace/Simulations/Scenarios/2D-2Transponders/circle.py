@@ -1,5 +1,6 @@
 import time
 import pymorse
+import sys
 from datetime import datetime
 from time import sleep
 from math import *
@@ -19,11 +20,12 @@ radius=30	     # radius of the circle the robot moves on
 #	return [v, cos(w*1./4.)]
 	
 with pymorse.Morse() as simu:
+	print("Entering trajectory controller")
 #	print(simu.robots)
 	motion=simu.sub.motion
 	motion.publish({'v':2*pi*radius/60, 'w':2*pi/60}) # 1 round per minute
-	sleep(60)
-	simu.quit()
+#	sleep(60)
+#	simu.quit()
 #	time=datetime.now()
 #	delta=0	
 	# Control the trajectory
