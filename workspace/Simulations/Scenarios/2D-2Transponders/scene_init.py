@@ -104,3 +104,5 @@ transponder2=Robot('../../Models/Transponder.blend')
 transponder2.translate(x=-20)
 
 env=Environment('../../Models/SimpleOceanGround.blend')
+env.place_camera([-20,-20,10])
+env.aim_camera([45,0,-90])

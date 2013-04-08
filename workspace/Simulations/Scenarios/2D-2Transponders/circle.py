@@ -9,7 +9,7 @@ from math import *
 # Tunable parameters #
 ######################
 duration=30          # 10s
-radius=30	     # radius of the circle the robot moves on
+radius=30	         # radius of the circle the robot moves on
 ######################
 
 # func(t) defines the trajectory

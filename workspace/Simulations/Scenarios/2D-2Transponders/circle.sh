@@ -11,4 +11,4 @@ sleep 10s
 python3.3 circle.py
 
 # Run the datalogger
-python3.3 data_logger.py out 10
+python3.3 data_logger.py out 10 1
