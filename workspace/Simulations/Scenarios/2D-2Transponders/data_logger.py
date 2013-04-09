@@ -17,28 +17,35 @@ _loch_doppler_pure=0
 _loch_doppler_noisy=0
 
 def update_pose_pure(data):
+	global _pose_pure
 	_pose_pure=data
 	
 def update_pose_noisy(data):
+	global _pose_noisy
 	_pose_noisy=data
 
 def update_imu_pure(data):
+	global _imu_pure
 	_imu_pure=data
 
 def update_imu_noisy(data):
+	global _imu_noisy
 	_imu_noisy=data
 
 def update_pinger_pure(data):
+	global _pinger_pure
 	_pinger_pure=data
 	
 def update_pinger_noisy(data):
+	global _pinger_noisy
 	_pinger_noisy=data
 
 def update_loch_doppler_pure(data):
-	print(data)
+	global _loch_doppler_pure
 	_loch_doppler_pure=data
 	
 def update_loch_doppler_noisy(data):
+	global _loch_doppler_noisy
 	_loch_doppler_noisy=data
 
 print("Entering data logger")
@@ -74,16 +81,20 @@ if(len(sys.argv)>3):
 			now=datetime.now()
 			delta=(now-time).seconds+(now-time).microseconds/1000000
 			# Concatenate data
-			if(_pose_pure!=0):
+			if (_pose_pure!=0) and (_pose_noisy!=0) and (_imu_pure!=0)\
+			and (_imu_noisy!=0) and (_pinger_pure!=0) and (_pinger_noisy!=0)\
+			and (_loch_doppler_pure!=0) and (_loch_doppler_noisy!=0):
 				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
 				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
-#				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
-#				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
+				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
+				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
 				print(s)
-				print("=============================")
-				print("=============================")
-				print("=============================")
-				print("=============================")
+			else:
+				print("+++++++++++++++++++++++++++++++++")
+				print("+++++++++++++++++++++++++++++++++")
+				print("++ PB: DATA SENSORS NOT READY? ++")
+				print("+++++++++++++++++++++++++++++++++")
+				print("+++++++++++++++++++++++++++++++++")
 			sleep(1/frequency)
 		simu.quit()
 	f.close()
