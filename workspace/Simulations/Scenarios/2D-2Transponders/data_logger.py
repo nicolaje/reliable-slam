@@ -26,6 +26,7 @@ def update_pose_noisy(data):
 
 def update_imu_pure(data):
 	global _imu_pure
+	print(data)
 	_imu_pure=data
 
 def update_imu_noisy(data):
@@ -58,10 +59,12 @@ if(len(sys.argv)>3):
 	# Data format:
 	# pose_pure.x; pose_pure.y; pose_pure.z; pose_pure.yaw; pose_pure.pitch; pose_pure.roll;
 	# pose_noisy.x; pose_noisy.y; pose_noisy.z; pose_noisy.yaw; pose_noisy.pitch; pose_noisy.roll;
-	# imu_pure.dtheta; imu_pure.dphi; imu_pure.dpsi
-	# imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi
-	# transponder1.pure; transponder2.pure
-	# transponder1.pure; transponder2.noisy
+	# imu_pure.dx; imu_pure.dy; imu_pure.dz;
+	# imu_noisy.dx; imu_noisy.dy; imu_noisy.dz;
+	# imu_pure.dtheta; imu_pure.dphi; imu_pure.dpsi;
+	# imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi;
+	# transponder1.pure; transponder2.pure;
+	# transponder1.pure; transponder2.noisy;
 	# loch_doppler_pure.vx; loch_doppler_pure.vy; loch_doppler_pure.vz;
 	# loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;
 	with pymorse.Morse() as simu:
@@ -88,6 +91,7 @@ if(len(sys.argv)>3):
 				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
 				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
 				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
+#				s=s+str(_imu_pure[''])
 				print(s)
 			else:
 				print("+++++++++++++++++++++++++++++++++")
