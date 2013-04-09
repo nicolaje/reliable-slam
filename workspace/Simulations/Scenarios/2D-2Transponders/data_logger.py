@@ -17,28 +17,21 @@ _loch_doppler_pure=0
 _loch_doppler_noisy=0
 
 def update_pose_pure(data):
-	print(data)
-	print(str(data('x')))
 	_pose_pure=data
 	
 def update_pose_noisy(data):
-	print(data)
 	_pose_noisy=data
 
 def update_imu_pure(data):
-	print(data)
 	_imu_pure=data
 
 def update_imu_noisy(data):
-	print(data)
 	_imu_noisy=data
 
 def update_pinger_pure(data):
-	print(data)
 	_pinger_pure=data
 	
 def update_pinger_noisy(data):
-	print(data)
 	_pinger_noisy=data
 
 def update_loch_doppler_pure(data):
@@ -46,7 +39,6 @@ def update_loch_doppler_pure(data):
 	_loch_doppler_pure=data
 	
 def update_loch_doppler_noisy(data):
-	print(data)
 	_loch_doppler_noisy=data
 
 print("Entering data logger")
@@ -82,11 +74,16 @@ if(len(sys.argv)>3):
 			now=datetime.now()
 			delta=(now-time).seconds+(now-time).microseconds/1000000
 			# Concatenate data
-#			s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
-#			s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
-#			s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
-#			s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
-			#print(s)
+			if(_pose_pure!=0):
+				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
+				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
+#				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
+#				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
+				print(s)
+				print("=============================")
+				print("=============================")
+				print("=============================")
+				print("=============================")
 			sleep(1/frequency)
 		simu.quit()
 	f.close()
