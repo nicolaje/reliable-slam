@@ -5,7 +5,7 @@ export PYTHONPATH=../../Utils:$PYTHONPATH
 
 # Run the scene
 optirun morse run scene_init.py &
-sleep 15s
+sleep 35s
 
 # Control the trajectory
 python3.3 circle.py

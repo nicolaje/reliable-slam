@@ -86,7 +86,6 @@ loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
 # V,W controller
 motion=MotionVW()
 motion.add_stream('socket')
-motion.add_stream('service')
 sub.append(motion)
 
 sub.translate(z=0.5,y=-30)
