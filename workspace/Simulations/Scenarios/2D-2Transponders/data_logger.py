@@ -66,7 +66,7 @@ if(len(sys.argv)>3):
 	'imu_pure.dtheta; imu_pure.dphi; imu_pure.dpsi;'\
 	'imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi;'\
 	'transponder1.pure; transponder2.pure;'\
-	'transponder1.pure; transponder2.noisy;'\
+	'transponder1.noisy; transponder2.noisy;'\
 	'loch_doppler_pure.vx; loch_doppler_pure.vy; loch_doppler_pure.vz;'\
 	'loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;\n')
 	with pymorse.Morse() as simu:
@@ -110,6 +110,8 @@ if(len(sys.argv)>3):
 				transponders_noisy=_pinger_noisy['near_objects']
 				
 				s=s+str(transponders_pure['transponder1'])+";"
+				s=s+str(transponders_pure['transponder2'])+";"
+				s=s+str(transponders_noisy['transponder1'])+";"
 				s=s+str(transponders_noisy['transponder2'])+";"
 				
 				loch_doppler_pure=_loch_doppler_pure['linear_velocity']
