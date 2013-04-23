@@ -17,8 +17,8 @@ Fx=[eye(3,3) zeros(3,4)];
 
 // Covariance of the motion noise
 Mt=[1 0;
-    0 1];
-    
+0 1];
+
 // Covariance of the range sensor
 Cr=1;
 // Covariance of the heading sensor
@@ -34,13 +34,13 @@ function [z1, z2, C1, C2]=range_only_measurement(rm1,rm2,x,sigma)
     z1=[x(4);x(5)]+rm1*[cos(theta1);sin(theta1)];
     z2=[x(6);x(7)]+rm2*[cos(theta2);sin(theta2)];
     PHI1=[cos(theta1) -sin(theta1);
-            sin(theta1) cos(theta1)];
+    sin(theta1) cos(theta1)];
     PHI2=[cos(theta2) -sin(theta2);
-            sin(theta2) cos(theta2)];
+    sin(theta2) cos(theta2)];
     C1=PHI1*[sigma 0;
-                0 10*sigma]*PHI1';
+    0 10*sigma]*PHI1';
     C2=PHI2*[sigma 0;
-                0 10*sigma]*PHI2';
+    0 10*sigma]*PHI2';
 endfunction
 
 // The EKF SLAM algorithm with known correspondences landmarks
@@ -48,76 +48,89 @@ endfunction
 // we reconstruct the zi ourselves from the range readings
 function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, r1t, r2t, theta, dt)
 
-      ////////////////
-     // PREDICTION //
+    ////////////////
+    // PREDICTION //
     ////////////////
     mut=mut_prev+Fx'*[ut(1)*dt*cos(mut_prev(3));
-                        ut(1)*dt*sin(mut_prev(3));
-                        dt*ut(2)];
+    ut(1)*dt*sin(mut_prev(3));
+    dt*ut(2)];
     Gt=eye(7,7)+Fx'*[0 0 -ut(1)*dt*sin(mut_prev(3));
-                        0 0 ut(1)*dt*cos(mut_prev(3));
-                        0 0 0]*Fx;
-    
+    0 0 ut(1)*dt*cos(mut_prev(3));
+    0 0 0]*Fx;
+
     // Jacobian of the motion model
     // with respect to the motion parameters
     Vt=[dt*cos(mut_prev(3)) 0;
-        dt*sin(mut_prev(3)) 0;
-        0 dt];
+    dt*sin(mut_prev(3)) 0;
+    0 dt];
 
     // Covariance of the motion noise
     // mapped in the state space
     Rt=Vt*Mt*Vt';
-                        
+
     sigmat=Gt*sigmat_prev*Gt'+Fx'*Rt*Fx;
-    
-      ////////////
-     // UPDATE //
+
     ////////////
-    
+    // UPDATE //
+    ////////////
+
+    for i=1:1:3,
+        Fx_j=[eye(3,3) zeros(3,2*i-2) zeros(3,3) zeros(3,2*2-2*i);
+        zeros(2,3) zeros(2,2*i-2) eye(2,2) zeros(2,1) zeros(2,2*2-2*i)];
+        Ht_i= // A completer
+    end
+
+    //////////////////////
+    // Not goot anymore //
+    //////////////////////
     // expected measurements
     z1hat=[mut(1)-mut(4) ;
-           mut(2)-mut(5)];
+    mut(2)-mut(5)];
     z2hat=[mut(1)-mut(6) ;
-           mut(2)-mut(7)];
+    mut(2)-mut(7)];
     thetaHat=mut(3);
-    
+
     [z1t,z2t,C1,C2]=range_only_measurements(r1t,r2t,mut_prev,Cr);
-    
+
     // Only with measurement 1 and heading first
     Ct1=[1 0 0 -1 0 0 0;
-         0 1 0 0 -1 0 0;
-         0 0 1 0 0 0 0;
-        -1 0 0 1 0 0 0;
-         0 -1 0 0 1 0 0;
-         0 0 0 0 0 0 0;
-         0 0 0 0 0 0 0];
-        
+    0 1 0 0 -1 0 0;
+    0 0 1 0 0 0 0;
+    -1 0 0 1 0 0 0;
+    0 -1 0 0 1 0 0;
+    0 0 0 0 0 0 0;
+    0 0 0 0 0 0 0];
+
     Qt1=[C1 0;
-         0 0 Ch];
-    
+    0 0 Ch];
+
     // Kalman gain
     Kt1=sigmat*Ct1'*inv(Ct1*sigmat*Ct1'+Qt1);
     mut=mut+Kt1*([z1t; theta)]-[z1hat; thetaHat]);
-    
+
     // Update the covariance of the state
     sigmat=(eye(3,3)-Kt1*Ct1)*sigmat;
-    
+
     // Measurement 2
     Ct2=[1 0 0 -1 0 0 0;
-         0 1 0 0 -1 0 0;
-         0 0 0 0 0 0 0;
-         0 0 0 0 0 0 0;
-         0 0 0 0 0 0 0;
-        -1 0 0 0 0 1 0;
-         0 -1 0 0 0 0 1];
+    0 1 0 0 -1 0 0;
+    0 0 0 0 0 0 0;
+    0 0 0 0 0 0 0;
+    0 0 0 0 0 0 0;
+    -1 0 0 0 0 1 0;
+    0 -1 0 0 0 0 1];
     Qt2=C2;
-    
+
     Kt2=sigma*Ct2'*inv(Ct2*sigmat*Ct2'+Qt2);
     mut=mut+Kt2*([z2t]-[z2hat]);
     sigmat=(eye(3,3)-Kt2*Ct2)*sigmat;
+    ////////////////////////////////////////////
 endfunction
 
 
-  //////////////////
- // Main Program //
 //////////////////
+// Main Program //
+//////////////////
+
+// Estimate of the original state
+dt=1;
