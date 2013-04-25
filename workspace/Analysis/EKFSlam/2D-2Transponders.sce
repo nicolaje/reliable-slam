@@ -144,10 +144,12 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[0; -30; 0; 20; 0; -20; 0];
+x=[0; -30; 0; 0; 0; 0; 0];
 
 // Original covariance
-sigma=10^-2*eye(7,7);
+sigma=[zeros(3,7);
+zeros(4,3) 50*eye(4,4)];
+
 dt=1;
 x_stack=[];
 x_prev_stack=x;
@@ -155,7 +157,7 @@ u_stack=[];
 y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
-    y_partial=[data(i, 7); data(i, 25); data(i, 26)];
+    y_partial=[data(i, 10); data(i, 27); data(i, 28)];
     ut=[data(i,32); data(i,24)];
     [x,sigma,y]=EKF_SLAM(x,sigma,ut,y_partial,dt);
     x_prev_stack=[x_prev_stack x];
@@ -185,7 +187,7 @@ legend(["True landmark 1 localization";"Estimated landmark 1 localization";"True
 
 figure
 plot(y_stack(2,:),'b');
-plot(x_stack(1)-x_stack(4),'b--');
+plot(x_stack(1,:)-x_stack(4,:),'b--');
 plot(y_stack(3,:),'r');
-plot(x_stack(2)-x_stack(5),'r--');
-legend(["Measured distance to pinger 1";"Real distance to pinger 1";"Measured distance to pinger 2";"Real distance to pinger 2"])
+plot(x_stack(2,:)-x_stack(5,:),'r--');
+legend(["Measured x-distance to pinger 1";"Real x-distance to pinger 1";"Measured y-distance to pinger 1";"Real y-distance to pinger 1"])
