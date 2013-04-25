@@ -1,5 +1,6 @@
 cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
 
+clear
 funcprot(0);
 
 raw_file=read_csv('2D-2Transponders.res',';');
@@ -47,10 +48,10 @@ function [y, W]=range_only_measurement(y_partial,x)
     sin(theta2) cos(theta2)];
 
     C1=PHI1*[Cr 0;
-    0 10*Cr]*PHI1';
+    0 1*Cr]*PHI1';
 
     C2=PHI2*[Cr 0;
-    0 10*Cr]*PHI2';
+    0 1*Cr]*PHI2';
 
     y=[y_partial(1);
     z1;
@@ -79,8 +80,8 @@ function [mut, sigmat,y]=EKF_SLAM(mut_prev, sigmat_prev, ut, y_partial, dt)
     ut(1)*dt*sin(mut_prev(3));
     dt*ut(2)];
     
-    Gt=eye(7,7)+Fx'*[0 0 -ut(1)*sin(mut_prev(3));
-    0 0 ut(1)*cos(mut_prev(3));
+    Gt=eye(7,7)+Fx'*[0 0 -ut(1)*dt*sin(mut_prev(3));
+    0 0 ut(1)*dt*cos(mut_prev(3));
     0 0 0]*Fx;
 
     // Jacobian of the motion model
@@ -152,7 +153,7 @@ y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
     y_partial=[data(i, 7); data(i, 25); data(i, 26)];
-    ut=[data(i,29); data(20)];
+    ut=[data(i,29); data(i,21)];
     [x,sigma,y]=EKF_SLAM(x,sigma,ut,y_partial,dt);
     x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
