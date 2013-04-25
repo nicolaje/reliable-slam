@@ -1,6 +1,9 @@
 cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
 
 clear
+close
+close
+close
 funcprot(0);
 
 raw_file=read_csv('2D-2Transponders.res',';');
@@ -35,8 +38,8 @@ C=[0 0 1 0 0 0 0; // Compass
 // with the estimated relative displacement between each landmark and the robot
 // y_partial=[theta; r1; r2]
 function [y, W]=range_only_measurement(y_partial,x)
-    theta1=atan((x(2)-x(5))/(x(1)-x(4)));
-    theta2=atan((x(2)-x(7))/(x(1)-x(6)));
+    theta1=atan((x(2)-x(5)),(x(1)-x(4)));
+    theta2=atan((x(2)-x(7)),(x(1)-x(6)));
 
     z1=y_partial(2)*[cos(theta1);sin(theta1)];
     z2=y_partial(3)*[cos(theta2);sin(theta2)];
@@ -48,10 +51,10 @@ function [y, W]=range_only_measurement(y_partial,x)
     sin(theta2) cos(theta2)];
 
     C1=PHI1*[Cr 0;
-    0 1*Cr]*PHI1';
+    0 10*Cr]*PHI1';
 
     C2=PHI2*[Cr 0;
-    0 1*Cr]*PHI2';
+    0 10*Cr]*PHI2';
 
     y=[y_partial(1);
     z1;
@@ -99,7 +102,7 @@ function [mut, sigmat,y]=EKF_SLAM(mut_prev, sigmat_prev, ut, y_partial, dt)
     ////////////
     // UPDATE //
     ////////////
-
+    //y=0;
     // Build the estimated full observation
     [y,W]=range_only_measurement(y_partial,mut);
 
@@ -153,9 +156,36 @@ y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
     y_partial=[data(i, 7); data(i, 25); data(i, 26)];
-    ut=[data(i,29); data(i,21)];
+    ut=[data(i,32); data(i,24)];
     [x,sigma,y]=EKF_SLAM(x,sigma,ut,y_partial,dt);
     x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
     y_stack=[y_stack y];
 end
+
+// Plot
+figure
+plot(x_stack(1,:),x_stack(2,:),'b');
+plot(x_prev_stack(1,:),x_prev_stack(2,:),'b--');
+legend(["True trajectory";"Estimated trajectory"]);
+
+figure
+plot(x_stack(3,:),'b');
+plot(x_prev_stack(3,:),'b--');
+plot(data(:,10),'r--');
+legend(["True heading";"Estimated heading";"Noisy heading"]);
+
+figure
+plot(x_stack(4),x_stack(5),'xb');
+plot(x_prev_stack(4,size(x_prev_stack,2)),x_prev_stack(5,size(x_prev_stack,2)),'bd');
+
+plot(x_stack(6),x_stack(7),'xr');
+plot(x_prev_stack(6,size(x_prev_stack,2)),x_prev_stack(7,size(x_prev_stack,2)),'rd');
+legend(["True landmark 1 localization";"Estimated landmark 1 localization";"True landmark 2 localization";"Estimated landmark 2 localization"])
+
+figure
+plot(y_stack(2,:),'b');
+plot(x_stack(1)-x_stack(4),'b--');
+plot(y_stack(3,:),'r');
+plot(x_stack(2)-x_stack(5),'r--');
+legend(["Measured distance to pinger 1";"Real distance to pinger 1";"Measured distance to pinger 2";"Real distance to pinger 2"])
