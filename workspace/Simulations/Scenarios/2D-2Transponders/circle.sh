@@ -11,4 +11,4 @@ sleep 35s
 python3.3 circle.py
 
 # Run the datalogger
-python3.3 data_logger.py 2D-2Transponders.res 60 1
+python3.3 data_logger.py 2D-2Transponders.res 120 1

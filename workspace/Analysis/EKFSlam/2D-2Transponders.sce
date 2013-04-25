@@ -1,4 +1,7 @@
 cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
+
+funcprot(0);
+
 raw_file=read_csv('2D-2Transponders.res',';');
 
 // Degrees to radians
@@ -7,15 +10,15 @@ deg2rad=%pi/180;
 // avoid the first comment line + parse strings to double
 data=evstr(raw_file(2:size(raw_file,1),:));
 
-// Covariance of the heading sensor
-Ch=0.1*deg2rad*0.1*deg2rad;
+// Variance of the heading sensor
+Ch=(0.02*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.4*0.4 0;
-0 0.1*deg2rad*0.1*deg2rad];
+Mt=[0.04^2 0;
+0 (0.01*deg2rad)^2];
 
-// Covariance of the range sensor
-Cr=0.3*0.3;
+// Variance of the range sensor
+Cr=0.03^2;
 
 // Observation matrix:
 
@@ -61,7 +64,7 @@ endfunction
 // The EKF SLAM algorithm with known correspondences landmarks
 // We give r1t, r2t, theta as inputs instead of zi because
 // we reconstruct the zi ourselves from the range readings
-function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y_partial, dt)
+function [mut, sigmat,y]=EKF_SLAM(mut_prev, sigmat_prev, ut, y_partial, dt)
 
     ////////////////
     // PREDICTION //
@@ -76,8 +79,8 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y_partial, dt)
     ut(1)*dt*sin(mut_prev(3));
     dt*ut(2)];
     
-    Gt=eye(7,7)+Fx'*[0 0 -ut(1)*dt*sin(mut_prev(3));
-    0 0 ut(1)*dt*cos(mut_prev(3));
+    Gt=eye(7,7)+Fx'*[0 0 -ut(1)*sin(mut_prev(3));
+    0 0 ut(1)*cos(mut_prev(3));
     0 0 0]*Fx;
 
     // Jacobian of the motion model
@@ -140,14 +143,18 @@ endfunction
 x=[0; -30; 0; 20; 0; -20; 0];
 
 // Original covariance
-sigma=10^3*eye(7,7);
+sigma=10^-2*eye(7,7);
 dt=1;
-x_stack=x;
+x_stack=[];
+x_prev_stack=x;
 u_stack=[];
+y_stack=[];
 for i=1:1:size(data,1),
-    y_partial=[data(i, 10); data(i, 27); data(i, 28)];
-    ut=[data(i,32); data(23)];
-    [x,sigma]=EKF_SLAM(x,sigma,ut,y_partial,dt);
-    x_stack=[x_stack x];
+    x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
+    y_partial=[data(i, 7); data(i, 25); data(i, 26)];
+    ut=[data(i,29); data(20)];
+    [x,sigma,y]=EKF_SLAM(x,sigma,ut,y_partial,dt);
+    x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
+    y_stack=[y_stack y];
 end

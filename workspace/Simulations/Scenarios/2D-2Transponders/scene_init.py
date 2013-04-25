@@ -7,12 +7,12 @@ from morse.builder import *
 #########################
 sensors_freq=1          # 1 Hz enough for now
 range_pinger=100	    # the pinger can detect transponders up to 100 m
-orientation_std=0.1     # 0.1 °
-gyro_std=0.1            # 0.1 °/s
-accelero_std=0.01*9.81  # 10 mg
-pinger_std=0.3          # 0.3 m
-pressure_std=1.5        # 1.5 m
-loch_doppler_std=0.4    # 0.4 m/s
+orientation_std=0.02    # 0.02 °
+gyro_std=0.01           # 0.01 °/s
+accelero_std=0.001*9.81 # 1 mg
+pinger_std=0.03         # 0.03 m
+pressure_std=0.15       # 0.15 m
+loch_doppler_std=0.04   # 0.04 m/s
 #########################
 
 sub=Submarine()
