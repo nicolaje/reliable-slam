@@ -55,7 +55,7 @@ print("Entering data logger")
 if(len(sys.argv)>3):
 	file_name=sys.argv[1]
 	duration=int(sys.argv[2]) # Logging duration in seconds
-	frequency=int(sys.argv[3])# Loggin frequency in Hz
+	frequency=int(sys.argv[3])# Logging frequency in Hz
 	f=open(str(file_name), 'w')
 	
 	# Data format:
@@ -67,10 +67,10 @@ if(len(sys.argv)>3):
 	'imu_noisy.d²x; imu_noisy.d²y; imu_noisy.d²z;'\
 	'imu_pure.dtheta; imu_pure.dphi; imu_pure.dpsi;'\
 	'imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi;'\
-	'transponder1.pure; transponder2.pure;'\
-	'transponder1.noisy; transponder2.noisy;'\
 	'loch_doppler_pure.vx; loch_doppler_pure.vy; loch_doppler_pure.vz;'\
-	'loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;\n')
+	'loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;'\
+	'transponder1.pure; transponder2.pure; transponder3.pure; transponder4.pure;'\
+	'transponder1.noisy; transponder2.noisy; transponder3.noisy; transponder4.noisy;\n')
 	with pymorse.Morse() as simu:
 		sub=simu.sub
 		sub.pose_pure.subscribe(update_pose_pure)
@@ -108,19 +108,23 @@ if(len(sys.argv)>3):
 				s=s+str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"
 				s=s+str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"
 				
-				transponders_pure=_pinger_pure['near_objects']
-				transponders_noisy=_pinger_noisy['near_objects']
-				
-				s=s+str(transponders_pure['transponder1'])+";"
-				s=s+str(transponders_pure['transponder2'])+";"
-				s=s+str(transponders_noisy['transponder1'])+";"
-				s=s+str(transponders_noisy['transponder2'])+";"
-				
 				loch_doppler_pure=_loch_doppler_pure['linear_velocity']
 				loch_doppler_noisy=_loch_doppler_noisy['linear_velocity']
 				
 				s=s+str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"
 				s=s+str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"
+				
+				transponders_pure=_pinger_pure['near_objects']
+				transponders_noisy=_pinger_noisy['near_objects']
+				
+				s=s+str(transponders_pure['transponder1'])+";"
+				s=s+str(transponders_pure['transponder2'])+";"
+				s=s+str(transponders_pure['transponder3'])+";"
+				s=s+str(transponders_pure['transponder4'])+";"
+				s=s+str(transponders_noisy['transponder1'])+";"
+				s=s+str(transponders_noisy['transponder2'])+";"
+				s=s+str(transponders_noisy['transponder3'])+";"
+				s=s+str(transponders_noisy['transponder4'])+";"
 				
 				f.write(s+'\n')
 			else:

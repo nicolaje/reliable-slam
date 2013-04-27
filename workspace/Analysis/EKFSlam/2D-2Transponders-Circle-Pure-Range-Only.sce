@@ -6,7 +6,7 @@ close
 close
 funcprot(0);
 
-raw_file=read_csv('2D-2Transponders.res',';');
+raw_file=read_csv('2D-2Transponders-Circle.res',';');
 
 // Degrees to radians
 deg2rad=%pi/180;
@@ -110,7 +110,7 @@ x=[0; -30; 0; 0; 0; 0; 0];
 
 // Original covariance
 sigma=[zeros(3,7);
-zeros(4,3) 50*eye(4,4)];
+zeros(4,3) 25*eye(4,4)];
 
 dt=1;
 x_stack=[];
@@ -152,7 +152,7 @@ legend(["True landmark 1 localization";"Estimated landmark 1 localization";"True
 
 figure
 plot(y_stack(2,:),'b');
-plot(x_stack(1,:)-x_stack(4,:),'b--');
+plot(sqrt((x_stack(1,:)-x_stack(4,:))^2+(x_stack(2,:)-x_stack(5,:))^2),'b--');
 plot(y_stack(3,:),'r');
-plot(x_stack(2,:)-x_stack(5,:),'r--');
-legend(["Measured x-distance to pinger 1";"Real x-distance to pinger 1";"Measured y-distance to pinger 1";"Real y-distance to pinger 1"])
+plot(sqrt((x_stack(1,:)-x_stack(6,:))^2+(x_stack(2,:)-x_stack(7,:))^2),'r--');
+legend(["Measured distance to pinger 1";"Real distance to pinger 1";"Measured distance to pinger 2";"Real distance to pinger 2"])

@@ -6,7 +6,7 @@ close
 close
 funcprot(0);
 
-raw_file=read_csv('2D-2Transponders-Circle.res',';');
+raw_file=read_csv('2D-2Transponders-Line.res',';');
 
 // Degrees to radians
 deg2rad=%pi/180;
@@ -144,7 +144,7 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[0; -30; 0; 20; 0; 20; 0];
+x=[0; -30; %pi/2; 27; 0; -25; 0];
 
 // Original covariance
 sigma=[zeros(3,7);

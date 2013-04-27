@@ -23,7 +23,7 @@ with pymorse.Morse() as simu:
 	print("Entering trajectory controller")
 #	print(simu.robots)
 	motion=simu.sub.motion
-	motion.publish({'v':2*pi*radius/60, 'w':2*pi/60}) # 1 round per minute
+	motion.publish({'v':2*pi*radius/120, 'w':2*pi/120}) # 1 round per 2 minutes
 #	sleep(60)
 #	simu.quit()
 #	time=datetime.now()

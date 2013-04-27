@@ -6,13 +6,13 @@ from morse.builder import *
 #			#
 #########################
 sensors_freq=1          # 1 Hz enough for now
-range_pinger=100	    # the pinger can detect transponders up to 100 m
-orientation_std=0.02    # 0.02 °
-gyro_std=0.01           # 0.01 °/s
-accelero_std=0.001*9.81 # 1 mg
-pinger_std=0.03         # 0.03 m
+range_pinger=100	# the pinger can detect transponders up to 100 m
+orientation_std=0.2     # 0.2 °
+gyro_std=0.1            # 0.1 °/s
+accelero_std=0.01*9.81  # 10 mg
+pinger_std=0.3          # 0.3 m
 pressure_std=0.15       # 0.15 m
-loch_doppler_std=0.04   # 0.04 m/s
+loch_doppler_std=0.4    # 0.4 m/s
 #########################
 
 sub=Submarine()
@@ -94,6 +94,8 @@ sub.translate(z=0.5,y=-30)
 # Environment      #
 # trans1=[20,0,0]  #
 # trans2=[-20,0,0] #
+# trans3=[0,20,0]  #
+# trans4=[0,-20,0] #
 ####################
 
 transponder1=Robot('../../Models/Transponder.blend')
@@ -101,6 +103,12 @@ transponder1.translate(x=20)
 
 transponder2=Robot('../../Models/Transponder.blend')
 transponder2.translate(x=-20)
+
+transponder3=Robot('../../Models/Transponder.blend')
+transponder3.translate(y=20)
+
+transponder4=Robot('../../Models/Transponder.blend')
+transponder4.translate(y=-20)
 
 env=Environment('../../Models/SimpleOceanGround.blend')
 env.place_camera([-20,-20,10])
