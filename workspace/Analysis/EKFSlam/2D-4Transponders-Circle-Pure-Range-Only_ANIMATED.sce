@@ -79,11 +79,18 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
 endfunction
 
 // Function to draw a confidence ellipse (from Luc Jaulin's scripts)
-function Draw_Ellipse(what,G_w,eta,thick);  //eta-confidence ellipse
+function Draw_Ellipse(what,G_w,eta,thick,c);  //eta-confidence ellipse
     xset('thickness',thick);                         // The ellipse encloses the random vector
+    xset('color',c);
     s=0:0.05:2*%pi+0.05;                             // with a probability eta
     w=what*ones(s)+sqrtm(-2*log(1-eta)*G_w)*[cos(s);sin(s)];
     xpoly(w(1,:),w(2,:));
+endfunction
+
+function Draw_True_Path(x);
+    xset('color',1);
+    xset('thickness',1);
+    
 endfunction
 
 ////////////////////
@@ -132,39 +139,3 @@ for i=1:1:size(data,1),
     u_stack=[u_stack ut];
     y_stack=[y_stack y];
 end
-
-////////////
-// Plots //
-//////////
-
-figure
-plot(x_stack(1,:),x_stack(2,:),'b');
-plot(x_prev_stack(1,:),x_prev_stack(2,:),'b--');
-legend(["True trajectory";"Estimated trajectory"]);
-
-// figure
-// plot(x_stack(3,:),'b');
-// plot(x_prev_stack(3,:),'b--');
-// plot(data(:,10),'r--');
-// legend(["True heading";"Estimated heading";"Noisy heading"]);
-
-figure
-plot(x_stack(4),x_stack(5),'db');
-plot(x_stack(6),x_stack(7),'dr');
-plot(x_stack(8),x_stack(9),'dg');
-plot(x_stack(10),x_stack(11),'dy');
-plot(x_prev_stack(4,size(x_prev_stack,2)),x_prev_stack(5,size(x_prev_stack,2)),'xb');
-plot(x_prev_stack(6,size(x_prev_stack,2)),x_prev_stack(7,size(x_prev_stack,2)),'xr');
-plot(x_prev_stack(8,size(x_prev_stack,2)),x_prev_stack(9,size(x_prev_stack,2)),'xg');
-plot(x_prev_stack(10,size(x_prev_stack,2)),x_prev_stack(11,size(x_prev_stack,2)),'xy');
-Draw_Ellipse([x_prev_stack(4,size(x_prev_stack,2)); x_prev_stack(5,size(x_prev_stack,2))], sigma(6:7,6:7), 0.999, 1);
-Draw_Ellipse([x_prev_stack(6,size(x_prev_stack,2)); x_prev_stack(7,size(x_prev_stack,2))], sigma(6:7,6:7), 0.999, 1);
-Draw_Ellipse([x_prev_stack(8,size(x_prev_stack,2)); x_prev_stack(9,size(x_prev_stack,2))], sigma(6:7,6:7), 0.999, 1);
-Draw_Ellipse([x_prev_stack(10,size(x_prev_stack,2)); x_prev_stack(11,size(x_prev_stack,2))], sigma(6:7,6:7), 0.999, 1);
-
-// figure
-// plot(y_stack(2,:),'b');
-// plot(sqrt((x_stack(1,:)-x_stack(4,:))^2+(x_stack(2,:)-x_stack(5,:))^2),'b--');
-// plot(y_stack(3,:),'r');
-// plot(sqrt((x_stack(1,:)-x_stack(6,:))^2+(x_stack(2,:)-x_stack(7,:))^2),'r--');
-// legend(["Measured distance to pinger 1";"Real distance to pinger 1";"Measured distance to pinger 2";"Real distance to pinger 2"])
