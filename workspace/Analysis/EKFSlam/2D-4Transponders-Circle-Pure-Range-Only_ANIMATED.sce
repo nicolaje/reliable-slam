@@ -87,10 +87,14 @@ function Draw_Ellipse(what,G_w,eta,thick,c);  //eta-confidence ellipse
     xpoly(w(1,:),w(2,:));
 endfunction
 
-function Draw_True_Path(x);
+function Draw_True_Path(x,len);
     xset('color',1);
     xset('thickness',1);
-    
+    if size(x,1)<len then // if the history is not big enough
+        len=size(x,1); 
+    end
+    real_length=size(x,1);
+    plot(x(real_length-1:))
 endfunction
 
 ////////////////////
