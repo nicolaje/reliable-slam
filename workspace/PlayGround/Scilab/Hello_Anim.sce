@@ -18,8 +18,8 @@ h_compound = gce();
 xpoly(t(1:40),y(1:40));
 test=gce();
 
-h_compound.children.mark_size = [20,1];
-h_compound.children.mark_background = 2;
+h_compound.children.mark_size = [5,1];
+h_compound.children.mark_background = 3;
 
 h_axes = gca();
 h_axes.data_bounds = [-1.5,-1.5;1.5,1.5];

@@ -1,15 +1,11 @@
 cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders
 
-clear
-close
-close
-close
+clear; close; close; close; close;
 funcprot(0);
 
-raw_file=read_csv('2D-4Transponders-Circle.res',';');
-
-// Degrees to radians
 deg2rad=%pi/180;
+
+raw_file=read_csv('2D-4Transponders-Circle.res',';');
 
 // avoid the first comment line + parse strings to double
 data=evstr(raw_file(2:size(raw_file,1),:));
@@ -18,11 +14,11 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 Ch=(0.2*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.04^2 0;
-0 (0.01*deg2rad)^2];
+Mt=[0.4^2 0;
+0 (0.1*deg2rad)^2];
 
 // Variance of the range sensor
-Cr=0.03^2;
+Cr=0.3^2;
 
 // The EKF SLAM algorithm with known correspondences landmarks
 function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
@@ -109,10 +105,14 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2, xl3, yl3, xl4, yl4]
 
 figure(1);
+drawlater();
+// Axes setup
+h_axes = gca();
+h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); 0; 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
+x=[data(1,1); data(1,2); data(1,7); 0; 0; 0; 0; 0; 0; 0; 0];
 
 // Original covariance
 sigma=[zeros(3,11);
@@ -122,23 +122,49 @@ zeros(8,3) 15*15*eye(8,8)];
 // Landmarks //
 //////////////
 plot(20,0,'pr'); // Position
-l1_shape=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99,1); // Confidence ellipse
-xset('color','red');
+l1_shape=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99); // Confidence ellipse
+xset('color',color('red'));
 xpoly(l1_shape(1,:),l1_shape(2,:));
 l1=gce(); // get handle on the poly
 
-plot(-20,0,'pg'); // Landmark1
-l2_shape=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99,1);
-xset('color','green');
+plot(-20,0,'pg');
+l2_shape=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99);
+xset('color',color('green'));
 xpoly(l2_shape(1,:), l2_shape(2,:));
 l2=gce();
 
-plot(0,20,'pb'); // Landmark1
+plot(0,20,'pb');
+l3_shape=confidence_ellipse([x(8);x(9)], sigma(8:9,8:9),0.99);
+xset('color',color('blue'));
+xpoly(l3_shape(1,:), l3_shape(2,:));
 l3=gce();
 
-plot(0,-20,'pm'); // Landmark1
+plot(0,-20,'pm');
+l4_shape=confidence_ellipse([x(10);x(11)], sigma(10:11,10:11),0.99);
+xset('color',color('magenta'));
+xpoly(l4_shape(1,:), l4_shape(2,:));
 l4=gce();
 
+/////////////
+// Robots //
+///////////
+
+// Ground truth
+xset('color',color('blue'));
+plot(data(1,1),data(1,2),'o');
+g_truth=gce();
+g_truth.children.mark_size = [5,1];
+g_truth.children.mark_background = 3;
+
+// Estimated position
+r_shape=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99);
+xset('color',color('orange'));
+xpoly(r_shape(1,:),r_shape(2,:));
+r=gce();
+
+xset('color',color('black')); // Reset the color of the axis
+
+drawnow();
 
 dt=1;
 x_stack=[];
@@ -153,4 +179,13 @@ for i=1:1:size(data,1),
     x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
     y_stack=[y_stack y];
+    drawlater();
+    g_truth.children.data=[data(i,1),data(i,2)];
+    r.data=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99)';
+    l1.data=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99)';
+    l2.data=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99)';
+    l3.data=confidence_ellipse([x(8);x(9)], sigma(8:9,8:9),0.99)';
+    l4.data=confidence_ellipse([x(10);x(11)], sigma(10:11,10:11),0.99)';
+    drawnow();
+    sleep(75);
 end
