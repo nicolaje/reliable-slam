@@ -78,23 +78,10 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
      sigmat=sigmat-R*C*sigmat; // Update the covariance
 endfunction
 
-// Function to draw a confidence ellipse (from Luc Jaulin's scripts)
-function Draw_Ellipse(what,G_w,eta,thick,c);  //eta-confidence ellipse
-    xset('thickness',thick);                         // The ellipse encloses the random vector
-    xset('color',c);
+// Function to get the shape of a confidence ellipse (from Luc Jaulin's scripts)
+function [poly_shape]=confidence_ellipse(what,G_w,eta)
     s=0:0.05:2*%pi+0.05;                             // with a probability eta
-    w=what*ones(s)+sqrtm(-2*log(1-eta)*G_w)*[cos(s);sin(s)];
-    xpoly(w(1,:),w(2,:));
-endfunction
-
-function Draw_True_Path(x,len);
-    xset('color',1);
-    xset('thickness',1);
-    if size(x,1)<len then // if the history is not big enough
-        len=size(x,1); 
-    end
-    real_length=size(x,1);
-    plot(x(real_length-1:))
+    poly_shape=what*ones(s)+sqrtm(-2*log(1-eta)*G_w)*[cos(s);sin(s)];
 endfunction
 
 ////////////////////
@@ -121,6 +108,8 @@ endfunction
 //  1  2   3      4    5    6    7   # index
 // [x, y, theta, xl1, yl1, xl2, yl2, xl3, yl3, xl4, yl4]
 
+figure(1);
+
 // Estimate of the original state
 //x=[data(1,1); data(1,2); 0; 20; 0; -20; 0; 0; 20; 0; -20];
 x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
@@ -128,6 +117,28 @@ x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
 // Original covariance
 sigma=[zeros(3,11);
 zeros(8,3) 15*15*eye(8,8)];
+
+////////////////
+// Landmarks //
+//////////////
+plot(20,0,'pr'); // Position
+l1_shape=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99,1); // Confidence ellipse
+xset('color','red');
+xpoly(l1_shape(1,:),l1_shape(2,:));
+l1=gce(); // get handle on the poly
+
+plot(-20,0,'pg'); // Landmark1
+l2_shape=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99,1);
+xset('color','green');
+xpoly(l2_shape(1,:), l2_shape(2,:));
+l2=gce();
+
+plot(0,20,'pb'); // Landmark1
+l3=gce();
+
+plot(0,-20,'pm'); // Landmark1
+l4=gce();
+
 
 dt=1;
 x_stack=[];

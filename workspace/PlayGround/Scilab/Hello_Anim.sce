@@ -15,7 +15,7 @@ figure(1);
 plot(x(1),0,'o');
 h_compound = gce();
 
-xpoly(t(1:10),y(1:10));
+xpoly(t(1:40),y(1:40));
 test=gce();
 
 h_compound.children.mark_size = [20,1];
