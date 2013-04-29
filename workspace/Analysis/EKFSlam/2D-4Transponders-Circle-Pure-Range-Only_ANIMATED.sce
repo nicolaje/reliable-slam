@@ -38,6 +38,13 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     ut(1)*dt*sin(mut_prev(3));
     dt*ut(2)];
 
+    // Handle the singularity for theta
+    if mut(3)>%pi then
+        mut(3)=modulo(mut(3)-2*%pi,2*%pi);
+    elseif mut(3)<-%pi then
+        mut(3)=modulo(mut(3)+2*%pi,2*%pi);
+    end
+
     Gt=eye(11,11)+Fx'*[0 0 -ut(1)*dt*sin(mut_prev(3));
     0 0 ut(1)*dt*cos(mut_prev(3));
     0 0 0]*Fx;
@@ -114,7 +121,7 @@ h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
+x=[data(1,1); data(1,2); %pi/2; 20; 0; -20; 0; 0; 20; 0; -20];
 
 // Original covariance
 sigma=[0*eye(3,3) zeros(3,8);
