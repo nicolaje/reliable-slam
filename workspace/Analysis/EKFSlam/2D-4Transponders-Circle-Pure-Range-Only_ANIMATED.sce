@@ -121,7 +121,7 @@ h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
+x=[data(1,1); data(1,2); data(1,7); 0; 0; -20; 0; 0; 20; 0; -20];
 
 // Original covariance
 sigma=[0*eye(3,3) zeros(3,8);
@@ -153,6 +153,27 @@ l4_shape=confidence_ellipse([x(10);x(11)], sigma(10:11,10:11),0.99);
 xset('color',color('magenta'));
 xpoly(l4_shape(1,:), l4_shape(2,:));
 l4=gce();
+
+/////////////////////////////
+// Distances to landmarks //
+///////////////////////////
+t=0:0.05:2*%pi;
+
+xset('color',color('red'));
+xpoly(cos(t),sin(t));
+dl1=gce();
+
+xset('color',color('green'));
+xpoly(cos(t),sin(t));
+dl2=gce();
+
+xset('color',color('blue'));
+xpoly(cos(t),sin(t));
+dl3=gce();
+
+xset('color',color('magenta'));
+xpoly(cos(t),sin(t));
+dl4=gce();
 
 /////////////
 // Robots //
@@ -192,9 +213,13 @@ for i=1:1:size(data,1),
     g_truth.children.data=[data(i,1),data(i,2)];
     r.data=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99)';
     l1.data=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99)';
+    dl1.data=[x(1)+y(2)*cos(t)',x(2)+y(2)*sin(t)'];
     l2.data=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99)';
+    dl2.data=[x(1)+y(3)*cos(t)',x(2)+y(3)*sin(t)'];
     l3.data=confidence_ellipse([x(8);x(9)], sigma(8:9,8:9),0.99)';
+    dl3.data=[x(1)+y(4)*cos(t)',x(2)+y(4)*sin(t)'];
     l4.data=confidence_ellipse([x(10);x(11)], sigma(10:11,10:11),0.99)';
+    dl4.data=[x(1)+y(5)*cos(t)',x(2)+y(5)*sin(t)'];
     drawnow();
     sleep(75);
 end
