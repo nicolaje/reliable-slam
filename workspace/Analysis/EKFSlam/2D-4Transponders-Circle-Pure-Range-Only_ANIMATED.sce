@@ -108,15 +108,15 @@ figure(1);
 drawlater();
 // Axes setup
 h_axes = gca();
-h_axes.data_bounds = [-35,-35;35,35];
+h_axes.data_bounds = [-30,-30;30,30];
 
 // Estimate of the original state
-//x=[data(1,1); data(1,2); 0; 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,7); 0; 0; 0; 0; 0; 0; 0; 0];
+x=[data(1,1); data(1,2); 0; 20; 0; -20; 0; 0; 20; 0; -20];
+//x=[data(1,1); data(1,2); data(1,7); 0; 0; 0; 0; 0; 0; 0; 0];
 
 // Original covariance
 sigma=[zeros(3,11);
-zeros(8,3) 15*15*eye(8,8)];
+zeros(8,3) 1*eye(8,8)];
 
 ////////////////
 // Landmarks //
