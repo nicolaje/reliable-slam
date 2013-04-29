@@ -5,7 +5,7 @@ cd /home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Tran
 clear; close; close; close; close;
 funcprot(0);
 
-deg2rad=1; //%pi/180;
+deg2rad=%pi/180;
 
 raw_file=read_csv('2D-4Transponders-Circle.res',';');
 
@@ -66,14 +66,14 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     ////////////
 
     // Jacobian of the observation matrix
-    C=[//0 0 1 0 0 0 0 0 0 0 0;
-    (mut(1)-mut(4))/y(1) (mut(2)-mut(5))/y(1) 0 (mut(4)-mut(1))/y(1) (mut(5)-mut(2))/y(1) 0 0 0 0 0 0;
-    (mut(1)-mut(6))/y(2) (mut(2)-mut(7))/y(2) 0 0 0 (mut(6)-mut(1))/y(2) (mut(7)-mut(2))/y(2) 0 0 0 0;
-    (mut(1)-mut(8))/y(3) (mut(2)-mut(9))/y(3) 0 0 0 0 0 (mut(8)-mut(1))/y(3) (mut(9)-mut(2))/y(3) 0 0;
-    (mut(1)-mut(10))/y(4) (mut(2)-mut(11))/y(4) 0 0 0 0 0 0 0 (mut(10)-mut(1))/y(4) (mut(11)-mut(2))/y(4)];
+    C=[0 0 1 0 0 0 0 0 0 0 0;
+    (mut(1)-mut(4))/y(2) (mut(2)-mut(5))/y(2) 0 (mut(4)-mut(1))/y(2) (mut(5)-mut(2))/y(2) 0 0 0 0 0 0;
+    (mut(1)-mut(6))/y(3) (mut(2)-mut(7))/y(3) 0 0 0 (mut(6)-mut(1))/y(3) (mut(7)-mut(2))/y(3) 0 0 0 0;
+    (mut(1)-mut(8))/y(4) (mut(2)-mut(9))/y(4) 0 0 0 0 0 (mut(8)-mut(1))/y(4) (mut(9)-mut(2))/y(4) 0 0;
+    (mut(1)-mut(10))/y(5) (mut(2)-mut(11))/y(5) 0 0 0 0 0 0 0 (mut(10)-mut(1))/y(5) (mut(11)-mut(2))/y(5)];
 
-    W=[//Ch zeros(1,4);
-    Cr*eye(4,4)];//zeros(4,1) 
+    W=[Ch zeros(1,4);
+    zeros(4,1) Cr*eye(4,4)];
 
     delta_y=y-C*mut;
     S=C*sigmat*C'+W;
@@ -121,7 +121,7 @@ h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); %pi/2; 20; 0; -20; 0; 0; 20; 0; -20];
+x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
 
 // Original covariance
 sigma=[0*eye(3,3) zeros(3,8);
@@ -182,7 +182,7 @@ u_stack=[];
 y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0; 0; 20; 0; -20]];
-    y=[data(i, 31); data(i, 32); data(i, 33); data(i,34)];//data(i, 7); 
+    y=[data(i, 7); data(i, 31); data(i, 32); data(i, 33); data(i,34)];
     ut=[data(i,25); 2*%pi/120]; //data(i,21)];
     [x,sigma]=EKF_SLAM(x,sigma,ut,y,dt);
     x_prev_stack=[x_prev_stack x];
