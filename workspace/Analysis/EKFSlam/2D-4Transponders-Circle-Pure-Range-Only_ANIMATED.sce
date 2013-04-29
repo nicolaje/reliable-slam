@@ -162,18 +162,29 @@ t=0:0.05:2*%pi;
 xset('color',color('red'));
 xpoly(cos(t),sin(t));
 dl1=gce();
+plot(cos(t),sin(t),'--');
+ddl1=gce();
 
 xset('color',color('green'));
 xpoly(cos(t),sin(t));
 dl2=gce();
+xset('color',color('green'));
+plot(cos(t),sin(t),'--');
+ddl2=gce();
 
 xset('color',color('blue'));
 xpoly(cos(t),sin(t));
 dl3=gce();
+xset('color',color('blue'));
+plot(cos(t),sin(t),'--');
+ddl3=gce();
 
 xset('color',color('magenta'));
 xpoly(cos(t),sin(t));
 dl4=gce();
+xset('color',color('magenta'));
+plot(cos(t),sin(t),'--');
+ddl4=gce();
 
 /////////////
 // Robots //
@@ -214,12 +225,16 @@ for i=1:1:size(data,1),
     r.data=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99)';
     l1.data=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99)';
     dl1.data=[x(1)+y(2)*cos(t)',x(2)+y(2)*sin(t)'];
+    ddl1.children.data=[data(i,1)+y(2)*cos(t)',data(i,2)+y(2)*sin(t)'];
     l2.data=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99)';
     dl2.data=[x(1)+y(3)*cos(t)',x(2)+y(3)*sin(t)'];
+    ddl2.children.data=[data(i,1)+y(3)*cos(t)',data(i,2)+y(3)*sin(t)'];
     l3.data=confidence_ellipse([x(8);x(9)], sigma(8:9,8:9),0.99)';
     dl3.data=[x(1)+y(4)*cos(t)',x(2)+y(4)*sin(t)'];
+    ddl3.children.data=[data(i,1)+y(4)*cos(t)',data(i,2)+y(4)*sin(t)'];
     l4.data=confidence_ellipse([x(10);x(11)], sigma(10:11,10:11),0.99)';
     dl4.data=[x(1)+y(5)*cos(t)',x(2)+y(5)*sin(t)'];
+    ddl4.children.data=[data(i,1)+y(5)*cos(t)',data(i,2)+y(5)*sin(t)'];
     drawnow();
     sleep(75);
 end
