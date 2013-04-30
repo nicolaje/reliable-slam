@@ -8,7 +8,7 @@ from morse.builder import *
 sensors_freq=1          # 1 Hz enough for now
 range_pinger=100        # the pinger can detect transponders up to 100 m
 orientation_std=0.02    # 0.2 °
-gyro_std=0.1            # 0.1 °/s
+gyro_std=0.01           # 0.01 °/s
 accelero_std=0.01*9.81  # 10 mg
 pinger_std=0.3          # 0.3 m
 pressure_std=0.15       # 0.15 m

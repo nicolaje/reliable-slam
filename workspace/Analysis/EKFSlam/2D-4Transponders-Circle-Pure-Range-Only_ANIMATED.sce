@@ -13,11 +13,11 @@ raw_file=read_csv('2D-4Transponders-Circle.res',';');
 data=evstr(raw_file(2:size(raw_file,1),:));
 
 // Variance of the heading sensor
-Ch=(0.2*deg2rad)^2;
+Ch=(0.02*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.4^2 0;
-0 (0.1*deg2rad)^2];
+Mt=[0.04^2 0;
+0 (0.01*deg2rad)^2];
 
 // Variance of the range sensor
 Cr=0.3^2;

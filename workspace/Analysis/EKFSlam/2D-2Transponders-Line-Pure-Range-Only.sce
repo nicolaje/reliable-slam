@@ -19,7 +19,7 @@ Ch=(0.02*deg2rad)^2;
 
 // Covariance of the motion noise
 Mt=[0.04^2 0;
-0 (0.1*deg2rad)^2];
+0 (0.01*deg2rad)^2];
 
 // Variance of the range sensor
 Cr=0.3^2;
@@ -110,7 +110,7 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0];
+x=[data(1,1); data(1,2); data(1,10); 10; 0; -10; 0];
 
 // Original covariance
 sigma=[1*eye(2,2) zeros(2,5);
@@ -121,7 +121,7 @@ figure(1);
 drawlater();
 // Axes setup
 h_axes = gca();
-h_axes.data_bounds = [-5,-55;5,35];
+h_axes.data_bounds = [-25,-45;25,35];
 
 ////////////////
 // Landmarks //
@@ -223,6 +223,10 @@ for i=1:1:size(data,1),
     path.data=[x_stack(1,1:i)',x_stack(2,1:i)'];
     l1.data=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99)'; // Confidence ellipse
     l2.data=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99)';
+    if i>2 then
+        l1_path.data=[x_prev_stack(4,3:i)',x_prev_stack(5,3:i)'];
+        l2_path.data=[x_prev_stack(6,3:i)',x_prev_stack(7,3:i)'];
+    end
     drawnow();
     sleep(75);
 end
