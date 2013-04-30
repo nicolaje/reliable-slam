@@ -18,7 +18,7 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 Ch=(0.2*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.4^2 0;
+Mt=[0.04^2 0;
 0 (0.1*deg2rad)^2];
 
 // Variance of the range sensor
@@ -110,12 +110,98 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0];
+x=[data(1,1); data(1,2); 3.5*data(1,10); 20; 0; -20; 0];
 
 // Original covariance
 sigma=[1*eye(2,2) zeros(2,5);
 0 0 Ch zeros(1,4);
 zeros(4,3) 20*eye(4,4)];
+
+figure(1);
+drawlater();
+// Axes setup
+h_axes = gca();
+h_axes.data_bounds = [-5,-55;5,35];
+
+////////////////
+// Landmarks //
+//////////////
+plot(20,0,'pr'); // Position
+l1_shape=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99); // Confidence ellipse
+xset('color',color('red'));
+xpoly(l1_shape(1,:),l1_shape(2,:));
+l1=gce(); // get handle on the poly
+
+xpoly(0,0);
+l1_path=gce();
+
+plot(-20,0,'pg');
+l2_shape=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99);
+xset('color',color('green'));
+xpoly(l2_shape(1,:), l2_shape(2,:));
+l2=gce();
+
+xpoly(0,0);
+l2_path=gce();
+
+/////////////////////////////
+// Distances to landmarks //
+///////////////////////////
+t=0:0.05:2*%pi;
+
+//xset('color',color('red'));
+//xpoly(cos(t),sin(t));
+//dl1=gce();
+//plot(cos(t),sin(t),'--');
+//ddl1=gce();
+
+//xset('color',color('green'));
+//xpoly(cos(t),sin(t));
+//dl2=gce();
+//xset('color',color('green'));
+//plot(cos(t),sin(t),'--');
+//ddl2=gce();
+
+//xset('color',color('blue'));
+//xpoly(cos(t),sin(t));
+//dl3=gce();
+//xset('color',color('blue'));
+//plot(cos(t),sin(t),'--');
+//ddl3=gce();
+
+//xset('color',color('magenta'));
+//xpoly(cos(t),sin(t));
+//dl4=gce();
+//xset('color',color('magenta'));
+//plot(cos(t),sin(t),'--');
+//ddl4=gce();
+
+/////////////
+// Robots //
+///////////
+
+// Ground truth
+xset('color',color('black'));
+plot(data(1,1),data(1,2),'o');
+g_truth=gce();
+g_truth.children.mark_size = [5,1];
+//g_truth.children.mark_background = 3;
+
+xpoly(0,0);
+path=gce();
+
+// Estimated position
+r_shape=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99);
+xset('color',color('orange'));
+xpoly(r_shape(1,:),r_shape(2,:));
+r=gce();
+
+xset('color',color('orange'));
+xpoly(0,0);
+path_estim=gce();
+
+xset('color',color('black')); // Reset the color of the axis
+drawnow();
 
 dt=1;
 x_stack=[];
@@ -125,26 +211,18 @@ y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
     y=[data(i, 10); data(i, 27); data(i, 28)];
-    ut=[data(i,32); data(i,24)];
+    ut=[data(i,32)/10; data(i,24)];
     [x,sigma]=EKF_SLAM(x,sigma,ut,y,dt);
     x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
     y_stack=[y_stack y];
+    drawlater();
+    g_truth.children.data=[data(i,1),data(i,2)];
+    r.data=confidence_ellipse([x(1);x(2)], sigma(1:2,1:2),0.99)';
+    path_estim.data=[x_prev_stack(1,1:i)',x_prev_stack(2,1:i)'];
+    path.data=[x_stack(1,1:i)',x_stack(2,1:i)'];
+    l1.data=confidence_ellipse([x(4);x(5)], sigma(4:5,4:5),0.99)'; // Confidence ellipse
+    l2.data=confidence_ellipse([x(6);x(7)], sigma(6:7,6:7),0.99)';
+    drawnow();
+    sleep(75);
 end
-
- ///////////
-// Plots //
-//////////
-
-figure
-plot(x_stack(1,:),x_stack(2,:),'b');
-plot(x_prev_stack(1,:),x_prev_stack(2,:),'b--');
-legend(["True trajectory";"Estimated trajectory"]);
-
-figure
-plot(x_stack(4),x_stack(5),'xb');
-plot(x_prev_stack(4,size(x_prev_stack,2)),x_prev_stack(5,size(x_prev_stack,2)),'bd');
-
-plot(x_stack(6),x_stack(7),'xr');
-plot(x_prev_stack(6,size(x_prev_stack,2)),x_prev_stack(7,size(x_prev_stack,2)),'rd');
-legend(["True landmark 1 localization";"Estimated landmark 1 localization";"True landmark 2 localization";"Estimated landmark 2 localization"])
