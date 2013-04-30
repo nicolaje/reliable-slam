@@ -15,7 +15,7 @@ deg2rad=%pi/180;
 data=evstr(raw_file(2:size(raw_file,1),:));
 
 // Variance of the heading sensor
-Ch=(0.2*deg2rad)^2;
+Ch=(0.02*deg2rad)^2;
 
 // Covariance of the motion noise
 Mt=[0.04^2 0;
@@ -110,7 +110,7 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[data(1,1); data(1,2); 3.5*data(1,10); 20; 0; -20; 0];
+x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0];
 
 // Original covariance
 sigma=[1*eye(2,2) zeros(2,5);
@@ -211,7 +211,7 @@ y_stack=[];
 for i=1:1:size(data,1),
     x_stack=[x_stack [data(i,1); data(i,2); data(i,7); 20; 0; -20; 0]];
     y=[data(i, 10); data(i, 27); data(i, 28)];
-    ut=[data(i,32)/10; data(i,24)];
+    ut=[data(i,32); data(i,24)];
     [x,sigma]=EKF_SLAM(x,sigma,ut,y,dt);
     x_prev_stack=[x_prev_stack x];
     u_stack=[u_stack ut];
