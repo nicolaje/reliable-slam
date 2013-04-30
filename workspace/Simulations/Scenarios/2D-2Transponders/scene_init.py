@@ -6,16 +6,25 @@ from morse.builder import *
 #			#
 #########################
 sensors_freq=1          # 1 Hz enough for now
-range_pinger=100	    # the pinger can detect transponders up to 100 m
-orientation_std=0.02    # 0.02 °
-gyro_std=0.01           # 0.01 °/s
-accelero_std=0.001*9.81 # 1 mg
-pinger_std=0.03         # 0.03 m
+range_pinger=100        # the pinger can detect transponders up to 100 m
+orientation_std=0.2     # 0.2 °
+gyro_std=0.1            # 0.1 °/s
+accelero_std=0.01*9.81  # 10 mg
+pinger_std=0.3          # 0.3 m
 pressure_std=0.15       # 0.15 m
-loch_doppler_std=0.04   # 0.04 m/s
+loch_doppler_std=0.4    # 0.04 m/s
 #########################
 
 sub=Submarine()
+
+#############
+# Actuators #
+#############
+
+# V,W controller
+motion=MotionVW()
+motion.add_stream('socket')
+sub.append(motion)
 
 ###########
 # Sensors #
@@ -78,15 +87,6 @@ loch_doppler_noisy.add_stream('socket')
 sub.append(loch_doppler_noisy)
 loch_doppler_noisy.frequency(sensors_freq)
 loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
-
-#############
-# Actuators #
-#############
-
-# V,W controller
-motion=MotionVW()
-motion.add_stream('socket')
-sub.append(motion)
 
 sub.translate(z=0.5,y=-30)
 
