@@ -18,11 +18,11 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 Ch=(0.2*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.04^2 0;
-0 (0.01*deg2rad)^2];
+Mt=[0.4^2 0;
+0 (0.1*deg2rad)^2];
 
 // Variance of the range sensor
-Cr=0.03^2;
+Cr=0.3^2;
 
 // The EKF SLAM algorithm with known correspondences landmarks
 function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
@@ -39,6 +39,13 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     mut=mut_prev+Fx'*[ut(1)*dt*cos(mut_prev(3));
     ut(1)*dt*sin(mut_prev(3));
     dt*ut(2)];
+    
+    // Handle the singularity for theta
+    if mut(3)>%pi then
+        mut(3)=modulo(mut(3)-2*%pi,2*%pi);
+    elseif mut(3)<-%pi then
+        mut(3)=modulo(mut(3)+2*%pi,2*%pi);
+    end
     
     Gt=eye(7,7)+Fx'*[0 0 -ut(1)*dt*sin(mut_prev(3));
     0 0 ut(1)*dt*cos(mut_prev(3));
@@ -76,13 +83,10 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     sigmat=sigmat-R*C*sigmat; // Update the covariance
 endfunction
 
-// Function to draw a confidence ellipse (from Luc Jaulin's scripts)
-function Draw_Ellipse(what,G_w,eta,couleur,thick);  //eta-confidence ellipse
-    xset('thickness',thick);                         // The ellipse encloses the random vector
+// Function to get the shape of a confidence ellipse (from Luc Jaulin's scripts)
+function [poly_shape]=confidence_ellipse(what,G_w,eta)
     s=0:0.05:2*%pi+0.05;                             // with a probability eta
-    w=what*ones(s)+sqrtm(-2*log(1-eta)*G_w)*[cos(s);sin(s)];
-    xset("color",couleur);
-    xpoly(w(1,:),w(2,:));
+    poly_shape=what*ones(s)+sqrtm(-2*log(1-eta)*G_w)*[cos(s);sin(s)];
 endfunction
 
 //////////////////
@@ -106,10 +110,11 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[0; -30; 0; 20; 0; -20; 0];
+x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0];
 
 // Original covariance
-sigma=[zeros(3,7);
+sigma=[1*eye(2,2) zeros(2,5);
+0 0 Ch zeros(1,4);
 zeros(4,3) 20*eye(4,4)];
 
 dt=1;

@@ -12,7 +12,7 @@ gyro_std=0.1            # 0.1 °/s
 accelero_std=0.01*9.81  # 10 mg
 pinger_std=0.3          # 0.3 m
 pressure_std=0.15       # 0.15 m
-loch_doppler_std=0.4    # 0.04 m/s
+loch_doppler_std=0.4    # 0.4 m/s
 #########################
 
 sub=Submarine()
