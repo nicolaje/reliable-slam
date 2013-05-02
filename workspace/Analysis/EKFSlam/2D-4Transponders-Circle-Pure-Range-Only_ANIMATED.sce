@@ -1,16 +1,18 @@
-// Personal laptop workstation (LINUX)
-path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders';
-
-// UFRGS Laptop workstation
-// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders'
-
-// Personal laptop workstation (WINDOWS)
-// path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders';
-
-// TODO: smarter initialization step (only when within a close range)
-
 clear; close; close; close; close;
 funcprot(0);
+
+global path_in;
+global path_out;
+
+// Personal laptop workstation (LINUX)
+path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
+path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/EKFSlam/Videos/2D-4Transponders/';
+
+// UFRGS Laptop workstation
+// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/'
+
+// Personal laptop workstation (WINDOWS)
+// path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders/';
 
 deg2rad=%pi/180;
 
@@ -281,6 +283,5 @@ for i=start:1:size(data,1),
         l4_path.data=[x_prev_stack(10,3:i-start+1)',x_prev_stack(11,3:i-start+1)'];
     end
     drawnow();
-    sleep(100);
-    //xs2png(gcf(),sprintf("imgs/circle_non_reasonnable_initialization_%04d.png",i));
+    xs2png(gcf(),sprintf(path_out+"imgs/circle_non_reasonnable_initialization_%04d.png",i));
 end

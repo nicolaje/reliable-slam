@@ -1,16 +1,17 @@
-// Linux personal workstation
-//cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
-
-// Windows personal workstation
-cd F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-2Transponders
-
-clear
-close
-close
-close
+clear; close; close; close; close;
 funcprot(0);
 
-raw_file=read_csv('2D-2Transponders-Line.res',';');
+// Personal laptop workstation (LINUX)
+path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders/';
+path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/EKFSlam/Videos/2D-2Transponders/';
+
+// UFRGS Laptop workstation
+// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders/'
+
+// Personal laptop workstation (WINDOWS)
+// path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-2Transponders/';
+
+raw_file=read_csv(path_in+'2D-2Transponders-Line.res',';');
 
 // Degrees to radians
 deg2rad=%pi/180;
@@ -232,5 +233,5 @@ for i=1:1:size(data,1),
         l2_path.data=[x_prev_stack(6,3:i)',x_prev_stack(7,3:i)'];
     end
     drawnow();
-    xs2png(gcf(),sprintf("imgs/line_non_reasonnable_initialization_%03d.png",i));
+    xs2png(gcf(),sprintf(path_out+"imgs/line_non_reasonnable_initialization_%03d.png",i));
 end
