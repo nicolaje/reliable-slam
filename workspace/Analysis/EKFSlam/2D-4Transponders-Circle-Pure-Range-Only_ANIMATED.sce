@@ -25,11 +25,6 @@ Mt=[0.04^2 0;
 
 // Variance of the range sensor
 Cr=0.3^2;
-global error_stack;
-error_stack=[];
-
-global prev_stack;
-prev_stack=[];
 
 // The EKF SLAM algorithm with known correspondences landmarks
 function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
@@ -86,11 +81,11 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     y_prev=C*mut;
     delta_y=y-y_prev;
     
-    global error_stack;
-    error_stack=[error_stack delta_y];
-    
-    global prev_stack;
-    prev_stack=[prev_stack C*mut];
+    if y(1)-y_prev(1)>%pi then
+        delta_y(1)=modulo(delta_y(1)-2*%pi,2*%pi);
+    elseif y(1)-y_prev<-%pi then
+        delta_y(1)=modulo(delta_y(1)+2*%pi,2*%pi);
+    end
     
     S=C*sigmat*C'+W;
     R=sigmat*C'*inv(S);
@@ -131,18 +126,19 @@ endfunction
 
 figure(1);
 drawlater();
+
 // Axes setup
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0; 0; 20; 0; -20];
+x=[data(1,1); data(1,2); data(1,10); 10; 0; -25; 0; 0; 25; 0; -15];
 
 // Original covariance
-sigma=[1*eye(2,2) zeros(2,9);
+sigma=[0*eye(2,2) zeros(2,9);
 0 0 Ch zeros(1,8);
-zeros(8,3) (20^2)*eye(8,8)];
+zeros(8,3) (10^2)*eye(8,8)];
 
 ////////////////
 // Landmarks //
@@ -186,7 +182,7 @@ l4_path=gce();
 /////////////////////////////
 // Distances to landmarks //
 ///////////////////////////
-t=0:0.05:2*%pi;
+//t=0:0.05:2*%pi;
 
 //xset('color',color('red'));
 //xpoly(cos(t),sin(t));
@@ -224,7 +220,6 @@ xset('color',color('black'));
 plot(data(1,1),data(1,2),'o');
 g_truth=gce();
 g_truth.children.mark_size = [5,1];
-//g_truth.children.mark_background = 3;
 
 xpoly(0,0);
 path=gce();
@@ -280,5 +275,6 @@ for i=1:1:size(data,1),
         l4_path.data=[x_prev_stack(10,3:i)',x_prev_stack(11,3:i)'];
     end
     drawnow();
+    sleep(75);
     //xs2png(gcf(),sprintf("imgs/circle_non_reasonnable_initialization_%04d.png",i));
 end
