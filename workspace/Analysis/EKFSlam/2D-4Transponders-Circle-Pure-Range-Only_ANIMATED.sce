@@ -2,6 +2,10 @@ cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/works
 
 // cd /home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders
 
+// cd F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders
+
+// TODO: smarter initialization step (only when within a close range)
+
 clear; close; close; close; close;
 funcprot(0);
 
@@ -21,6 +25,11 @@ Mt=[0.04^2 0;
 
 // Variance of the range sensor
 Cr=0.3^2;
+global error_stack;
+error_stack=[];
+
+global prev_stack;
+prev_stack=[];
 
 // The EKF SLAM algorithm with known correspondences landmarks
 function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
@@ -39,9 +48,9 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     dt*ut(2)];
 
     // Handle the singularity for theta
-    if mut(3)>%pi then
+    if mut(3)>=%pi then
         mut(3)=modulo(mut(3)-2*%pi,2*%pi);
-    elseif mut(3)<-%pi then
+    elseif mut(3)<=-%pi then
         mut(3)=modulo(mut(3)+2*%pi,2*%pi);
     end
 
@@ -74,13 +83,20 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
 
     W=[Ch zeros(1,4);
     zeros(4,1) Cr*eye(4,4)];
-
-    delta_y=y-C*mut;
+    y_prev=C*mut;
+    delta_y=y-y_prev;
+    
+    global error_stack;
+    error_stack=[error_stack delta_y];
+    
+    global prev_stack;
+    prev_stack=[prev_stack C*mut];
+    
     S=C*sigmat*C'+W;
     R=sigmat*C'*inv(S);
 
-     mut=mut+R*delta_y; // Update the state vector
-     sigmat=sigmat-R*C*sigmat; // Update the covariance
+    mut=mut+R*delta_y; // Update the state vector
+    sigmat=sigmat-R*C*sigmat; // Update the covariance
 endfunction
 
 // Function to get the shape of a confidence ellipse (from Luc Jaulin's scripts)
@@ -121,7 +137,7 @@ h_axes.data_bounds = [-35,-35;35,35];
 
 // Estimate of the original state
 //x=[data(1,1); data(1,2); data(1,7); 20; 0; -20; 0; 0; 20; 0; -20];
-x=[data(1,1); data(1,2); data(1,10); 25; 5; -25; -5; 5; 25; -5; -25];
+x=[data(1,1); data(1,2); data(1,10); 20; 0; -20; 0; 0; 20; 0; -20];
 
 // Original covariance
 sigma=[1*eye(2,2) zeros(2,9);
@@ -264,5 +280,5 @@ for i=1:1:size(data,1),
         l4_path.data=[x_prev_stack(10,3:i)',x_prev_stack(11,3:i)'];
     end
     drawnow();
-    sleep(75);
+    //xs2png(gcf(),sprintf("imgs/circle_non_reasonnable_initialization_%04d.png",i));
 end

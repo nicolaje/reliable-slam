@@ -1,4 +1,8 @@
-cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
+// Linux personal workstation
+//cd /media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders
+
+// Windows personal workstation
+cd F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-2Transponders
 
 clear
 close
@@ -110,7 +114,7 @@ endfunction
 // [x, y, theta, xl1, yl1, xl2, yl2]
 
 // Estimate of the original state
-x=[data(1,1); data(1,2); data(1,10); 10; 0; -10; 0];
+x=[data(1,1); data(1,2); data(1,10); 0; 0; 0; 0];
 
 // Original covariance
 sigma=[1*eye(2,2) zeros(2,5);
@@ -228,5 +232,5 @@ for i=1:1:size(data,1),
         l2_path.data=[x_prev_stack(6,3:i)',x_prev_stack(7,3:i)'];
     end
     drawnow();
-    sleep(75);
+    xs2png(gcf(),sprintf("imgs/line_non_reasonnable_initialization_%03d.png",i));
 end
