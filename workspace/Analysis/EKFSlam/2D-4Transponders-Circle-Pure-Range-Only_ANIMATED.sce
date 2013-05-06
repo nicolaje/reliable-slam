@@ -1,9 +1,6 @@
 clear; close; close; close; close;
 funcprot(0);
 
-global path_in;
-global path_out;
-
 // Personal laptop workstation (LINUX)
 path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
 path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/EKFSlam/Videos/2D-4Transponders/';
