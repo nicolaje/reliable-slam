@@ -28,10 +28,18 @@ function [Y]=init_particle_set(K,N)
 endfunction
 
 // Observation function
-function [z_hat]=h(mu,x)
+function [z_hat]=h(mu,x) // TODO: use the particle as input+ make it landmark nb independant
     return [sqrt((mu(1)-x(1))^2+(mu(2)-x(2))^2);
     sqrt((mu(3)-x(1))^2+(mu(4)-x(2))^2);
     sqrt((mu(5)-x(1))^2+(mu(6)-x(2)^2)];
+endfunction
+
+// Returns the jacobian of the observation function
+function [C]=jacobian_observation(particle,N)
+    C=[];
+    for i=1:N,
+        C=[C;] // TODO
+    end
 endfunction
 
 // FastSLAM 1.0 algorithm with known correspondances landmarks
@@ -39,7 +47,7 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt,t)
     for k=1:K,
         particle=Y_prev(1+(k-1)*(4+N*6):1+k*(4+N*6));
         particle(2:4)=sample_motion_model(particle(2:4),u,dt); // sample pose
-        z_hat=h(particle(5:))
+        z_hat=h(particle(5:5+2*N),particle(2:4)); // measurement prediction
         
         // Jacobian of the observation matrix (3 landmarks)
         C=[(mut(1)-mut(4))/y(2) (mut(2)-mut(5))/y(2) 0 (mut(4)-mut(1))/y(2) (mut(5)-mut(2))/y(2) 0 0;
