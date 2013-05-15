@@ -18,9 +18,8 @@ Mt=[0.04^2 0;
 Cr=0.3^2;
 
 // 1 particle is 
-// [[w(1:t)] [x_1:t] [y_1:t] [theta_1:t] [mux_l1_1:t] [muy_l1_1:t] [sigmaxx_l1_1:t] [sigmaxy_l1_1:t] [sigmayx_l1_1:t] [sigmayy_l1_1:t] ... [mux_lN_1:t] [muy_lN_1:t] [sigmaxx_lN_1:t] [sigmaxy_lN_1:t] [sigmayx_lN_1:t] [sigmayy_lN_1:t]]
+// [[w(1:t)] [x_1:t] [y_1:t] [theta_1:t] [mux_l1_1:t] [muy_l1_1:t]  ... [mux_lN_1:t] [muy_lN_1:t] [sigmaxx_l1_1:t] [sigmaxy_l1_1:t] [sigmayx_l1_1:t] [sigmayy_l1_1:t] ... [sigmaxx_lN_1:t] [sigmaxy_lN_1:t] [sigmayx_lN_1:t] [sigmayy_lN_1:t]]
 // w=weight
-// of size (1, 1+3*t+6N)
 // Particle array (memory)
 P=[];
 
@@ -38,7 +37,7 @@ endfunction
 // FastSLAM 1.0 algorithm with known correspondances landmarks
 function [Y_pos]=fast_slam_1(z, u, Y_prev,dt,t)
     for k=1:K,
-        particle=Y_prev(k,:);
+        particle=Y_prev(1+(k-1)*(4+N*6):1+k*(4+N*6));
         particle(2:4)=sample_motion_model(particle(2:4),u,dt); // sample pose
         z_hat=h(particle(5:))
         
