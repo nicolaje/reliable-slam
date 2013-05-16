@@ -1,5 +1,5 @@
 // Number of particles
-K=1000; 
+K=100; 
 
 // Number of landmarks
 N=3;
@@ -21,10 +21,26 @@ Cr=0.3^2;
 // [[w(1:t)] [x_1:t] [y_1:t] [theta_1:t] [mux_l1_1:t] [muy_l1_1:t]  ... [mux_lN_1:t] [muy_lN_1:t] [sigmaxx_l1_1:t] [sigmaxy_l1_1:t] [sigmayx_l1_1:t] [sigmayy_l1_1:t] ... [sigmaxx_lN_1:t] [sigmaxy_lN_1:t] [sigmayx_lN_1:t] [sigmayy_lN_1:t]]
 // w=weight
 // Particle array (memory)
+// It has 3-dimension (date of the particle, members of the particle, index of the particle {k})
 P=[];
 
-function [Y]=init_particle_set(K,N)
+// Initialize a particle-set according to the given "a-priori" initial state-vector,
+// uniformely distributed in boxes
+// init_vector is [x y theta l1_x l1_y l2_x l2_y...]
+function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
+    Y=[];
+    low=init_vector(1:3)-pose_uncertainty(1:3);
+    high=init_vector(1:3)+pose_uncertainty(1:3);
+    Y(1,1,1:K)=1/K; // initialize weights
     
+    for i=1:K,
+        for j=2:4, // pose & orientation uncertainty
+            Y(1,1:j,i)=[Y(1,1:j,i) grand(1,1,'unf',low(j-1),high(j-1)] ;
+        end
+        for j=5:2:N+5, // landmarks uncertainty
+            Y(1,j:j+1,i)=[Y(1,j:j+1,i) grand()]
+        end
+    end
 endfunction
 
 // Observation function
