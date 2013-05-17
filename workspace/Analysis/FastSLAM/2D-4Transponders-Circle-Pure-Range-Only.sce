@@ -43,10 +43,6 @@ function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
             Y(1,j+1,i)=grand(1,1,'unf',low(j),high(j));
         end
         for j=1:N, // landmarks uncertainty
-            disp(j);
-//            disp(size(Y));
-//            disp(4+2*(j-1):4+2*(j-1)+1);
-//            disp(size(grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))'));
             Y(1,4+2*(j-1):4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))';
         end
     end
@@ -60,13 +56,6 @@ endfunction
 
 // Get the covariance matrix of the ith landmark
 function [Sigma]=get_landmark_covariance(particle,i)
-    disp(N);
-    disp(i);
-    disp(4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1);
-    disp(4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3);
-    disp(particle(1,4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1));
-    disp(particle(1,4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3));
-    
     Sigma=[particle(1,4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1);
     particle(1,4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3)];
 endfunction
@@ -114,4 +103,42 @@ function [Y]=resampling_low_variance()
     
 endfunction
 
-[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 0 0 1 1 1 0 0 1 2 0 0 2],[1 1 1]);
+function [pos,landmarks]=plot_set(Y)
+    pos=[];
+    landmarks=[];
+    for i=1:size(Y,3),
+        pos=[pos;Y(1,2,i) Y(1,3,i)]
+        landmarks=[landmarks; Y(1,4:4+2*N_param+1,i)];
+    end
+    xpoly(pos(:,1),pos(:,2),"marks");
+    handle=gce();
+    handle.line_mode="off";
+    handle.mark_size=0;
+    handle.mark_mode="on";
+    handle.mark_style=0;
+    handle.mark_foreground=color('red');
+    
+    xpoly(landmarks(:,1),landmarks(:,2));
+    handle_l=gce();
+    handle_l.line_mode="off",
+    handle_l.mark_size=0;
+    handle_l.mark_mode="on";
+    handle_l.mark_style=14;
+    handle_l.mark_foreground=color('blue');
+    
+    xpoly(landmarks(:,3),landmarks(:,4));
+    handle_l2=gce();
+    handle_l2.line_mode="off",
+    handle_l2.mark_size=0;
+    handle_l2.mark_mode="on";
+    handle_l2.mark_style=14;
+    handle_l2.mark_foreground=color('orange');
+endfunction
+
+[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 -10 4 10 25 1 0 0 1 1 0 0 1],[1 1 1]);
+figure(1);
+drawlater();
+h_axes = gca();
+h_axes.data_bounds = [-25,-45;25,35];
+[pos,landmarks]=plot_set(p_set);
+drawnow();
