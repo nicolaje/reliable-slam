@@ -1,8 +1,11 @@
+funcprot(0);
+clear;
+
 // Number of particles
-K=100; 
+K_param=100; 
 
 // Number of landmarks
-N=3;
+N_param=2;
 
 // Degrees to radians
 deg2rad=%pi/180;
@@ -21,33 +24,58 @@ Cr=0.3^2;
 // [[w(1:t)] [x_1:t] [y_1:t] [theta_1:t] [mux_l1_1:t] [muy_l1_1:t]  ... [mux_lN_1:t] [muy_lN_1:t] [sigmaxx_l1_1:t] [sigmaxy_l1_1:t] [sigmayx_l1_1:t] [sigmayy_l1_1:t] ... [sigmaxx_lN_1:t] [sigmaxy_lN_1:t] [sigmayx_lN_1:t] [sigmayy_lN_1:t]]
 // w=weight
 // Particle array (memory)
-// It has 3-dimension (date of the particle, members of the particle, index of the particle {k})
+// It has 3-dimension (time t of the particle, member index of the particle members, index of the particle {k})
 P=[];
 
 // Initialize a particle-set according to the given "a-priori" initial state-vector,
-// uniformely distributed in boxes
-// init_vector is [x y theta l1_x l1_y l2_x l2_y...]
+// uniformely distributed in boxes for the robot pose,
+// normally distributed for the landmarks position
+// init_vector is [w x y theta l1_x l1_y l2_x l2_y...sigma...]
+// pose_uncertainty contains the half-width of the pose boxes
 function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
-    Y=[];
-    low=init_vector(1:3)-pose_uncertainty(1:3);
-    high=init_vector(1:3)+pose_uncertainty(1:3);
+    Y=zeros(1,4+(2+4)*N,K);
+    low=init_vector(2:4)-pose_uncertainty(1:3);
+    high=init_vector(2:4)+pose_uncertainty(1:3);
     Y(1,1,1:K)=1/K; // initialize weights
     
     for i=1:K,
-        for j=2:4, // pose & orientation uncertainty
-            Y(1,1:j,i)=[Y(1,1:j,i) grand(1,1,'unf',low(j-1),high(j-1)] ;
+        for j=1:3, // pose & orientation uncertainty
+            Y(1,j+1,i)=grand(1,1,'unf',low(j),high(j));
         end
-        for j=5:2:N+5, // landmarks uncertainty
-            Y(1,j:j+1,i)=[Y(1,j:j+1,i) grand()]
+        for j=1:N, // landmarks uncertainty
+            disp(j);
+//            disp(size(Y));
+//            disp(4+2*(j-1):4+2*(j-1)+1);
+//            disp(size(grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))'));
+            Y(1,4+2*(j-1):4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))';
         end
     end
+endfunction
+
+// Get the estimate position of the ith landmark
+function [L_pose]=get_landmark_estimate(particle,i)
+    L_pose=[particle(1,4+1+(i-1)*2);
+    particle(1,4+1+(i-1)*2+1)];
+endfunction
+
+// Get the covariance matrix of the ith landmark
+function [Sigma]=get_landmark_covariance(particle,i)
+    disp(N);
+    disp(i);
+    disp(4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1);
+    disp(4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3);
+    disp(particle(1,4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1));
+    disp(particle(1,4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3));
+    
+    Sigma=[particle(1,4+1+N*2+(i-1)*4:4+1+N*2+(i-1)*4+1);
+    particle(1,4+1+N*2+(i-1)*4+2:4+1+N*2+(i-1)*4+3)];
 endfunction
 
 // Observation function
 function [z_hat]=h(mu,x) // TODO: use the particle as input+ make it landmark nb independant
     return [sqrt((mu(1)-x(1))^2+(mu(2)-x(2))^2);
     sqrt((mu(3)-x(1))^2+(mu(4)-x(2))^2);
-    sqrt((mu(5)-x(1))^2+(mu(6)-x(2)^2)];
+    sqrt((mu(5)-x(1))^2+(mu(6)-x(2))^2)];
 endfunction
 
 // Returns the jacobian of the observation function
@@ -85,3 +113,5 @@ endfunction
 function [Y]=resampling_low_variance()
     
 endfunction
+
+[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 0 0 1 1 1 0 0 1 2 0 0 2],[1 1 1]);
