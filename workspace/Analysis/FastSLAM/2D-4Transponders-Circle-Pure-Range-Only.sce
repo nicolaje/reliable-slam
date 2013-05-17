@@ -1,11 +1,25 @@
 funcprot(0);
 clear;
 
+// Personal laptop workstation (LINUX)
+path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
+path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/EKFSlam/Videos/2D-4Transponders/';
+
+// UFRGS Laptop workstation
+// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders/'
+
+// Personal laptop workstation (WINDOWS)
+// path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-2Transponders/';
+raw_file=read_csv(path_in+'2D-4Transponders-Circle.res',';');
+
+// avoid the first comment line + parse strings to double
+data=evstr(raw_file(2:size(raw_file,1),:));
+
 // Number of particles
-K_param=100; 
+K_param=500; 
 
 // Number of landmarks
-N_param=2;
+N_param=4;
 
 // Degrees to radians
 deg2rad=%pi/180;
@@ -124,7 +138,7 @@ function [pos,landmarks]=plot_set(Y)
     handle_l.mark_size=0;
     handle_l.mark_mode="on";
     handle_l.mark_style=14;
-    handle_l.mark_foreground=color('blue');
+    handle_l.mark_background=color('blue');
     
     xpoly(landmarks(:,3),landmarks(:,4));
     handle_l2=gce();
@@ -132,10 +146,26 @@ function [pos,landmarks]=plot_set(Y)
     handle_l2.mark_size=0;
     handle_l2.mark_mode="on";
     handle_l2.mark_style=14;
-    handle_l2.mark_foreground=color('orange');
+    handle_l2.mark_background=color('orange');
+    
+    xpoly(landmarks(:,5),landmarks(:,6));
+    handle_l3=gce();
+    handle_l3.line_mode="off",
+    handle_l3.mark_size=0;
+    handle_l3.mark_mode="on";
+    handle_l3.mark_style=14;
+    handle_l3.mark_background=color('green');
+    
+    xpoly(landmarks(:,7),landmarks(:,8));
+    handle_l4=gce();
+    handle_l4.line_mode="off",
+    handle_l4.mark_size=0;
+    handle_l4.mark_mode="on";
+    handle_l4.mark_style=14;
+    handle_l4.mark_background=color('purple');
 endfunction
 
-[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 -10 4 10 25 1 0 0 1 1 0 0 1],[1 1 1]);
+[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 20 0 -20 0 0 20 0 -20 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[2 2 2]);
 figure(1);
 drawlater();
 h_axes = gca();

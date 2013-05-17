@@ -280,5 +280,5 @@ for i=start:1:size(data,1),
         l4_path.data=[x_prev_stack(10,3:i-start+1)',x_prev_stack(11,3:i-start+1)'];
     end
     drawnow();
-    xs2png(gcf(),sprintf(path_out+"imgs/circle_non_reasonnable_initialization_%04d.png",i));
+    //xs2png(gcf(),sprintf(path_out+"imgs/circle_non_reasonnable_initialization_%04d.png",i));
 end
