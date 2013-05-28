@@ -85,10 +85,22 @@ endfunction
 
 // Returns the jacobian of the observation function
 function [C]=jacobian_observation(particle)
-    C=[0 0 1 zeros(1,2*N_param)]; // heading measurement
+    C=[];
     for i=1:N_param,
-        C=[C;] // TODO
+        dx=particle(2)-particle(4+(i-1)*2);
+        dy=particle(3)-particle(4+(i-1)*2+1);
+        d=sqrt((dx)^2+(dy)^2);
+        dx=dx/d;
+        dy=dy/d;
+
+        C=[C;
+        dx dy zeros(1,1+(i-1)*2)] // TODO
     end
+        C=[0 0 1 0 0 0 0 0 0 0 0;
+    (mut(1)-mut(4))/y(2) (mut(2)-mut(5))/y(2) 0 (mut(4)-mut(1))/y(2) (mut(5)-mut(2))/y(2) 0 0 0 0 0 0;
+    (mut(1)-mut(6))/y(3) (mut(2)-mut(7))/y(3) 0 0 0 (mut(6)-mut(1))/y(3) (mut(7)-mut(2))/y(3) 0 0 0 0;
+    (mut(1)-mut(8))/y(4) (mut(2)-mut(9))/y(4) 0 0 0 0 0 (mut(8)-mut(1))/y(4) (mut(9)-mut(2))/y(4) 0 0;
+    (mut(1)-mut(10))/y(5) (mut(2)-mut(11))/y(5) 0 0 0 0 0 0 0 (mut(10)-mut(1))/y(5) (mut(11)-mut(2))/y(5)];
 endfunction
 
 // FastSLAM 1.0 algorithm with known correspondances landmarks
@@ -116,11 +128,12 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt,t)
     // return the new particle set
 endfunction
 
-function [particle]=sample_motion_model(particle_prev,u,dt)// TODO: particle as input/output
+function [particle]=sample_motion_model(particle_prev,u,theta,dt)// TODO: particle as input/output
     u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
     particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(x_prev(3));
+    particle_prev(4)=theta;
     u(1)*dt*sin(x_prev(3));
-    dt*u(2)+grand(1,1,'nor',0,Ch)];
+    dt*u(2)+grand(1,1,'nor',0,sqrt(Ch))];
     particle=particle_prev;
 endfunction
 
