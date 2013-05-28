@@ -71,12 +71,21 @@ function [mut, sigmat]=EKF_SLAM(mut_prev, sigmat_prev, ut, y, dt)
     // UPDATE ///
     ////////////
 
-    // Jacobian of the observation matrix
+    d1=sqrt((mut(1)-mut(4))^2+(mut(2)-mut(5))^2);
+    d2=sqrt((mut(1)-mut(6))^2+(mut(2)-mut(7))^2);
+    d3=sqrt((mut(1)-mut(8))^2+(mut(2)-mut(9))^2);
+    d4=sqrt((mut(1)-mut(10))^2+(mut(2)-mut(11))^2);
     C=[0 0 1 0 0 0 0 0 0 0 0;
-    (mut(1)-mut(4))/y(2) (mut(2)-mut(5))/y(2) 0 (mut(4)-mut(1))/y(2) (mut(5)-mut(2))/y(2) 0 0 0 0 0 0;
-    (mut(1)-mut(6))/y(3) (mut(2)-mut(7))/y(3) 0 0 0 (mut(6)-mut(1))/y(3) (mut(7)-mut(2))/y(3) 0 0 0 0;
-    (mut(1)-mut(8))/y(4) (mut(2)-mut(9))/y(4) 0 0 0 0 0 (mut(8)-mut(1))/y(4) (mut(9)-mut(2))/y(4) 0 0;
-    (mut(1)-mut(10))/y(5) (mut(2)-mut(11))/y(5) 0 0 0 0 0 0 0 (mut(10)-mut(1))/y(5) (mut(11)-mut(2))/y(5)];
+    (mut(1)-mut(4))/d1 (mut(2)-mut(5))/d1 0 (mut(4)-mut(1))/d1 (mut(5)-mut(2))/d1 0 0 0 0 0 0;
+    (mut(1)-mut(6))/d2 (mut(2)-mut(7))/d2 0 0 0 (mut(6)-mut(1))/d2 (mut(7)-mut(2))/d2 0 0 0 0;
+    (mut(1)-mut(8))/d3 (mut(2)-mut(9))/d3 0 0 0 0 0 (mut(8)-mut(1))/d3 (mut(9)-mut(2))/d3 0 0;
+    (mut(1)-mut(10))/d4 (mut(2)-mut(11))/d4 0 0 0 0 0 0 0 (mut(10)-mut(1))/d4 (mut(11)-mut(2))/d4];
+    // Jacobian of the observation matrix
+//    C=[0 0 1 0 0 0 0 0 0 0 0;
+//    (mut(1)-mut(4))/y(2) (mut(2)-mut(5))/y(2) 0 (mut(4)-mut(1))/y(2) (mut(5)-mut(2))/y(2) 0 0 0 0 0 0;
+//    (mut(1)-mut(6))/y(3) (mut(2)-mut(7))/y(3) 0 0 0 (mut(6)-mut(1))/y(3) (mut(7)-mut(2))/y(3) 0 0 0 0;
+//    (mut(1)-mut(8))/y(4) (mut(2)-mut(9))/y(4) 0 0 0 0 0 (mut(8)-mut(1))/y(4) (mut(9)-mut(2))/y(4) 0 0;
+//    (mut(1)-mut(10))/y(5) (mut(2)-mut(11))/y(5) 0 0 0 0 0 0 0 (mut(10)-mut(1))/y(5) (mut(11)-mut(2))/y(5)];
 
     W=[Ch zeros(1,4);
     zeros(4,1) Cr*eye(4,4)];
