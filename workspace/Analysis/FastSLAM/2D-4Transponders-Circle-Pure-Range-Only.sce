@@ -149,7 +149,8 @@ endfunction
 // Update the weight and the kalman filter of the
 // landmark nb 'landmark' in the particle
 function [particle]=update_particle(particle, w, mu, sigma, landmark)
-    particle(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1)=mu';
+    disp(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1);
+    //particle(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1)=mu';
     //particle(4+N_param*2+1+(landmark-1)*4:4+N_param*2+1+(landmark-1)*4+3)=[sigma(1,1:2) sigma(2,1:2)];
 endfunction
 
@@ -184,7 +185,6 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
             Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
 
             w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
-
             particle=update_particle(particle, w, [0; 0], Sigma, l);
             Y_pos(1,:,k)=particle;
         end
