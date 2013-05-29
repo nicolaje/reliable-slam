@@ -33,7 +33,7 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 // transponder1_noisy; transponder1_noisy; transponder1_noisy; transponder1_noisy;
 
 // Number of particles
-K_param=1; 
+K_param=100; 
 
 // Number of landmarks
 N_param=4;
@@ -106,7 +106,7 @@ function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
             Y(1,j+1,i)=grand(1,1,'unf',low(j),high(j));
         end
         for j=1:N, // landmarks uncertainty
-            Y(1,4+2*(j-1):4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))';
+            Y(1,1+4+2*(j-1):1+4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),get_landmark_covariance(init_vector,j))';
         end
     end
 endfunction
@@ -202,11 +202,11 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 endfunction
 
 function [particle]=sample_motion_model(particle_prev,u,theta,dt)
-    u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
-    particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(particle_prev(4));
-    u(1)*dt*sin(particle_prev(4));
-    dt*u(2)]';
-    particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
+//    u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
+//    particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(particle_prev(4));
+//    u(1)*dt*sin(particle_prev(4));
+//    dt*u(2)]';
+    //particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
     particle=particle_prev;
 endfunction
 
@@ -320,7 +320,7 @@ function plot_best(Y)
 endfunction
 
 // Plot all the particles of a set
-function [pos,landmarks]=plot_set(Y)
+function plot_set(Y)
     global handle;
     global handle_l;
     global handle_l2;
@@ -329,10 +329,10 @@ function [pos,landmarks]=plot_set(Y)
     pos=[];
     landmarks=[];
 
-    for i=1:K_param,
-        pos=[pos;Y(1,2,i) Y(1,3,i)]
+    for k=1:K_param,
+        pos=[pos;Y(1,2,k) Y(1,3,k)]
         for j=1:N_param,
-            landmarks(i,2*j:2*j+1)=[get_landmark_estimate(Y(1,:,i),j)'];
+            landmarks(k,2*(j-1)+1:2*(j-1)+2)=[get_landmark_estimate(Y(1,:,k),j)'];
         end
     end
     
@@ -407,13 +407,14 @@ figure(1);
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
 drawlater();
-// [pos,landmarks]=plot_set(p_set);
+plot_set(p_set);
 drawnow();
-for i=1:size(data,1),
-    [z,u]=parse_data(data,i);
-    p_set=fast_slam_1(z,u,p_set,0.1);
-    drawlater();
-//    [pos,landmarks]=plot_set(p_set);
-    plot_set(p_set);
-    drawnow();
-end
+//pause
+//for i=1:size(data,1),
+//    [z,u]=parse_data(data,i);
+//    p_set=fast_slam_1(z,u,p_set,0.1);
+//    drawlater();
+////    [pos,landmarks]=plot_set(p_set);
+//    plot_set(p_set);
+//    drawnow();
+//end
