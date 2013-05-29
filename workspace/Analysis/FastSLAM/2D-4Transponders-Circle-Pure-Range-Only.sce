@@ -164,25 +164,26 @@ endfunction
 
 // FastSLAM 1.0 algorithm with known correspondances landmarks
 function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
-    Y_pos=zeros(1,4+6*N_param,N_param);
+    Y_pos=zeros(1,4+6*N_param,K_param);
     for l=1:N_param, // loop over all observed landmarks
         for k=1:K_param, // loop over all particles
 
-            particle=Y_prev(size(Y_prev,1),:,k); // retrieve the k-th particle
+            particle=Y_prev(1,:,k); // retrieve the k-th particle
+
             particle=sample_motion_model(particle,u,z(1),dt); // sample pose
 
-            z_hat=h(particle,l);
+            //z_hat=h(particle,l);
 
-            H=jacobian_observation(particle,l);
-            Sigma=get_landmark_covariance(particle,l);
+            //H=jacobian_observation(particle,l);
+            //Sigma=get_landmark_covariance(particle,l);
 
-            x_l=get_landmark_estimate(particle,l);
-            z_l=get_reduced_measurement(z,l);
+            //x_l=get_landmark_estimate(particle,l);
+            //z_l=get_reduced_measurement(z,l);
 
-            Q=H*Sigma*H'+Cr; // Measurement covariance
-            K=Sigma*H'*inv(Q); // Kalman Gain
+            //Q=H*Sigma*H'+Cr; // Measurement covariance
+            //K=Sigma*H'*inv(Q); // Kalman Gain
             //x_l=x_l+K*(z_l-z_hat); // Update mean
-            Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
+            //Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
 
 //            w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
 
@@ -330,7 +331,9 @@ function [pos,landmarks]=plot_set(Y)
 
     for i=1:K_param,
         pos=[pos;Y(1,2,i) Y(1,3,i)]
-        landmarks=[landmarks; Y(1,4:4+2*N_param+1,i)];
+        for j=1:N_param,
+            landmarks(i,2*j:2*j+1)=[get_landmark_estimate(Y(1,:,i),j)'];
+        end
     end
     
     if handle==-1 then
