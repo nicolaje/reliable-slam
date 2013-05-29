@@ -148,11 +148,9 @@ endfunction
 
 // Update the weight and the kalman filter of the
 // landmark nb 'landmark' in the particle
-function update_particle(particle, w, mu, sigma, landmark)
-    //    disp(particle(4+(landmark-1)*2:4+(landmark-1)*2+1));
-    //    disp(mu');
-    particle(4+(landmark-1)*2:4+(landmark-1)*2+1)=mu';
-    particle(4+N_param*2+(landmark-1)*4:4+N_param*2+(landmark-1)*4+3)=[sigma(1,1:2) sigma(2,1:2)];
+function [particle]=update_particle(particle, w, mu, sigma, landmark)
+    particle(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1)=mu';
+    //particle(4+N_param*2+1+(landmark-1)*4:4+N_param*2+1+(landmark-1)*4+3)=[sigma(1,1:2) sigma(2,1:2)];
 endfunction
 
 // Normalize the weights in a particle set
@@ -172,27 +170,27 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 
             particle=sample_motion_model(particle,u,z(1),dt); // sample pose
 
-            //z_hat=h(particle,l);
+            z_hat=h(particle,l);
 
-            //H=jacobian_observation(particle,l);
-            //Sigma=get_landmark_covariance(particle,l);
+            H=jacobian_observation(particle,l);
+            Sigma=get_landmark_covariance(particle,l);
 
-            //x_l=get_landmark_estimate(particle,l);
-            //z_l=get_reduced_measurement(z,l);
+            x_l=get_landmark_estimate(particle,l);
+            z_l=get_reduced_measurement(z,l);
 
-            //Q=H*Sigma*H'+Cr; // Measurement covariance
-            //K=Sigma*H'*inv(Q); // Kalman Gain
-            //x_l=x_l+K*(z_l-z_hat); // Update mean
-            //Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
+            Q=H*Sigma*H'+Cr; // Measurement covariance
+            K=Sigma*H'*inv(Q); // Kalman Gain
+            x_l=x_l+K*(z_l-z_hat); // Update mean
+            Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
 
-//            w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
+            w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
 
-            //update_particle(particle, w, x_l, Sigma, l);
+            particle=update_particle(particle, w, [0; 0], Sigma, l);
             Y_pos(1,:,k)=particle;
         end
 
         // Normalize weights
-        //Y_pos=normalize_weights(Y_pos);
+        Y_pos=normalize_weights(Y_pos);
 
         // Resample
         //Y_pos=resampling_roulette(Y_pos);
@@ -202,11 +200,11 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 endfunction
 
 function [particle]=sample_motion_model(particle_prev,u,theta,dt)
-//    u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
-//    particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(particle_prev(4));
-//    u(1)*dt*sin(particle_prev(4));
-//    dt*u(2)]';
-    //particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
+    u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
+    particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(particle_prev(4));
+    u(1)*dt*sin(particle_prev(4));
+    dt*u(2)]';
+    particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
     particle=particle_prev;
 endfunction
 
@@ -397,24 +395,20 @@ function plot_set(Y)
     else
         handle_l4.data=[landmarks(:,7) landmarks(:,8)];
     end
-
 endfunction
 
-[p_set]=init_particle_set(K_param,N_param,[0 0 0 0 20 0 -20 0 0 20 0 -20 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[2 2 2]);
+[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) 20 0 -20 0 0 20 0 -20 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[2 2 2]);
 figure(1);
 
 // Axes setup
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
-drawlater();
-plot_set(p_set);
-drawnow();
-//pause
-//for i=1:size(data,1),
-//    [z,u]=parse_data(data,i);
-//    p_set=fast_slam_1(z,u,p_set,0.1);
-//    drawlater();
-////    [pos,landmarks]=plot_set(p_set);
-//    plot_set(p_set);
-//    drawnow();
-//end
+
+for i=1:size(data,1),
+    [z,u]=parse_data(data,i);
+    p_set=fast_slam_1(z,u,p_set,1);
+    drawlater();
+//    [pos,landmarks]=plot_set(p_set);
+    plot_set(p_set);
+    drawnow();
+end
