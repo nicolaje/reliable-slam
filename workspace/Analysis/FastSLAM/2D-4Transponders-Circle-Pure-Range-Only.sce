@@ -33,7 +33,7 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 // transponder1_noisy; transponder1_noisy; transponder1_noisy; transponder1_noisy;
 
 // Number of particles
-K_param=200; 
+K_param=1; 
 
 // Number of landmarks
 N_param=4;
@@ -181,17 +181,17 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 
             Q=H*Sigma*H'+Cr; // Measurement covariance
             K=Sigma*H'*inv(Q); // Kalman Gain
-            x_l=x_l+K*(z_l-z_hat); // Update mean
+            //x_l=x_l+K*(z_l-z_hat); // Update mean
             Sigma=(eye(2,2)-K*H)*Sigma; // Update covariance
 
-            w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
+//            w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
 
-            update_particle(particle, w, x_l, Sigma, l);
-            Y_pos(:,:,k)=particle;
+            //update_particle(particle, w, x_l, Sigma, l);
+            Y_pos(1,:,k)=particle;
         end
 
         // Normalize weights
-        Y_pos=normalize_weights(Y_pos);
+        //Y_pos=normalize_weights(Y_pos);
 
         // Resample
         //Y_pos=resampling_roulette(Y_pos);
@@ -213,12 +213,12 @@ function [Y_res]=resampling_roulette(Y)
     Y_res=[];
     rand_vect=grand(size(Y,3),1,'unf',0,1);
     for i=1:size(Y,3),
-        Y_res(1,:,i)=get_corresponding_particle(Y,rand_vect(i));
+        Y_res(1,:,i)=get_particle(Y,rand_vect(i));
     end
 endfunction
 
 // Helper for the roulette-resampling strategy
-function [particle]=get_corresponding_particle(Y,weight)
+function [particle]=get_particle(Y,weight)
     w=0;
     particle=[];
     for i=1:size(Y,3),
@@ -289,14 +289,32 @@ function plot_best(Y)
         handle_best_l2.data=[landmarks(3) landmarks(4)];
     end
     
-    if handle_best_l3 then
+    if handle_best_l3 ==-1 then
+        xpoly(landmarks(5),landmarks(6));
+        global handle_l3;
+        handle_best_l3=gce();
+
+        handle_best_l3.line_mode="off",
+        handle_best_l3.mark_size=0;
+        handle_best_l3.mark_mode="on";
+        handle_best_l3.mark_style=14;
+        handle_best_l3.mark_background=color('green');
     else
-        
+        handle_best_l3.data=[landmarks(5) landmarks(6)];
     end
     
-    if handle_best_l4 then
+    if handle_best_l4 ==-1 then
+        xpoly(landmarks(7),landmarks(8));
+        global handle_l4;
+        handle_best_l4=gce();
+
+        handle_best_l4.line_mode="off",
+        handle_best_l4.mark_size=0;
+        handle_best_l4.mark_mode="on";
+        handle_best_l4.mark_style=14;
+        handle_best_l4.mark_background=color('purple');
     else
-        
+        handle_best_l4.data=[landmarks(7) landmarks(8)];
     end
 endfunction
 
@@ -309,12 +327,12 @@ function [pos,landmarks]=plot_set(Y)
     global handle_l4;
     pos=[];
     landmarks=[];
-    //    disp(size(Y));
-    for i=1:size(Y,3),
+
+    for i=1:K_param,
         pos=[pos;Y(1,2,i) Y(1,3,i)]
         landmarks=[landmarks; Y(1,4:4+2*N_param+1,i)];
     end
-
+    
     if handle==-1 then
         xpoly(pos(:,1),pos(:,2),"marks");
         handle=gce();
@@ -393,6 +411,6 @@ for i=1:size(data,1),
     p_set=fast_slam_1(z,u,p_set,0.1);
     drawlater();
 //    [pos,landmarks]=plot_set(p_set);
-    plot_best(p_set);
+    plot_set(p_set);
     drawnow();
 end
