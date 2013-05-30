@@ -152,7 +152,7 @@ endfunction
 // Update the weight and the kalman filter of the
 // landmark nb 'landmark' in the particle
 function [particle_res]=update_particle(particle, w, mu, sigma, landmark)
-//    disp(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1);
+    particle(1,1)=w;
     particle(4+1+(landmark-1)*2:4+1+(landmark-1)*2+1)=mu';
     particle(4+N_param*2+1+(landmark-1)*4:4+N_param*2+1+(landmark-1)*4+3)=[sigma(1,1:2) sigma(2,1:2)];
     particle_res=particle;
@@ -196,7 +196,8 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
         Y_prev=normalize_weights(Y_prev);
 
         // Resample
-        Y_prev=resampling_roulette(Y_prev);
+      //Y_prev=resampling_roulette_2(Y_prev);;
+      resampling_roulette(Y_prev);
     end
 
     // return the new particle set
@@ -212,7 +213,23 @@ function [particle]=sample_motion_model(particle_prev,u,theta,dt)
     particle=particle_prev;
 endfunction
 
+// Redraw the first quartile of the population
 function [Y_res]=resampling_roulette(Y)
+    q=quart(Y(1,1,:));
+    thres=q(1);
+    idx=find(Y(1,1,:)>thres);
+    pop_kept=Y(:,:,idx);
+    pop_kept=normalize_weights(pop_kept);
+    nb_to_redraw=K_param-size(idx,2);
+    rand_vect=grand(nb_to_redraw,1,'unf',0,1);
+    for i=1:nb_to_redraw,
+        Y_res(1,:,size(idx,2)+i)=get_particle(pop_kept,rand_vect(i));
+    end
+endfunction
+
+// Redraw the entire population with a probability proportional to
+// the weights of the particles
+function [Y_res]=resampling_roulette_2(Y)
     Y_res=[];
     rand_vect=grand(K_param,1,'unf',0,1);
     for i=1:K_param,
@@ -401,17 +418,60 @@ function plot_set(Y)
     end
 endfunction
 
-[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) 20 0 -20 0 0 20 0 -20 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[2 2 2]);
+[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2]);
 figure(1);
 
 // Axes setup
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
 
+// True robot position
+xpoly(0,0);
+r=gce();
+r.line_mode="off";
+r.mark_size=0;
+r.mark_mode="on";
+r.mark_style=1;
+r.mark_background=color('black');
+
+// True landmark positions
+xpoly(20,0);
+hl1=gce();
+hl1.line_mode="off",
+hl1.mark_size=0;
+hl1.mark_mode="on";
+hl1.mark_style=10;
+hl1.mark_foreground=color('blue');
+
+xpoly(-20,0);
+hl2=gce();
+hl2.line_mode="off",
+hl2.mark_size=0;
+hl2.mark_mode="on";
+hl2.mark_style=10;
+hl2.mark_foreground=color('orange');
+
+xpoly(0,20);
+hl3=gce();
+hl3.line_mode="off",
+hl3.mark_size=0;
+hl3.mark_mode="on";
+hl3.mark_style=10;
+hl3.mark_foreground=color('green');
+
+xpoly(0,-20);
+hl4=gce();
+hl4.line_mode="off",
+hl4.mark_size=0;
+hl4.mark_mode="on";
+hl4.mark_style=10;
+hl4.mark_foreground=color('purple');
+
 for i=1:size(data,1),
     [z,u]=parse_data(data,i);
     p_set=fast_slam_1(z,u,p_set,1);
     drawlater();
     plot_set(p_set);
+    r.data=[data(i,1) data(i,2)];
     drawnow();
 end
