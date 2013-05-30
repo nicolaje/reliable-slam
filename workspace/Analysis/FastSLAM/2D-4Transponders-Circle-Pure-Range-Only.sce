@@ -33,7 +33,7 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 // transponder1_noisy; transponder1_noisy; transponder1_noisy; transponder1_noisy;
 
 // Number of particles
-K_param=3; 
+K_param=300; 
 
 // Number of landmarks
 N_param=4;
@@ -109,7 +109,7 @@ function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
             sigma=get_landmark_covariance(init_vector,j);
             Y(1,1+4+2*(j-1):1+4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),sigma)';
             // Particles must carry the covariance matrix of each landmark estimate
-            Y(1,4+2*N+1+4*(j-1):4+2*N+1+4*(j-1)+3)=[sigma(1,1:2) sigma(2,1:2)];
+            Y(1,4+2*N+1+4*(j-1):4+2*N+1+4*(j-1)+3,i)=[sigma(1,1:2) sigma(2,1:2)];
         end
     end
 endfunction
@@ -167,18 +167,19 @@ endfunction
 
 // FastSLAM 1.0 algorithm with known correspondances landmarks
 function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
-    Y_pos=zeros(1,4+6*N_param,K_param);
-    for l=1:N_param, // loop over all observed landmarks
+    for l=1:4,//N_param, // loop over all observed landmarks
         for k=1:K_param, // loop over all particles
             particle=Y_prev(1,:,k); // retrieve the k-th particle
 
-            particle=sample_motion_model(particle,u,z(1),dt); // sample pose
+            // Don't apply the motion update when incorporating the next landmark
+            if l==1 then
+                particle=sample_motion_model(particle,u,z(1),dt); // sample pose
+            end
 
             z_hat=h(particle,l);
 
             H=jacobian_observation(particle,l);
             Sigma=get_landmark_covariance(particle,l);
-
             x_l=get_landmark_estimate(particle,l);
             z_l=get_reduced_measurement(z,l);
             Q=H*Sigma*H'+Cr; // Measurement covariance
@@ -188,17 +189,18 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 
             w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
             tmp=update_particle(particle, w, x_l, Sigma, l);
-            Y_pos(:,:,k)=tmp;
+            Y_prev(:,:,k)=tmp;
         end
 
         // Normalize weights
-        Y_pos=normalize_weights(Y_pos);
+        Y_prev=normalize_weights(Y_prev);
 
         // Resample
-        //Y_pos=resampling_roulette(Y_pos);
+        Y_prev=resampling_roulette(Y_prev);
     end
 
     // return the new particle set
+    Y_pos=Y_prev;
 endfunction
 
 function [particle]=sample_motion_model(particle_prev,u,theta,dt)
@@ -410,7 +412,6 @@ for i=1:size(data,1),
     [z,u]=parse_data(data,i);
     p_set=fast_slam_1(z,u,p_set,1);
     drawlater();
-//    [pos,landmarks]=plot_set(p_set);
     plot_set(p_set);
     drawnow();
 end
