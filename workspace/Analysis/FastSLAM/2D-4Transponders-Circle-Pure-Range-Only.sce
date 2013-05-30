@@ -197,7 +197,7 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
 
         // Resample
       //Y_prev=resampling_roulette_2(Y_prev);;
-      resampling_roulette(Y_prev);
+      resampling_roulette(Y_prev,3);
     end
 
     // return the new particle set
@@ -213,10 +213,10 @@ function [particle]=sample_motion_model(particle_prev,u,theta,dt)
     particle=particle_prev;
 endfunction
 
-// Redraw the first quartile of the population
-function [Y_res]=resampling_roulette(Y)
+// Redraw the mth quartile of the population
+function [Y_res]=resampling_roulette(Y,m)
     q=quart(Y(1,1,:));
-    thres=q(1);
+    thres=q(m);
     idx=find(Y(1,1,:)>thres);
     pop_kept=Y(:,:,idx);
     pop_kept=normalize_weights(pop_kept);
