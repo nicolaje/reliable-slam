@@ -2,15 +2,19 @@ funcprot(0);
 clear;
 xdel(winsid()); // close all previously opened windows
 
+rand('seed',1)
+
 // Personal laptop workstation (LINUX)
 path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
-path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/EKFSlam/Videos/2D-4Transponders/';
+path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Videos/2D-4Transponders/';
 
 // UFRGS Laptop workstation
-// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-2Transponders/'
+// path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/'
 
 // Personal laptop workstation (WINDOWS)
-// path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-2Transponders/';
+//path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders\';
+//path_out='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Analysis\FastSLAM\Videos\2D-4Transponders\';
+
 raw_file=read_csv(path_in+'2D-4Transponders-Circle.res',';');
 
 // avoid the first comment line + parse strings to double
@@ -33,7 +37,7 @@ data=evstr(raw_file(2:size(raw_file,1),:));
 // transponder1_noisy; transponder1_noisy; transponder1_noisy; transponder1_noisy;
 
 // Number of particles
-K_param=300; 
+K_param=500; 
 
 // Number of landmarks
 N_param=4;
@@ -107,7 +111,7 @@ function [Y]=init_particle_set(K,N,init_vector,pose_uncertainty)
         end
         for j=1:N, // landmarks uncertainty
             sigma=get_landmark_covariance(init_vector,j);
-            Y(1,1+4+2*(j-1):1+4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),sigma)';
+            Y(1,1+4+2*(j-1):1+4+2*(j-1)+1,i)=grand(1,'mn',get_landmark_estimate(init_vector,j),sigma)'; //get_landmark_estimate(init_vector,j);
             // Particles must carry the covariance matrix of each landmark estimate
             Y(1,4+2*N+1+4*(j-1):4+2*N+1+4*(j-1)+3,i)=[sigma(1,1:2) sigma(2,1:2)];
         end
@@ -166,8 +170,18 @@ function [Y_res]=normalize_weights(Y)
 endfunction
 
 // FastSLAM 1.0 algorithm with known correspondances landmarks
-function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
-    for l=1:4,//N_param, // loop over all observed landmarks
+function [Y_pos]=fast_slam_1(z, u, Y_prev,dt,mod,resampling_strategy,quartil,std)
+    for l=1:4, // loop over all observed landmarks
+
+        if mod==2 then // Resample after each landmark is incorporated
+            // Normalize weights
+            Y_prev=normalize_weights(Y_prev);
+            if  resampling_strategy==1 then // Roulette on the ith quartil
+                Y_prev=resampling_roulette(Y_prev,quartil,std);
+            else // Roulette over the whole population
+                Y_prev=resampling_roulette_2(Y_prev,std);
+            end
+        end
         for k=1:K_param, // loop over all particles
             particle=Y_prev(1,:,k); // retrieve the k-th particle
 
@@ -190,31 +204,42 @@ function [Y_pos]=fast_slam_1(z, u, Y_prev,dt)
             w=(1/sqrt(det(2*%pi*Q)))*exp((-1/2)*(z_l-z_hat)'*inv(Q)*(z_l-z_hat)); // weight
             tmp=update_particle(particle, w, x_l, Sigma, l);
             Y_prev(:,:,k)=tmp;
-        end
 
+            if mod==3 then // Resample for each particle, for each landmark
+                // Normalize weights
+                Y_prev=normalize_weights(Y_prev);
+                if  resampling_strategy==1 then // Roulette on the ith quartil
+                    Y_prev=resampling_roulette(Y_prev,quartil,std);
+                else // Roulette over the whole population
+                    Y_prev=resampling_roulette_2(Y_prev,std);
+                end
+            end
+        end
+    end
+    if mod==1 then // Resample after every landmarks are incorporated
         // Normalize weights
         Y_prev=normalize_weights(Y_prev);
-
-        // Resample
-      //Y_prev=resampling_roulette_2(Y_prev);;
-      resampling_roulette(Y_prev,3);
+        if  resampling_strategy==1 then // Roulette on the ith quartil
+            Y_prev=resampling_roulette(Y_prev,quartil,std);
+        else // Roulette over the whole population
+            Y_prev=resampling_roulette_2(Y_prev,std);
+        end
     end
-
     // return the new particle set
     Y_pos=Y_prev;
 endfunction
 
 function [particle]=sample_motion_model(particle_prev,u,theta,dt)
+    particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
     u=u+grand(1,'mn',zeros(2,1),Mt); // Add noise to the control input
     particle_prev(2:4)=particle_prev(2:4)+[u(1)*dt*cos(particle_prev(4));
     u(1)*dt*sin(particle_prev(4));
     dt*u(2)]';
-    particle_prev(4)=theta+grand(1,1,'nor',0,sqrt(Ch));
     particle=particle_prev;
 endfunction
 
 // Redraw the mth quartile of the population
-function [Y_res]=resampling_roulette(Y,m)
+function [Y_res]=resampling_roulette(Y,m,std)
     q=quart(Y(1,1,:));
     thres=q(m);
     idx=find(Y(1,1,:)>thres);
@@ -222,23 +247,45 @@ function [Y_res]=resampling_roulette(Y,m)
     pop_kept=normalize_weights(pop_kept);
     nb_to_redraw=K_param-size(idx,2);
     rand_vect=grand(nb_to_redraw,1,'unf',0,1);
+    Y_res=pop_kept;
     for i=1:nb_to_redraw,
-        Y_res(1,:,size(idx,2)+i)=get_particle(pop_kept,rand_vect(i));
+        p=get_particle2(pop_kept,rand_vect(i));
+        p(2:3)=p(2:3)+grand(1,2,'nor',0,std);
+        Y_res(1,:,size(idx,2)+i)=p;
+    end
+endfunction
+// Helper for the roulette-resampling strategy
+function [particle]=get_particle(Y,weight)
+    w=0;
+    particle=[];
+    for i=1:size(Y,3),
+        w=w+Y(1,1,i);
+        if (w>weight) then
+            if (i>1) then
+                particle=Y(1,:,i-1);
+                break;
+            else 
+                particle=Y(1,:,1);
+                break;
+            end
+        end
     end
 endfunction
 
 // Redraw the entire population with a probability proportional to
 // the weights of the particles
-function [Y_res]=resampling_roulette_2(Y)
+function [Y_res]=resampling_roulette_2(Y,std)
     Y_res=[];
     rand_vect=grand(K_param,1,'unf',0,1);
     for i=1:K_param,
-        Y_res(1,:,i)=get_particle(Y,rand_vect(i));
+        p=get_particle(Y,rand_vect(i));
+        p(2:3)=p(2:3)+grand(1,2,'nor',0,std); // add some noise to diversify the population
+        Y_res(1,:,i)=p;
     end
 endfunction
 
 // Helper for the roulette-resampling strategy
-function [particle]=get_particle(Y,weight)
+function [particle]=get_particle2(Y,weight)
     w=0;
     particle=[];
     for i=1:K_param,
@@ -262,7 +309,7 @@ endfunction
 // Plot the best particle of a set
 function plot_best(Y)
     global handle_best;
-    global handle_best_l;
+    global handle_best_l1;
     global handle_best_l2;
     global handle_best_l3;
     global handle_best_l4;
@@ -270,7 +317,7 @@ function plot_best(Y)
     particle=Y(1,:,k);
     pos=particle(2:3);
     landmarks=particle(4+1:4+2*N_param);
-    
+
     if handle_best==-1 then
         xpoly(pos(1),pos(2),"marks");
         handle_best=gce();
@@ -282,19 +329,19 @@ function plot_best(Y)
     else
         handle_best.data=[pos(1) pos(2)];
     end
-    
+
     if handle_best_l1 ==-1 then
         xpoly(landmarks(1),landmarks(2));
-        handle_best_l=gce();
-        handle_best_l.line_mode="off",
-        handle_best_l.mark_size=0;
-        handle_best_l.mark_mode="on";
-        handle_best_l.mark_style=14;
-        handle_best_l.mark_background=color('blue');
+        handle_best_l1=gce();
+        handle_best_l1.line_mode="off",
+        handle_best_l1.mark_size=0;
+        handle_best_l1.mark_mode="on";
+        handle_best_l1.mark_style=14;
+        handle_best_l1.mark_background=color('blue');
     else
-        handle_best_l.data=[landmarks(1) landmarks(2)];
+        handle_best_l1.data=[landmarks(1) landmarks(2)];
     end
-    
+
     if handle_best_l2 ==-1 then
         xpoly(landmarks(3),landmarks(4));
         global handle_l2;
@@ -308,7 +355,7 @@ function plot_best(Y)
     else
         handle_best_l2.data=[landmarks(3) landmarks(4)];
     end
-    
+
     if handle_best_l3 ==-1 then
         xpoly(landmarks(5),landmarks(6));
         global handle_l3;
@@ -322,7 +369,7 @@ function plot_best(Y)
     else
         handle_best_l3.data=[landmarks(5) landmarks(6)];
     end
-    
+
     if handle_best_l4 ==-1 then
         xpoly(landmarks(7),landmarks(8));
         global handle_l4;
@@ -354,7 +401,7 @@ function plot_set(Y)
             landmarks(k,2*(j-1)+1:2*(j-1)+2)=[get_landmark_estimate(Y(1,:,k),j)'];
         end
     end
-    
+
     if handle==-1 then
         xpoly(pos(:,1),pos(:,2),"marks");
         handle=gce();
@@ -418,7 +465,7 @@ function plot_set(Y)
     end
 endfunction
 
-[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2]);
+[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
 figure(1);
 
 // Axes setup
@@ -466,12 +513,23 @@ hl4.mark_size=0;
 hl4.mark_mode="on";
 hl4.mark_style=10;
 hl4.mark_foreground=color('purple');
+i=0;
+drawlater();
+    plot_set(p_set);
+drawnow();
+xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart3_std0.5/CLOUD_%04d.png",i));
 
 for i=1:size(data,1),
     [z,u]=parse_data(data,i);
-    p_set=fast_slam_1(z,u,p_set,1);
+    p_set=fast_slam_1(z,u,p_set,1,1,1,3,0.1);
     drawlater();
     plot_set(p_set);
+
+    hl1.data=[20 0];
+    hl2.data=[-20 0];
+    hl3.data=[0 20];
+    hl4.data=[0 -20];
     r.data=[data(i,1) data(i,2)];
     drawnow();
+    //xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart3_std0.5/CLOUD_%04d.png",i));
 end
