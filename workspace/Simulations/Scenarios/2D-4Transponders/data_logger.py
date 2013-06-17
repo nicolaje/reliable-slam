@@ -59,17 +59,17 @@ if(len(sys.argv)>3):
 	f=open(str(file_name), 'w')
 	
 	# Data format:
-	f.write('# pose_pure.x; pose_pure.y; pose_pure.z;'+\
-	'pose_noisy.x; pose_noisy.y; pose_noisy.z;'\
+	f.write('# pose_pure.x; pose_pure.y; pose_pure.z;'\
 	'pose_pure.yaw; pose_pure.pitch; pose_pure.roll;'\
-	'pose_noisy.yaw; pose_noisy.pitch; pose_noisy.roll;'\
-	'imu_pure.d²x; imu_pure.d²y; imu_pure.d²z;'\
-	'imu_noisy.d²x; imu_noisy.d²y; imu_noisy.d²z;'\
 	'imu_pure.dtheta; imu_pure.dphi; imu_pure.dpsi;'\
-	'imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi;'\
 	'loch_doppler_pure.vx; loch_doppler_pure.vy; loch_doppler_pure.vz;'\
-	'loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;'\
+	'imu_pure.d²x; imu_pure.d²y; imu_pure.d²z;'\
 	'transponder1.pure; transponder2.pure; transponder3.pure; transponder4.pure;'\
+	'pose_noisy.x; pose_noisy.y; pose_noisy.z;'\
+	'pose_noisy.yaw; pose_noisy.pitch; pose_noisy.roll;'\
+	'imu_noisy.dtheta; imu_noisy.dphi; imu_noisy.dpsi;'\
+	'loch_doppler_noisy.vx; loch_doppler_noisy.vy; loch_doppler_noisy.vz;'\
+	'imu_noisy.d²x; imu_noisy.d²y; imu_noisy.d²z;'\
 	'transponder1.noisy; transponder2.noisy; transponder3.noisy; transponder4.noisy;\n')
 	with pymorse.Morse() as simu:
 		sub=simu.sub
@@ -104,7 +104,7 @@ if(len(sys.argv)>3):
 				transponders_pure=_pinger_pure['near_objects']
 				transponders_noisy=_pinger_noisy['near_objects']
 				
-				# Pure datas
+				# Pure data
 				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
 				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
 				s=s+str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"
@@ -116,7 +116,7 @@ if(len(sys.argv)>3):
 				s=s+str(transponders_pure['transponder3'])+";"
 				s=s+str(transponders_pure['transponder4'])+";"
 				
-				# Noisy datas
+				# Noisy data
 				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
 				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
 				s=s+str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"

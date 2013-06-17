@@ -8,8 +8,8 @@ MORSEDataParser::MORSEDataParser(QString data_file, int nbRobots, int nbLandmark
     }else{
         file->readLine(); // drop the 1st comment line
 
-        nbRobots=nbRobots;
-        nbLandmarks=nbLandmarks;
+        this->nbRobots=nbRobots;
+        this->nbLandmarks=nbLandmarks;
 
     }
 }
@@ -22,12 +22,12 @@ vector<Robot> MORSEDataParser::nextRecord()
     double position[3], orientation[3];
     double angularSpeed[3], linearSpeed[3];
     double acceleration[3];
-    double landmarks[nbLandmarks];
+    vector<double> landmarks;
 
     double positionNoisy[3], orientationNoisy[3];
     double angularSpeedNoisy[3], linearSpeedNoisy[3];
     double accelerationNoisy[3];
-    double landmarksNoisy[nbLandmarks];
+    vector<double> landmarksNoisy;
 
     int width=2*(Robot::NB_COLUMNS+nbLandmarks);
 
@@ -39,12 +39,30 @@ vector<Robot> MORSEDataParser::nextRecord()
             angularSpeed[j]=res.value(i*width+6+j).toDouble();
             linearSpeed[j]=res.value(i*width+9+j).toDouble();
             acceleration[j]=res.value(i*width+12+j).toDouble();
+            positionNoisy[j]=res.value(Robot::NB_COLUMNS+nbLandmarks+j).toDouble();
+            orientationNoisy[j]=res.value(Robot::NB_COLUMNS+nbLandmarks+3+j).toDouble();
+            angularSpeedNoisy[j]=res.value(Robot::NB_COLUMNS+nbLandmarks+6+j).toDouble();
+            linearSpeedNoisy[j]=res.value(Robot::NB_COLUMNS+nbLandmarks+9+j).toDouble();
+            accelerationNoisy[j]=res.value(Robot::NB_COLUMNS+nbLandmarks+12+j).toDouble();
         }
         for(int l=0; l<nbLandmarks; l++){
-            landmarks[l]=res.value(i*width+Robot::NB_COLUMNS+l).toDouble();
-            landmarksNoisy[l]=res.value(i*width+Robot::NB_COLUMNS*2+nbLandmarks+l).toDouble();
+            landmarks.push_back(res.value(i*width+Robot::NB_COLUMNS+l).toDouble());
+            landmarksNoisy.push_back(res.value(i*width+Robot::NB_COLUMNS*2+nbLandmarks+l).toDouble());
         }
-        qDebug() << position[0] << position[1] << position[2];
+        r.setPosition(position);
+        r.setOrientation(orientation);
+        r.setRotationSpeed(angularSpeed);
+        r.setSpeed(linearSpeed);
+        r.setAcceleration(acceleration);
+        r.setLandmarksMeasurements(landmarks);
+
+        r.setPositionNoisy(positionNoisy);
+        r.setOrientationNoisy(orientationNoisy);
+        r.setRotationSpeedNoisy(angularSpeedNoisy);
+        r.setSpeedNoisy(linearSpeedNoisy);
+        r.setAccelerationNoisy(accelerationNoisy);
+        r.setLandmarksMeasurementsNoisy(landmarksNoisy);
+
         robots.push_back(r);
     }
     return robots;

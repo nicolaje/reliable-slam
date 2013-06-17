@@ -31,17 +31,27 @@ public:
     int getLandmarksNumber();
 
     void setPosition(double x, double y, double z);
+    void setPosition(double vec[]);
     void setOrientation(double theta, double psi, double phi);
+    void setOrientation(double vec[]);
     void setRotationSpeed(double dTheta, double dPsi, double dPhi);
+    void setRotationSpeed(double vec[]);
     void setSpeed(double vx, double vy, double vz);
+    void setSpeed(double vec[]);
     void setAcceleration(double ax, double ay, double az);
+    void setAcceleration(double vec[]);
     void setLandmarksMeasurements(vector<double> meas);
 
     void setPositionNoisy(double x, double y, double z);
+    void setPositionNoisy(double vec[]);
     void setOrientationNoisy(double theta, double psi, double phi);
+    void setOrientationNoisy(double vec[]);
     void setRotationSpeedNoisy(double dTheta, double dPsi, double dPhi);
+    void setRotationSpeedNoisy(double vec[]);
     void setSpeedNoisy(double vx, double vy, double vz);
+    void setSpeedNoisy(double vec[]);
     void setAccelerationNoisy(double ax, double ay, double az);
+    void setAccelerationNoisy(double vec[]);
     void setLandmarksMeasurementsNoisy(vector<double> meas);
     void toString();
 private:
@@ -51,7 +61,7 @@ private:
      */
     double position[3]={0,0,0};
     double orientation[3]={0,0,0};
-    double agularSpeed[3]={0,0,0};
+    double angularSpeed[3]={0,0,0};
     double linearSpeed[3]={0,0,0};
     double acceleration[3]={0,0,0};
 
@@ -62,7 +72,7 @@ private:
      */
     double positionNoisy[3]={0,0,0};
     double orientationNoisy[3]={0,0,0};
-    double agularSpeedNoisy[3]={0,0,0};
+    double angularSpeedNoisy[3]={0,0,0};
     double linearSpeedNoisy[3]={0,0,0};
     double accelerationNoisy[3]={0,0,0};
 
