@@ -15,6 +15,26 @@ double *Robot::getPosition()
     return position;
 }
 
+double *Robot::getOrientation()
+{
+    return this->position;
+}
+
+double *Robot::getRotationSpeed()
+{
+    return this->angularSpeed;
+}
+
+double *Robot::getSpeed()
+{
+    return this->linearSpeed;
+}
+
+double *Robot::getAcceleration()
+{
+    return this->acceleration;
+}
+
 
 void Robot::setPosition(double x, double y, double z)
 {
@@ -159,12 +179,48 @@ void Robot::toString()
     for(int i=0;i<measurements.size();i++){
         qDebug() << "Meas. nb "<<i<<": "<<measurements.at(i);
     }
-        qDebug() << "Noisy data:";
-        qDebug() << "Position: {" << positionNoisy[0] << "," << positionNoisy[1] << "," << positionNoisy[2] << "}\n"
-                 << "Orientation: {" << orientationNoisy[0] <<","<<orientationNoisy[1]<<","<<orientationNoisy[2]<<"}\n"
-                 << "Ang. Speed: {"<< angularSpeedNoisy[0] <<","<<angularSpeedNoisy[1]<<","<<angularSpeedNoisy[2]<<"}\n"
-                 << "Acceleration: {"<<accelerationNoisy[0]<<","<<accelerationNoisy[1]<<","<<accelerationNoisy[2]<<"}\n";
-        for(int i=0;i<measurements.size();i++){
-            qDebug() << "Meas. nb "<<i<<": "<< measurements.at(i);
-        }
+    qDebug() << "Noisy data:";
+    qDebug() << "Position: {" << positionNoisy[0] << "," << positionNoisy[1] << "," << positionNoisy[2] << "}\n"
+             << "Orientation: {" << orientationNoisy[0] <<","<<orientationNoisy[1]<<","<<orientationNoisy[2]<<"}\n"
+             << "Ang. Speed: {"<< angularSpeedNoisy[0] <<","<<angularSpeedNoisy[1]<<","<<angularSpeedNoisy[2]<<"}\n"
+             << "Acceleration: {"<<accelerationNoisy[0]<<","<<accelerationNoisy[1]<<","<<accelerationNoisy[2]<<"}\n";
+    for(int i=0;i<measurements.size();i++){
+        qDebug() << "Meas. nb "<<i<<": "<< measurements.at(i);
+    }
+}
+
+
+vector<double> Robot::getLandmarksMeasurements()
+{
+    return this->measurements;
+}
+
+double *Robot::getPositionNoisy()
+{
+    return this->positionNoisy;
+}
+
+double *Robot::getOrientationNoisy()
+{
+    return this->orientationNoisy;
+}
+
+double *Robot::getRotationSpeedNoisy()
+{
+    return this->angularSpeedNoisy;
+}
+
+double *Robot::getSpeedNoisy()
+{
+    return this->linearSpeedNoisy;
+}
+
+double *Robot::getAccelerationNoisy()
+{
+    return this->accelerationNoisy;
+}
+
+vector<double> Robot::getLandmarksMeasurementsNoisy()
+{
+    return this->measurementsNoisy;
 }
