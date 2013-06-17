@@ -91,36 +91,35 @@ if(len(sys.argv)>3):
 			# Concatenate data
 			if (_pose_pure!=0) and (_pose_noisy!=0) and (_imu_pure!=0)\
 			and (_imu_noisy!=0) and (_pinger_pure!=0) and (_pinger_noisy!=0)\
-			and (_loch_doppler_pure!=0) and (_loch_doppler_noisy!=0):
-				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
-				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
-				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
-				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
-				
+			and (_loch_doppler_pure!=0) and (_loch_doppler_noisy!=0):				
 				linear_acceleration_pure=_imu_pure['linear_acceleration']
 				linear_acceleration_noisy=_imu_noisy['linear_acceleration']
 				
 				angular_velocity_pure=_imu_pure['angular_velocity']
 				angular_velocity_noisy=_imu_noisy['angular_velocity']
 				
-				s=s+str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])+";"
-				s=s+str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])+";"
-				s=s+str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"
-				s=s+str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"
-				
 				loch_doppler_pure=_loch_doppler_pure['linear_velocity']
 				loch_doppler_noisy=_loch_doppler_noisy['linear_velocity']
-				
-				s=s+str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"
-				s=s+str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"
 				
 				transponders_pure=_pinger_pure['near_objects']
 				transponders_noisy=_pinger_noisy['near_objects']
 				
+				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
+				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
+				s=s+str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"
+				s=s+str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"
+				s=s+str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])+";"
 				s=s+str(transponders_pure['transponder1'])+";"
 				s=s+str(transponders_pure['transponder2'])+";"
 				s=s+str(transponders_pure['transponder3'])+";"
 				s=s+str(transponders_pure['transponder4'])+";"
+				
+				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
+				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
+				s=s+str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"
+				s=s+str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"
+				s=s+str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])+";"
+
 				s=s+str(transponders_noisy['transponder1'])+";"
 				s=s+str(transponders_noisy['transponder2'])+";"
 				s=s+str(transponders_noisy['transponder3'])+";"
