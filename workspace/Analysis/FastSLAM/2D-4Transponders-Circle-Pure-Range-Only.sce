@@ -467,7 +467,7 @@ endfunction
 
 
 figure(1);
-[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
+[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[0.1 0.1 2*sqrt(Ch)]);
 // Axes setup
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
