@@ -12,8 +12,8 @@ rand('seed',1)
 // path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/'
 
 // Personal laptop workstation (WINDOWS)
-path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders\';
-path_out='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Analysis\FastSLAM\Videos\2D-4Transponders\';
+//path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders\';
+//path_out='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Analysis\FastSLAM\Videos\2D-4Transponders\';
 
 raw_file=read_csv(path_in+'2D-4Transponders-Circle.res',';');
 

@@ -189,6 +189,13 @@ void Robot::toString()
     }
 }
 
+ibex::IntervalVector Robot::asIntervalVector()
+{
+    ibex::IntervalVector res(NB_COLUMNS);
+    stateVec[0]=ibex::Interval(SIGMA_FACTOR*);
+    return res;
+}
+
 
 vector<double> Robot::getLandmarksMeasurements()
 {

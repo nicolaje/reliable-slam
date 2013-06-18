@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <QDebug>
+#include <ibex.h>
 using namespace std;
 
 class Robot
@@ -13,6 +14,11 @@ public:
     ~Robot();
 
     static const int NB_COLUMNS=15;
+    /**
+     * @brief SIGMA_FACTOR determines the confidence interval
+     *  used to bound the noisy measurements.
+     */
+    static const int SIGMA_FACTOR=5;
 
     double* getPosition();
     double* getOrientation();
@@ -54,6 +60,12 @@ public:
     void setAccelerationNoisy(double vec[]);
     void setLandmarksMeasurementsNoisy(vector<double> meas);
     void toString();
+
+    ibex::IntervalVector positionAsIntervalVector;
+    ibex::IntervalVector orientationAsIntervalVector;
+    ibex::IntervalVector angularSpeedAsIntervalVector;
+    ibex::IntervalVector linearSpeedAsIntervalVector;
+    ibex::IntervalVector accelerationAsIntervalVector;
 private:
 
     /**
@@ -77,6 +89,15 @@ private:
     double accelerationNoisy[3]={0,0,0};
 
     vector<double> measurementsNoisy;
+
+    /**
+     * Noise parameters
+     */
+    double positionNoise;
+    double orientationNoise[3]={0,0,0};
+    double angularSpeedNois[3]={0,0,0};
+    double accelerationNoise[3]={0,0,0};
+    double measurementsNoise=0;
 };
 
 #endif // ROBOT_H

@@ -24,11 +24,5 @@ HEADERS += mainwindow.h \
 
 FORMS += mainwindow.ui
 
-win32 {
- INCLUDEPATH += ../ibex-2.0/include/ibex ../soplex-1.7.0/src
- LIBS += -L../ibex-2.0/bin -L../soplex-1.7.0/lib -libex_mingw_x86 -lsoplex_mingw_x86
-} 
-else {
- INCLUDEPATH += ../ibex-2.0/include/ibex ../soplex-1.7.0/src
- LIBS += -L../ibex-2.0/bin -L../soplex-1.7.0/lib -libex_linux_x86 -lsoplex_linux_x86
-}
+CONFIG += link_pkgconfig
+PKGCONFIG += /usr/local/share/pkgconfig/ibex.pc

@@ -24,3 +24,5 @@ HEADERS  += mainwindow.h \
     robot.h
 
 FORMS    += mainwindow.ui
+CONFIG += link_pkgconfig
+PKGCONFIG += /usr/local/share/pkgconfig/ibex.pc
