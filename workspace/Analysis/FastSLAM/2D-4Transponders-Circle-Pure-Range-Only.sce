@@ -5,8 +5,8 @@ xdel(winsid()); // close all previously opened windows
 rand('seed',1)
 
 // Personal laptop workstation (LINUX)
-//path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
-//path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Videos/2D-4Transponders/';
+path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
+path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Videos/2D-4Transponders/';
 
 // UFRGS Laptop workstation
 // path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/'
@@ -467,76 +467,7 @@ endfunction
 
 
 figure(1);
-//[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
-//// Axes setup
-//h_axes = gca();
-//h_axes.data_bounds = [-35,-35;35,35];
-//
-//// True robot position
-//xpoly(0,0);
-//r=gce();
-//r.line_mode="off";
-//r.mark_size=0;
-//r.mark_mode="on";
-//r.mark_style=1;
-//r.mark_background=color('black');
-//
-//// True landmark positions
-//xpoly(20,0);
-//hl1=gce();
-//hl1.line_mode="off",
-//hl1.mark_size=0;
-//hl1.mark_mode="on";
-//hl1.mark_style=10;
-//hl1.mark_foreground=color('blue');
-//
-//xpoly(-20,0);
-//hl2=gce();
-//hl2.line_mode="off",
-//hl2.mark_size=0;
-//hl2.mark_mode="on";
-//hl2.mark_style=10;
-//hl2.mark_foreground=color('orange');
-//
-//xpoly(0,20);
-//hl3=gce();
-//hl3.line_mode="off",
-//hl3.mark_size=0;
-//hl3.mark_mode="on";
-//hl3.mark_style=10;
-//hl3.mark_foreground=color('green');
-//
-//xpoly(0,-20);
-//hl4=gce();
-//hl4.line_mode="off",
-//hl4.mark_size=0;
-//hl4.mark_mode="on";
-//hl4.mark_style=10;
-//hl4.mark_foreground=color('purple');
-//i=0;
-//drawlater();
-//    plot_set(p_set);
-//drawnow();
-//xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
-//for i=1:size(data,1),
-//    [z,u]=parse_data(data,i);
-//    p_set=fast_slam_1(z,u,p_set,1,1,1,1,0.1);
-//    //if i==size(data,1) then
-//    drawlater();
-//    plot_set(p_set);
-//
-//    hl1.data=[20 0];
-//    hl2.data=[-20 0];
-//    hl3.data=[0 20];
-//    hl4.data=[0 -20];
-//    r.data=[data(i,1) data(i,2)];
-//    drawnow();
-//    //end
-//    xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
-//end
-
-for s=1:3,
-    [p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
+[p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
 // Axes setup
 h_axes = gca();
 h_axes.data_bounds = [-35,-35;35,35];
@@ -586,21 +517,90 @@ i=0;
 drawlater();
     plot_set(p_set);
 drawnow();
-xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart%i_std0.1/CLOUD_%04d.png",s,i));
-    for i=1:size(data,1),
-        [z,u]=parse_data(data,i);
-        p_set=fast_slam_1(z,u,p_set,1,1,1,1,0.1);
-        //if i==size(data,1) then
-        drawlater();
-        plot_set(p_set);
+xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
+for i=1:size(data,1),
+    [z,u]=parse_data(data,i);
+    p_set=fast_slam_1(z,u,p_set,1,1,1,1,0.1);
+    //if i==size(data,1) then
+    drawlater();
+    plot_set(p_set);
 
-        hl1.data=[20 0];
-        hl2.data=[-20 0];
-        hl3.data=[0 20];
-        hl4.data=[0 -20];
-        r.data=[data(i,1) data(i,2)];
-        drawnow();
-        //end
-        xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart%i_std0.1/CLOUD_%04d.png",s,i));
-    end
+    hl1.data=[20 0];
+    hl2.data=[-20 0];
+    hl3.data=[0 20];
+    hl4.data=[0 -20];
+    r.data=[data(i,1) data(i,2)];
+    drawnow();
+    //end
+    //xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
 end
+
+//for s=1:3,
+//    [p_set]=init_particle_set(K_param,N_param,[0 data(1,1) data(1,2) data(1,7) [20 0]+grand(1,2,'unf',-10,10) [-20 0]+grand(1,2,'unf',-10,10) [0 20]+grand(1,2,'unf',-10,10) [0 -20]+grand(1,2,'unf',-10,10) 16 0 0 16 16 0 0 16 16 0 0 16 16 0 0 16],[5 5 2*sqrt(Ch)]);
+//// Axes setup
+//h_axes = gca();
+//h_axes.data_bounds = [-35,-35;35,35];
+//
+//// True robot position
+//xpoly(0,0);
+//r=gce();
+//r.line_mode="off";
+//r.mark_size=0;
+//r.mark_mode="on";
+//r.mark_style=1;
+//r.mark_background=color('black');
+//
+//// True landmark positions
+//xpoly(20,0);
+//hl1=gce();
+//hl1.line_mode="off",
+//hl1.mark_size=0;
+//hl1.mark_mode="on";
+//hl1.mark_style=10;
+//hl1.mark_foreground=color('blue');
+//
+//xpoly(-20,0);
+//hl2=gce();
+//hl2.line_mode="off",
+//hl2.mark_size=0;
+//hl2.mark_mode="on";
+//hl2.mark_style=10;
+//hl2.mark_foreground=color('orange');
+//
+//xpoly(0,20);
+//hl3=gce();
+//hl3.line_mode="off",
+//hl3.mark_size=0;
+//hl3.mark_mode="on";
+//hl3.mark_style=10;
+//hl3.mark_foreground=color('green');
+//
+//xpoly(0,-20);
+//hl4=gce();
+//hl4.line_mode="off",
+//hl4.mark_size=0;
+//hl4.mark_mode="on";
+//hl4.mark_style=10;
+//hl4.mark_foreground=color('purple');
+//i=0;
+//drawlater();
+//    plot_set(p_set);
+//drawnow();
+//xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart%i_std0.1/CLOUD_%04d.png",s,i));
+//    for i=1:size(data,1),
+//        [z,u]=parse_data(data,i);
+//        p_set=fast_slam_1(z,u,p_set,1,1,1,1,0.1);
+//        //if i==size(data,1) then
+//        drawlater();
+//        plot_set(p_set);
+//
+//        hl1.data=[20 0];
+//        hl2.data=[-20 0];
+//        hl3.data=[0 20];
+//        hl4.data=[0 -20];
+//        r.data=[data(i,1) data(i,2)];
+//        drawnow();
+//        //end
+//        xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy1_quart%i_std0.1/CLOUD_%04d.png",s,i));
+//    end
+//end
