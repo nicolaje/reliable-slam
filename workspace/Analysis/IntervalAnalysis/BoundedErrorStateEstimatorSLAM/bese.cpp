@@ -1,13 +1,14 @@
 #include "bese.h"
 using namespace ibex;
-BESE::BESE(ibex::IntervalVector initState, int nbRobots, int nbLandmarks)
+BESE::BESE(IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubPavings)
 {
-    this->state=initState;
+    *this->state=initState;
     this->nbLandmarks=nbLandmarks;
     this->nbRobots=nbRobots;
+    this->useSubPavings=useSubPavings;
 }
 
-void BESE::predict(ibex::IntervalVector measurements)
+void BESE::predict(IntervalVector measurements, ibex::Interval dt)
 {
 
 }

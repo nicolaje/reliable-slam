@@ -1,6 +1,7 @@
 #ifndef BESE_H
 #define BESE_H
 #include <ibex.h>
+#include <subpaving.h>
 
 /**
  * @brief The BESE (Bounded Error State Estimator) class estimates the state of a robot
@@ -10,15 +11,17 @@
 class BESE
 {
 public:
-    BESE(ibex::IntervalVector initState, int nbRobots, int nbLandmarks);
-    void predict(ibex::IntervalVector measurements);
+    BESE(ibex::IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubPavings=false);
+    void predict(ibex::IntervalVector measurements, ibex::Interval dt);
     void update(ibex::IntervalVector measurements);
 private:
-    ibex::IntervalVector state;
+    ibex::IntervalVector *state;
+    SubPaving stateAsSubPaving;
     ibex::Function motionModel;
     ibex::Function measurementModel;
     int nbRobots;
     int nbLandmarks;
+    bool useSubPavings;
 };
 
 #endif // BESE_H
