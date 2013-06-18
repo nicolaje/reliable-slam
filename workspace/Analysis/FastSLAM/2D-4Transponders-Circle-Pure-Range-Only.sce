@@ -5,15 +5,15 @@ xdel(winsid()); // close all previously opened windows
 rand('seed',1)
 
 // Personal laptop workstation (LINUX)
-path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
-path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Videos/2D-4Transponders/';
+//path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/';
+//path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Videos/2D-4Transponders/';
 
 // UFRGS Laptop workstation
 // path_in='/home/jeremy/workspace/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/'
 
 // Personal laptop workstation (WINDOWS)
-//path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders\';
-//path_out='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Analysis\FastSLAM\Videos\2D-4Transponders\';
+path_in='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Simulations\Scenarios\2D-4Transponders\';
+path_out='F:\Etudes\ENSTA-Bretagne\Stages\ENSI3-UFRGS\reliable-slam\workspace\Analysis\FastSLAM\Videos\2D-4Transponders\';
 
 raw_file=read_csv(path_in+'2D-4Transponders-Circle.res',';');
 
@@ -46,14 +46,14 @@ N_param=4;
 deg2rad=%pi/180;
 
 // Variance of the heading sensor
-Ch=(0.02*deg2rad)^2;
+Ch=10*(0.02*deg2rad)^2;
 
 // Covariance of the motion noise
-Mt=[0.04^2 0;
+Mt=10*[0.04^2 0;
 0 (0.01*deg2rad)^2];
 
 // Variance of the range sensor
-Cr=0.3^2;
+Cr=10*0.3^2;
 
 global handle;
 handle=-1;
@@ -251,6 +251,10 @@ function [Y_res]=resampling_roulette(Y,m,std)
     for i=1:nb_to_redraw,
         p=get_particle2(pop_kept,rand_vect(i));
         p(2:3)=p(2:3)+grand(1,2,'nor',0,std);
+//        for land=1:N_param,
+//            p(4+1+(land-1)*2)=p(4+1+(land-1)*2)+grand(1,1,'nor',0,std);
+//            p(1,4+1+(land-1)*2+1)=p(1,4+1+(land-1)*2+1)+grand(1,1,'nor',0,std);
+//        end
         Y_res(1,:,size(idx,2)+i)=p;
     end
 endfunction
@@ -280,6 +284,10 @@ function [Y_res]=resampling_roulette_2(Y,std)
     for i=1:K_param,
         p=get_particle(Y,rand_vect(i));
         p(2:3)=p(2:3)+grand(1,2,'nor',0,std); // add some noise to diversify the population
+//        for land=1:N_param,
+//            p(4+1+(land-1)*2)=p(4+1+(land-1)*2)+grand(1,1,'nor',0,std);
+//            p(1,4+1+(land-1)*2+1)=p(1,4+1+(land-1)*2+1)+grand(1,1,'nor',0,std);
+//        end
         Y_res(1,:,i)=p;
     end
 endfunction
@@ -515,7 +523,7 @@ hl4.mark_style=10;
 hl4.mark_foreground=color('purple');
 i=0;
 drawlater();
-    plot_set(p_set);
+plot_set(p_set);
 drawnow();
 xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
 for i=1:size(data,1),
@@ -532,7 +540,7 @@ for i=1:size(data,1),
     r.data=[data(i,1) data(i,2)];
     drawnow();
     //end
-    //xs2png(gcf(),sprintf(path_out+"imgs/mod1_strategy2_std0.1/CLOUD_%04d.png",i));
+    xs2png(gcf(),sprintf(path_out+"imgs/narrower_and_bigger_variance/CLOUD_%04d.png",i));
 end
 
 //for s=1:3,
