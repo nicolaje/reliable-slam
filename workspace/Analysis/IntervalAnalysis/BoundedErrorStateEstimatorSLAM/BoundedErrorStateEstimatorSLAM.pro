@@ -22,4 +22,5 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 CONFIG += link_pkgconfig
-PKGCONFIG += /usr/local/share/pkgconfig/ibex.pc
+PKGCONFIG +=/usr/local/share/pkgconfig/ibex.pc
+PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc

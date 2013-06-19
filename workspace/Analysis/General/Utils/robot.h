@@ -61,11 +61,12 @@ public:
     void setLandmarksMeasurementsNoisy(vector<double> meas);
     void toString();
 
-    ibex::IntervalVector positionAsIntervalVector;
-    ibex::IntervalVector orientationAsIntervalVector;
-    ibex::IntervalVector angularSpeedAsIntervalVector;
-    ibex::IntervalVector linearSpeedAsIntervalVector;
-    ibex::IntervalVector accelerationAsIntervalVector;
+    ibex::IntervalVector asIntervalVector();
+    ibex::IntervalVector positionAsIntervalVector();
+    ibex::IntervalVector orientationAsIntervalVector();
+    ibex::IntervalVector angularSpeedAsIntervalVector();
+    ibex::IntervalVector linearSpeedAsIntervalVector();
+    ibex::IntervalVector accelerationAsIntervalVector();
 private:
 
     /**
@@ -93,9 +94,10 @@ private:
     /**
      * Noise parameters
      */
-    double positionNoise;
+    double positionNoise[3]={0,0,0};
     double orientationNoise[3]={0,0,0};
-    double angularSpeedNois[3]={0,0,0};
+    double angularSpeedNoise[3]={0,0,0};
+    double linearSpeedNoise[3]={0,0,0};
     double accelerationNoise[3]={0,0,0};
     double measurementsNoise=0;
 };

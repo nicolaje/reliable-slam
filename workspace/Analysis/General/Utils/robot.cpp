@@ -192,9 +192,24 @@ void Robot::toString()
 ibex::IntervalVector Robot::asIntervalVector()
 {
     ibex::IntervalVector res(NB_COLUMNS);
-    stateVec[0]=ibex::Interval(SIGMA_FACTOR*);
+    res[0]=ibex::Interval(-SIGMA_FACTOR*positionNoise[0]+positionNoisy[0],SIGMA_FACTOR*positionNoise[0]+positionNoisy[0]);
+    res[1]=ibex::Interval(-SIGMA_FACTOR*positionNoise[1]+positionNoisy[1],SIGMA_FACTOR*positionNoise[1]+positionNoisy[1]);
+    res[2]=ibex::Interval(-SIGMA_FACTOR*positionNoise[2]+positionNoisy[2],SIGMA_FACTOR*positionNoise[2]+positionNoisy[2]);
+    res[3]=ibex::Interval(-SIGMA_FACTOR*orientationNoise[0]+orientationNoisy[0],SIGMA_FACTOR*orientationNoise[0]+orientationNoisy[0]);
+    res[4]=ibex::Interval(-SIGMA_FACTOR*orientationNoise[1]+orientationNoisy[1],SIGMA_FACTOR*orientationNoise[1]+orientationNoisy[1]);
+    res[5]=ibex::Interval(-SIGMA_FACTOR*orientationNoise[2]+orientationNoisy[2],SIGMA_FACTOR*orientationNoise[2]+orientationNoisy[2]);
+    res[6]=ibex::Interval(-SIGMA_FACTOR*angularSpeedNoise[0]+angularSpeedNoisy[0],SIGMA_FACTOR*angularSpeedNoise[0]+angularSpeedNoisy[0]);
+    res[7]=ibex::Interval(-SIGMA_FACTOR*angularSpeedNoise[1]+angularSpeedNoisy[1],SIGMA_FACTOR*angularSpeedNoise[1]+angularSpeedNoisy[1]);
+    res[8]=ibex::Interval(-SIGMA_FACTOR*angularSpeedNoise[2]+angularSpeedNoisy[2],SIGMA_FACTOR*angularSpeedNoise[2]+angularSpeedNoisy[2]);
+    res[9]=ibex::Interval(-SIGMA_FACTOR*linearSpeedNoise[0]+linearSpeedNoisy[0],SIGMA_FACTOR*linearSpeedNoise[0]+linearSpeedNoisy[0]);
+    res[10]=ibex::Interval(-SIGMA_FACTOR*linearSpeedNoise[1]+linearSpeedNoisy[1],SIGMA_FACTOR*linearSpeedNoise[1]+linearSpeedNoisy[1]);
+    res[11]=ibex::Interval(-SIGMA_FACTOR*linearSpeedNoise[2]+linearSpeedNoisy[2],SIGMA_FACTOR*linearSpeedNoise[2]+linearSpeedNoisy[2]);
+    res[12]=ibex::Interval(-SIGMA_FACTOR*accelerationNoise[0]+accelerationNoisy[0],SIGMA_FACTOR*accelerationNoise[0]+accelerationNoisy[0]);
+    res[13]=ibex::Interval(-SIGMA_FACTOR*accelerationNoise[1]+accelerationNoisy[1],SIGMA_FACTOR*accelerationNoise[1]+accelerationNoisy[1]);
+    res[14]=ibex::Interval(-SIGMA_FACTOR*accelerationNoise[2]+accelerationNoisy[2],SIGMA_FACTOR*accelerationNoise[2]+accelerationNoisy[2]);
     return res;
 }
+
 
 
 vector<double> Robot::getLandmarksMeasurements()
