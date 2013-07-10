@@ -9,19 +9,21 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Utils
-TEMPLATE = app
+TEMPLATE = lib
 
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     morsedataparser.cpp \
     morserosconnector.cpp \
-    robot.cpp
+    robot.cpp \
+    sivia.cpp
 
 HEADERS  += mainwindow.h \
     morsedataparser.h \
     morserosconnector.h \
-    robot.h
+    robot.h \
+    sivia.h
 
 FORMS    += mainwindow.ui
 CONFIG += link_pkgconfig

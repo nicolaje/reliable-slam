@@ -18,7 +18,7 @@ public:
      * @brief SIGMA_FACTOR determines the confidence interval
      *  used to bound the noisy measurements.
      */
-    static const int SIGMA_FACTOR=5;
+    static const int SIGMA_FACTOR=10;
 
     double* getPosition();
     double* getOrientation();
@@ -67,6 +67,10 @@ public:
     ibex::IntervalVector angularSpeedAsIntervalVector();
     ibex::IntervalVector linearSpeedAsIntervalVector();
     ibex::IntervalVector accelerationAsIntervalVector();
+    ibex::IntervalVector pingerMeasurementsAsIntervalVector();
+    ibex::IntervalVector *getObservationsAsIntervalVector();
+
+    std::string groundTruthToString();
 private:
 
     /**
@@ -78,7 +82,7 @@ private:
     double linearSpeed[3]={0,0,0};
     double acceleration[3]={0,0,0};
 
-    vector<double> measurements;
+    vector<double> pingerMeasurements;
 
     /**
      * Noisy data
@@ -94,12 +98,12 @@ private:
     /**
      * Noise parameters
      */
-    double positionNoise[3]={0,0,0};
-    double orientationNoise[3]={0,0,0};
-    double angularSpeedNoise[3]={0,0,0};
-    double linearSpeedNoise[3]={0,0,0};
-    double accelerationNoise[3]={0,0,0};
-    double measurementsNoise=0;
+    double positionNoise[3]={0.5,0.5,0.15};
+    double orientationNoise[3]={0.02*M_PI/180,0.02*M_PI/180,0.02*M_PI/180};
+    double angularSpeedNoise[3]={0.01*M_PI/180,0.01*M_PI/180,0.01*M_PI/180};
+    double linearSpeedNoise[3]={0.04,0.04,0.04};
+    double accelerationNoise[3]={0.01*9.81,0.01*9.81,0.01*9.81};
+    double pingerNoise=0.03;
 };
 
 #endif // ROBOT_H

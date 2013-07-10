@@ -14,13 +14,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp\
     bese.cpp \
-    subpaving.cpp
 
 HEADERS  += mainwindow.h \
     bese.h \
-    subpaving.h
 
 FORMS    += mainwindow.ui
 CONFIG += link_pkgconfig
 PKGCONFIG +=/usr/local/share/pkgconfig/ibex.pc
 PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc
+LIBS += -L"../../General/Utils-build-desktop-Qt_4_8_2_in_PATH__System__Release/" -lUtils

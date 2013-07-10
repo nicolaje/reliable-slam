@@ -1,0 +1,19 @@
+/*
+* Inclusion function of the motion model of a simplified underwater robot.
+*/
+function MotionModel(x,y,z,phi,theta,psi,dphi,dtheta,dpsi,dx,dy,dz,ddx,ddy,ddz)
+ cphi = cos(phi);
+sphi = sin(phi);
+ctheta = cos(theta);
+stheta = sin(theta);
+cpsi = cos(psi);
+spsi = sin(psi);
+
+return 
+	(x;y;z;phi;theta;psi;l1x;l1y;l2x;l2y;l3x;l3y;l4x;l4y)+
+	((,,);
+	(,,);
+	(,,))
+	* (dx;dy;dz;dphi;dtheta;dpsi);
+
+end

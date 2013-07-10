@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-15 -*-
 import time
 import sys
 import pymorse
@@ -84,7 +82,7 @@ if(len(sys.argv)>3):
 		time=datetime.now()
 		delta=0
 		while delta<duration:
-			print('T: %i'%delta)
+			print('T: %f'%delta)
 			now=datetime.now()
 			delta=(now-time).seconds+(now-time).microseconds/1000000
 			
@@ -106,7 +104,7 @@ if(len(sys.argv)>3):
 				
 				# Pure data
 				s=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'
-				s=s+str(_pose_pure['yaw'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['roll'])+';'
+				s=s+str(_pose_pure['roll'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['yaw'])+';'
 				s=s+str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"
 				s=s+str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"
 				s=s+str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])+";"
@@ -118,7 +116,7 @@ if(len(sys.argv)>3):
 				
 				# Noisy data
 				s=s+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'
-				s=s+str(_pose_noisy['yaw'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['roll'])+';'
+				s=s+str(_pose_noisy['roll'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['yaw'])+';'
 				s=s+str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"
 				s=s+str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"
 				s=s+str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])+";"

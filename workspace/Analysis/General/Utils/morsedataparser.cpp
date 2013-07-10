@@ -67,3 +67,8 @@ vector<Robot> MORSEDataParser::nextRecord()
     }
     return robots;
 }
+
+bool MORSEDataParser::hasDataLeft()
+{
+    return !this->file->atEnd();
+}
