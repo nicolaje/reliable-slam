@@ -12,6 +12,11 @@ Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d r
     }
 }
 
+void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)
+{
+    this->landmarksKalmanFilters=landmarksKFs;
+}
+
 
 void Particle::updateKF(double measurement, int landmarkIndex)
 {

@@ -12,6 +12,7 @@ class Particle
 {
 public:
     Particle(Eigen::Vector3d robotPosition, Eigen::Vector3d robotOrientation, Eigen::Vector3d robotLinearMotion, Eigen::Vector3d robotAngularMotion, std::vector<Eigen::Vector3d> landmarksPosEstimates, std::vector<Eigen::Matrix3d> landmarksPosCovs);
+    void setInitMap(std::vector<KalmanFilter> landmarksKFs);
     void predict(double dt);
     void updateRobotPosition(Eigen::Vector3d position);
     void updateRobotOrientation(Eigen::Vector3d orientation);
