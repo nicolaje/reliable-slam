@@ -16,6 +16,9 @@ _pinger_noisy=0
 _loch_doppler_pure=0
 _loch_doppler_noisy=0
 
+_storage=''
+_storage_time=''
+
 def update_pose_pure(data):
 	global _pose_pure
 	_pose_pure=data
@@ -55,7 +58,12 @@ if(len(sys.argv)>3):
 	duration=int(sys.argv[2]) # Logging duration in seconds
 	frequency=int(sys.argv[3])# Logging frequency in Hz
 	f=open(str(file_name), 'w')
-	
+	print("Logging into %s"%file_name)
+	print("During %i"%duration)
+	print("With frequency %f"%frequency)
+
+	time_log=open("time",'w')
+
 	# Data format:
 	f.write('# pose_pure.x; pose_pure.y; pose_pure.z;'\
 	'pose_pure.yaw; pose_pure.pitch; pose_pure.roll;'\
@@ -82,7 +90,7 @@ if(len(sys.argv)>3):
 		time=datetime.now()
 		delta=0
 		while delta<duration:
-			print('T: %f'%delta)
+			#print('T: %f'%delta)
 			now=datetime.now()
 			delta=(now-time).seconds+(now-time).microseconds/1000000
 			
@@ -125,18 +133,29 @@ if(len(sys.argv)>3):
 				s=s+str(transponders_noisy['transponder2'])+";"
 				s=s+str(transponders_noisy['transponder3'])+";"
 				s=s+str(transponders_noisy['transponder4'])+";"
-				
-				f.write(s+'\n')
-			else:
-				print("+++++++++++++++++++++++++++++++++")
-				print("+++++++++++++++++++++++++++++++++")
-				print("++ PB: DATA SENSORS NOT READY? ++")
-				print("+++++++++++++++++++++++++++++++++")
-				print("+++++++++++++++++++++++++++++++++")
+				s=s+'\n'
+				_storage=_storage+s;
+#				f.write(s+'\n')
+#			else:
+#				print("+++++++++++++++++++++++++++++++++")
+#				print("+++++++++++++++++++++++++++++++++")
+#				print("++ PB: DATA SENSORS NOT READY? ++")
+#				print("+++++++++++++++++++++++++++++++++")
+#				print("+++++++++++++++++++++++++++++++++")
 			sleep(1/frequency)
+			after=datetime.now()
+			delta2=(after-now).seconds+(after-now).microseconds/1000000
+			print("Time Ellapsed %f"%delta2)
+			_storage_time=_storage_time+str(delta2)+'\n'
+#			time_log.write(str(delta2))
+#			time_log.write('\n')
+		time_log.write(_storage_time)
+		time_log.close()
+		f.write(_storage)
+		f.close()
+		print("I could exit data logger properly!")
 		simu.quit()
-	f.close()
-	print("Finished logging after %i"%delta)
+#	print("Finished logging after %i"%delta)
 		
-else:
-	print("Not enough argument to log data")
+#else:
+#	print("Not enough argument to log data")

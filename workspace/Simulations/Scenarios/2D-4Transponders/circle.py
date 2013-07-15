@@ -21,13 +21,23 @@ radius=30            # radius of the circle the robot moves on
 	
 with pymorse.Morse() as simu:
 	print("Entering trajectory controller")
-	v=2.*pi*radius/120.
-	w=2.*pi/120.
+	v=5.*pi*radius/120.
+	w=5.*pi/120.
 	print("w: "+str(w))
 	print("v: "+str(v))
 #	print(simu.robots)
 	motion=simu.sub.motion
 	motion.publish({'v':v,'w':w}) #{'v':2*pi*radius/120, 'w':2*pi/120}) # 1 round per 2 minutes
+#	sleep(10)
+#	v=0
+#	w=pi/20
+#	motion.publish({'v':v,'w':w})
+#	print("Turning")
+#	sleep(10)
+#	v=10
+#	w=0
+#	motion.publish({'v':v,'w':w})
+#	print("Back")
 #	sleep(60)
 #	simu.quit()
 #	time=datetime.now()

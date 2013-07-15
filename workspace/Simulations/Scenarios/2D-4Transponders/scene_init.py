@@ -100,18 +100,19 @@ sub.translate(z=0.5,y=-30)
 ####################
 
 transponder1=Robot('../../Models/Transponder.blend')
-transponder1.translate(x=20)
+transponder1.translate(x=18,y=-30,z=3)
 
 transponder2=Robot('../../Models/Transponder.blend')
-transponder2.translate(x=-20)
+transponder2.translate(x=-7,y=12,z=17)
 
 transponder3=Robot('../../Models/Transponder.blend')
-transponder3.translate(y=20)
+transponder3.translate(y=20,z=5)
 
 transponder4=Robot('../../Models/Transponder.blend')
-transponder4.translate(y=-20)
+transponder4.translate(x=-27,y=-20,z=10)
 
-# sub.rotate(x=0.5)
+sub.translate(z=30)
+sub.rotate(x=-0.5)
 
 env=Environment('../../Models/SimpleOceanGround.blend')
 env.place_camera([-20,-20,10])

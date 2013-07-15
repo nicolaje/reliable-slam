@@ -68,8 +68,8 @@ void BESE::update(IntervalVector *vector)
     for(int i=0;i<(*vector).size();i++){
         extState[(*state).size()+i]=(*vector)[i];
     }
-    CtcFwdBwd ctc(sys.f);//*observationModel);
-    CtcFixPoint fix(ctc,0.001);
+    CtcFwdBwd ctc(sys.f);
+    CtcFixPoint fix(ctc);
     try{
         fix.contract(extState);
         outFix.contract(extState);

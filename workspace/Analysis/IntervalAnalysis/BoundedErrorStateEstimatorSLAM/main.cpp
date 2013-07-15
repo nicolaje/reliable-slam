@@ -36,21 +36,21 @@ int main(int argc, char *argv[])
         initState[3+i]=robot[3+i]; // or
     }
 
-    initState[6]=Interval(19,20);
-    initState[7]=Interval(-1,1);
-    initState[8]=Interval(-10,10);
+    initState[6]=Interval(10,25);
+    initState[7]=Interval(-50,1);
+    initState[8]=Interval(-1,5);
 
-    initState[9]=Interval(-21,-19);
-    initState[10]=Interval(-1,1);
-    initState[11]=Interval(-10,10);
+    initState[9]=Interval(-21,10);
+    initState[10]=Interval(-1,20);
+    initState[11]=Interval(15,17);
 
-    initState[12]=Interval(-1,1);
-    initState[13]=Interval(19,21);
-    initState[14]=Interval(-10,10);
+    initState[12]=Interval(-10,7);
+    initState[13]=Interval(19,29);
+    initState[14]=Interval(0,10);
 
-    initState[15]=Interval(-1,1);
-    initState[16]=Interval(-21,-19);
-    initState[17]=Interval(-10,10);
+    initState[15]=Interval(-50,1);
+    initState[16]=Interval(-21,-9);
+    initState[17]=Interval(0,20);
 
     BESE estimator(initState,1,4);
 
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     Interval dt(0.1,0.11);
 
     int j=0;
-    while(j<997){//p.hasDataLeft()){//
-//        std::cout << estimator.debugToString() << std::endl;
+    while(p.hasDataLeft()){//j<374){//
+        std::cout << estimator.debugToString() << std::endl;
         j++;
         std::cout << j << std::endl;
         estimator.predict(dt);
@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
 //                std::cout << "Pas Lulz D: ?? : " << (posE&posV) << std::endl;
         estimator.update(&updObs);
     }
+    std::cout << "Position: " << estimator.getPosition() << std::endl;
     out->close();
     groundTruth->close();
     //return a.exec();

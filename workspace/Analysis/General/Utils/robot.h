@@ -18,7 +18,7 @@ public:
      * @brief SIGMA_FACTOR determines the confidence interval
      *  used to bound the noisy measurements.
      */
-    static const int SIGMA_FACTOR=10;
+    static const int SIGMA_FACTOR=19;
 
     double* getPosition();
     double* getOrientation();
@@ -98,7 +98,7 @@ private:
     /**
      * Noise parameters
      */
-    double positionNoise[3]={0.5,0.5,0.15};
+    double positionNoise[3]={0.15,0.15,0.15};
     double orientationNoise[3]={0.02*M_PI/180,0.02*M_PI/180,0.02*M_PI/180};
     double angularSpeedNoise[3]={0.01*M_PI/180,0.01*M_PI/180,0.01*M_PI/180};
     double linearSpeedNoise[3]={0.04,0.04,0.04};
