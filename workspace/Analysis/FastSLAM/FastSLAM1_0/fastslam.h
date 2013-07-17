@@ -8,7 +8,14 @@
 class FastSLAM
 {
 public:
-    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance);
+    static const uint RESAMPLE_EACH=0;
+    static const uint RESAMPLE_ALL=1;
+    static const uint ROULETTE=0;
+    static const uint ROULETTE_1ST_QUARTIL=1;
+    static const uint ROULETTE_2ST_QUARTIL=2;
+    static const uint ROULETTE_3ST_QUARTIL=3;
+
+    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_EACH,uint RESAMPLE_STRATEGY=ROULETTE);
     /**
      * @brief initParticles Draws a particle swarm from the initial estimation of the robot & landmarks positions.
      * @param landmarksPosEstimates

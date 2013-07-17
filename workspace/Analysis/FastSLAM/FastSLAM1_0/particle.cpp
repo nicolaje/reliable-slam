@@ -7,10 +7,6 @@ Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d r
     this->robotOrientation=robotOrientation;
     this->robotLinearMotion=robotLinearMotion;
     this->robotAngularMotion=robotAngularMotion;
-    for(uint i=0; i<landmarksPosEstimates.size();i++){
-        KalmanFilter f(landmarksPosEstimates[i],landmarksPosCovs[i],pingerVariance);
-        landmarksKalmanFilters.push_back(f);
-    }
 }
 
 void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)

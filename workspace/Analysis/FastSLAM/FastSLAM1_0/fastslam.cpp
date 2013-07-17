@@ -1,6 +1,6 @@
 #include "fastslam.h"
 using namespace Eigen;
-FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance)
+FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY)
 {
     this->positionCovariance=positionCovariance;
     this->orientationCovariance=orientationCovariance;
@@ -38,6 +38,11 @@ void FastSLAM::predict(double dt)
 
 void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
+    for(int l=0;l<landmarksMeasurements.size();l++){
+        for(int i=0;i<particleNb;i++){
+            particles[i].updateKF(landmarksMeasurements[l],l);
+        }
+    }
 }
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
