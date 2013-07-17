@@ -326,10 +326,6 @@ ibex::IntervalVector *Robot::getObservationsAsIntervalVector()
     return res;
 }
 
-Eigen::Vector3d Robot::positionAsVect()
-{
-}
-
 string Robot::groundTruthToString()
 {
     std::string res;
@@ -350,17 +346,32 @@ string Robot::groundTruthToString()
     return res+"\n";
 }
 
-
-Eigen::Vector3d Robot::angularMotionAsVect()
+Eigen::Vector3d Robot::positionAsVect()
 {
+    Eigen::Vector3d positionAsVect;
+    positionAsVect << positionNoisy[0],positionNoisy[1],positionNoisy[2];
+    return positionAsVect;
 }
-
-
-Eigen::Vector3d Robot::linearMotionAsVect()
-{
-}
-
 
 Eigen::Vector3d Robot::orientationAsVect()
 {
+    Eigen::Vector3d orientationAsVect;
+    orientationAsVect << orientationNoisy[0],orientationNoisy[1],orientationNoisy[2];
+    return orientationAsVect;
+}
+
+Eigen::Vector3d Robot::linearMotionAsVect()
+{
+    Eigen::Vector3d linearMotionAsVect;
+    linearMotionAsVect << linearSpeedNoisy[0],linearSpeedNoisy[1],linearSpeedNoisy[2];
+    return linearMotionAsVect;
+}
+
+
+
+Eigen::Vector3d Robot::angularMotionAsVect()
+{
+    Eigen::Vector3d angularMotionAsVect;
+    angularMotionAsVect << angularSpeedNoisy[0],angularSpeedNoisy[1],angularSpeedNoisy[2];
+    return angularMotionAsVect;
 }

@@ -11,19 +11,19 @@ FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, 
 
 void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksCovEstimates)
 {
-    this->particleNb=particleNb;
-    for(int i=0; i<particleNb; i++){
-        Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion, landmarksPosEstimates, landmarksCovEstimates);
-        std::vector<KalmanFilter> initMap;
-        // TODO: find a way to draw landmark positions from a multivariate normal distribution (http://stackoverflow.com/questions/6142576/sample-from-multivariate-normal-gaussian-distribution-in-c could do? )
-        // But for now, all the particles are init the same,
-        // next step is drawing from uniform distribution, and doing it wrong because assuming the cov matrices are diagonals!
-        for(uint j=0;j<landmarksPosEstimates.size();j++){
-            Vector3d pos=landmarksPosEstimates[j];
-            Matrix3d posCov=landmarksCovEstimates[j];
-            KalmanFilter kf(pos, posCov, this->pingerVariance);
-            initMap.push_back(kf);
-        }
-        p.setInitMap(initMap);
-    }
+//    this->particleNb=particleNb;
+//    for(int i=0; i<particleNb; i++){
+//        Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion, landmarksPosEstimates, landmarksCovEstimates);
+//        std::vector<KalmanFilter> initMap;
+//        // TODO: find a way to draw landmark positions from a multivariate normal distribution (http://stackoverflow.com/questions/6142576/sample-from-multivariate-normal-gaussian-distribution-in-c could do? )
+//        // But for now, all the particles are init the same,
+//        // next step is drawing from uniform distribution, and doing it wrong because assuming the cov matrices are diagonals!
+//        for(uint j=0;j<landmarksPosEstimates.size();j++){
+//            Vector3d pos=landmarksPosEstimates[j];
+//            Matrix3d posCov=landmarksCovEstimates[j];
+//            KalmanFilter kf(pos, posCov, this->pingerVariance);
+//            initMap.push_back(kf);
+//        }
+//        p.setInitMap(initMap);
+//    }
 }
