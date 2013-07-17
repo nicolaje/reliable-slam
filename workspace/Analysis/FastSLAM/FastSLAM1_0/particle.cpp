@@ -17,6 +17,10 @@ void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)
     this->landmarksKalmanFilters=landmarksKFs;
 }
 
+void Particle::predict(double dt)
+{
+}
+
 
 void Particle::updateKF(double measurement, int landmarkIndex)
 {

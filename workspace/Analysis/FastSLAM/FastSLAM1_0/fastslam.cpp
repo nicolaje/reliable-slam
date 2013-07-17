@@ -30,10 +30,18 @@ void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d ro
 
 void FastSLAM::predict(double dt)
 {
+    for(int i=0;i<particleNb;i++){
+        particles[i].predict(dt);
+    }
 }
 
 void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
+}
+
+Matrix3d FastSLAM::getRotationMatrix(Vector3d eulerZYX)
+{
+
 }
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
@@ -41,11 +49,11 @@ void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
 }
 
 
-void FastSLAM::updateRobotState(Vector3d orientation)
+void FastSLAM::updateRobotOrientation(Vector3d orientation)
 {
 }
 
 
-void FastSLAM::updateRobotState(Vector3d position, Vector3d orientation)
+void FastSLAM::updateRobotPosition(Vector3d position)
 {
 }

@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
         r=p.nextRecord()[0];
         estimator.updateMap(r.getLandmarksMeasurementsNoisy());
         estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
-        estimator.updateRobotState(r.orientationAsVect());
+        estimator.updateRobotOrientation(r.orientationAsVect());
     }
 
     return a.exec();
