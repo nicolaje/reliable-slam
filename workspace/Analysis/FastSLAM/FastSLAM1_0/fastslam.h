@@ -38,7 +38,7 @@ public:
     void updateRobotOrientation(Eigen::Vector3d orientation);
     void updateRobotMotion(Eigen::Vector3d linearMotion, Eigen::Vector3d angularMotion);
     void updateMap(std::vector<double> landmarksMeasurements);
-    void handleReSampling();
+    void reSample();
     void setPercentilResampling(int percentil);
 private:
     Eigen::Matrix3d positionCovariance;

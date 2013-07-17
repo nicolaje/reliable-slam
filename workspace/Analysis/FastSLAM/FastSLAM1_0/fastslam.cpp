@@ -49,18 +49,18 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
             particles[i].updateKF(landmarksMeasurements[l],l);
             if(resampling_strategy==RESAMPLE_EVERYTIME){
                 normalize();
-                handleReSampling();
+                reSample();
             }
         }
         normalize();
         if(resampling_strategy==RESAMPLE_EACH)
-            handleReSampling();
+            reSample();
     }
     if(resampling_strategy==RESAMPLE_ALL)
-        handleReSampling();
+        reSample();
 }
 
-void FastSLAM::handleReSampling()
+void FastSLAM::reSample()
 {
     switch(resampling_method){
     case ROULETTE:

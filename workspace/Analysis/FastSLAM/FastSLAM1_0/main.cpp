@@ -59,6 +59,7 @@
     0,0.01*M_PI,0,\
     0,0,0.01*M_PI
 #define PING_COV 0.03
+
 using namespace Eigen;
 
 int main(int argc, char *argv[])

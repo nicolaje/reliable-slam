@@ -17,14 +17,16 @@ public:
      * @param distance the measured distances to the landmarks
      * @return the weight of this particle after update (to be normalized!)
      */
-    double update(double distance);
+    double update(double distance, Eigen::Vector3d robotPos);
 private:
 
     // Estimated position of the landmark
     Eigen::Vector3d mean;
     Eigen::Matrix3d covariance;
 
+    double observationModel(Eigen::Vector3d robotPosition);
     // Todo: implement a way to get a jacobian of obs. model
+    Eigen::RowVector3d jacobianObservationModel(Eigen::Vector3d robotPosition);
 
     double pingerVariance;
 };

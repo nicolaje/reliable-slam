@@ -15,3 +15,13 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
 {
 
 }
+
+double KalmanFilter::observationModel(Vector3d robotPosition)
+{
+    return (mean-robotPosition).squaredNorm();
+}
+
+
+RowVector3d KalmanFilter::jacobianObservationModel(Vector3d robotPosition)
+{
+}
