@@ -1,14 +1,14 @@
 #include "particle.h"
 using namespace Eigen;
 
-Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksPosCovs)
+Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksPosCovs, double pingerVariance)
 {
     this->robotPosition=robotPosition;
     this->robotOrientation=robotOrientation;
     this->robotLinearMotion=robotLinearMotion;
     this->robotAngularMotion=robotAngularMotion;
     for(uint i=0; i<landmarksPosEstimates.size();i++){
-        KalmanFilter f(landmarksPosEstimates[i],landmarksPosCovs[i]);
+        KalmanFilter f(landmarksPosEstimates[i],landmarksPosCovs[i],pingerVariance);
         landmarksKalmanFilters.push_back(f);
     }
 }

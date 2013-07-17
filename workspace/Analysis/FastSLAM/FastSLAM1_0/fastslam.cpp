@@ -25,6 +25,7 @@ void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d ro
             initMap.push_back(kf);
         }
         p.setInitMap(initMap);
+        particles.push_back(p);
     }
 }
 
