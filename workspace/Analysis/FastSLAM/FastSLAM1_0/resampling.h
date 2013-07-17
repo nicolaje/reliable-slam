@@ -9,8 +9,7 @@
 class ReSampling
 {
 public:
-    ReSampling();
-    void resamplingRoulette(std::vector<Particle> particles);
+    static void resamplingRoulette(std::vector<Particle> particles);
 };
 
 #endif // RESAMPLING_H

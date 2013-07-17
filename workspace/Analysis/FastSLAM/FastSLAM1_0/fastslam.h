@@ -10,6 +10,7 @@ class FastSLAM
 public:
     static const uint RESAMPLE_EACH=0;
     static const uint RESAMPLE_ALL=1;
+    static const uint RESAMPLE_EVERYTIME; // Resample for each landmark measurement incorpored, for each particle
     static const uint ROULETTE=0;
     static const uint ROULETTE_1ST_QUARTIL=1;
     static const uint ROULETTE_2ST_QUARTIL=2;
@@ -36,6 +37,7 @@ public:
     void updateRobotOrientation(Eigen::Vector3d orientation);
     void updateRobotMotion(Eigen::Vector3d linearMotion, Eigen::Vector3d angularMotion);
     void updateMap(std::vector<double> landmarksMeasurements);
+    void handleReSampling();
 private:
     Eigen::Matrix3d positionCovariance;
     Eigen::Matrix3d orientationCovariance;
@@ -46,6 +48,7 @@ private:
     int resampling_method;
     int resampling_strategy;
 
+    void normalize();
     std::vector<Particle> particles;
 };
 

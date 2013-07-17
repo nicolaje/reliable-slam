@@ -1,5 +1,8 @@
 #include "fastslam.h"
+#include "resampling.h"
+
 using namespace Eigen;
+
 FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY)
 {
     this->positionCovariance=positionCovariance;
@@ -44,6 +47,41 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
         for(int i=0;i<particleNb;i++){
             particles[i].updateKF(landmarksMeasurements[l],l);
         }
+        normalize();
+        if(resampling_strategy==RESAMPLE_EACH){
+            handleReSampling();
+        }
+    }
+}
+
+void FastSLAM::handleReSampling()
+{
+    switch(resampling_method){
+    case ROULETTE:
+        ReSampling::resamplingRoulette(particles);
+        break;
+    case ROULETTE_1ST_QUARTIL:
+        ReSampling::resamplingQuartil(particles,1);
+        break;
+    case ROULETTE_2ST_QUARTIL:
+        ReSampling::resamplingQuartil(particles,2);
+        break;
+    case ROULETTE_3ST_QUARTIL:
+        ReSampling::resamplingQuartil(particles,3);
+        break;
+    default:
+        ReSampling::resamplingRoulette(particles);
+    }
+}
+
+void FastSLAM::normalize()
+{
+    double sum=0;
+    for(int i=0;i<particleNb;i++){
+        sum+=particles[i].getWeight();
+    }
+    for(int i=0;i<particleNb;i++){
+        particles[i].normalizeWeight(sum);
     }
 }
 

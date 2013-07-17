@@ -11,7 +11,9 @@
 class Particle
 {
 public:
-    Particle(Eigen::Vector3d robotPosition, Eigen::Vector3d robotOrientation, Eigen::Vector3d robotLinearMotion, Eigen::Vector3d robotAngularMotion, std::vector<Eigen::Vector3d> landmarksPosEstimates, std::vector<Eigen::Matrix3d> landmarksPosCovs,double pingerVariance);
+    static const uint WEIGHT_INDEP=0;
+    static const uing WEIGHT_MULT=1;
+    Particle(Eigen::Vector3d robotPosition, Eigen::Vector3d robotOrientation, Eigen::Vector3d robotLinearMotion, Eigen::Vector3d robotAngularMotion, std::vector<Eigen::Vector3d> landmarksPosEstimates, std::vector<Eigen::Matrix3d> landmarksPosCovs,double pingerVariance, int weightingMethond=WEIGHT_MULT);
     void setInitMap(std::vector<KalmanFilter> landmarksKFs);
     void predict(double dt);
     void updateRobotPosition(Eigen::Vector3d position);
@@ -20,8 +22,10 @@ public:
     void updateRobotOrientationMotion(Eigen::Vector3d orientationMotion);
     void updateKF(double measurement, int landmarkIndex);
     double getWeight();
+    void normalizeWeight(double norm);
 private:
     double weight;
+    int weightingMethod;
     Eigen::Vector3d robotPosition; // Position of the robot
     Eigen::Vector3d robotOrientation; // Orientation of the robot
     Eigen::Vector3d robotLinearMotion; // Linear speed of the robot
