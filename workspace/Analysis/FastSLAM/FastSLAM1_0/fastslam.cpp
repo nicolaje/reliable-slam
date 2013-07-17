@@ -3,7 +3,7 @@
 
 using namespace Eigen;
 
-FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY)
+FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY, int percentil)
 {
     this->positionCovariance=positionCovariance;
     this->orientationCovariance=orientationCovariance;
@@ -12,6 +12,7 @@ FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, 
     this->pingerVariance=pingerVariance;
     this->resampling_method=RESAMPLE_METHOD;
     this->resampling_strategy=RESAMPLE_STRATEGY;
+    this->percentil=percentil;
 }
 
 void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksCovEstimates)
@@ -66,17 +67,25 @@ void FastSLAM::handleReSampling()
         ReSampling::resamplingRoulette(particles);
         break;
     case ROULETTE_1ST_QUARTIL:
-        ReSampling::resamplingQuartil(particles,1);
+        ReSampling::resamplingPercentil(particles,25);
         break;
     case ROULETTE_2ST_QUARTIL:
-        ReSampling::resamplingQuartil(particles,2);
+        ReSampling::resamplingPercentil(particles,50);
         break;
     case ROULETTE_3ST_QUARTIL:
-        ReSampling::resamplingQuartil(particles,3);
+        ReSampling::resamplingPercentil(particles,75);
+        break;
+    case ROULETTE_PERCENTIL:
+        ReSampling::resamplingPercentil(particles,percentil);
         break;
     default:
         ReSampling::resamplingRoulette(particles);
     }
+}
+
+void FastSLAM::setPercentilResampling(int percentil)
+{
+    this->percentil=percentil;
 }
 
 void FastSLAM::normalize()

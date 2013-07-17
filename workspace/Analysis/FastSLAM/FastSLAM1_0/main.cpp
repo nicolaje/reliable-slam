@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
         estimator.updateMap(r.getLandmarksMeasurementsNoisy());
         estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
         estimator.updateRobotOrientation(r.orientationAsVect());
+        estimator.predict(DT);
     }
 
     return a.exec();

@@ -18,6 +18,9 @@ void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)
 void Particle::predict(double dt)
 {
     robotPosition=robotPosition+dt*getRotationMatrix(robotOrientation)*robotLinearMotion;
+    for(int l=0;l<landmarksKalmanFilters.size();l++){
+        landmarksKalmanFilters[l].predict(dt);
+    }
 }
 
 
@@ -25,10 +28,10 @@ void Particle::updateKF(double measurement, int landmarkIndex)
 {
     switch(weightingMethod){
     case WEIGHT_INDEP:
-        weight=landmarksKalmanFilters[landmarkIndex].update(measurement);
+        weight=landmarksKalmanFilters[landmarkIndex].update(measurement,robotPosition);
         break;
     case WEIGHT_MULT:
-        weight*=landmarksKalmanFilters[landmarkIndex].update(measurement);
+        weight*=landmarksKalmanFilters[landmarkIndex].update(measurement,robotPosition);
         break;
     }
 }

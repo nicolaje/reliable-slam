@@ -11,7 +11,7 @@ void KalmanFilter::predict(double dt)
 {
     // Landmarks do not move in our situation, do nothing =)
 }
-double KalmanFilter::update(double distance)
+double KalmanFilter::update(double distance, Vector3d robotPos)
 {
 
 }
