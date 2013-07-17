@@ -4,6 +4,6 @@ void ReSampling::resamplingRoulette(std::vector<Particle> particles)
 {
 }
 
-void ReSampling::resamplingQuartil(std::vector<Particle> particles, int quartil)
+void ReSampling::resamplingPercentil(std::vector<Particle> particles, int percentil)
 {
 }
