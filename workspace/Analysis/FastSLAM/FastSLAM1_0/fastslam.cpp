@@ -7,6 +7,8 @@ FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, 
     this->linearMotionCovariance=linearMotionCovariance;
     this->angularMotionCovariance=angularMotionCovariance;
     this->pingerVariance=pingerVariance;
+    this->resampling_method=RESAMPLE_METHOD;
+    this->resampling_strategy=RESAMPLE_STRATEGY;
 }
 
 void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksCovEstimates)

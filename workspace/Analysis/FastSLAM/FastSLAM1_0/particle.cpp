@@ -22,7 +22,7 @@ void Particle::predict(double dt)
 
 void Particle::updateKF(double measurement, int landmarkIndex)
 {
-    weight=landmarksKalmanFilters[landmarkIndex].update(measurement);
+    weight*=landmarksKalmanFilters[landmarkIndex].update(measurement);
 }
 
 

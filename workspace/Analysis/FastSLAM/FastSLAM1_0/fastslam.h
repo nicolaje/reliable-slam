@@ -43,6 +43,8 @@ private:
     Eigen::Matrix3d angularMotionCovariance;
     double pingerVariance;
     int particleNb;
+    int resampling_method;
+    int resampling_strategy;
 
     std::vector<Particle> particles;
 };
