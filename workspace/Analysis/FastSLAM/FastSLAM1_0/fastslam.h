@@ -37,7 +37,6 @@ private:
     double pingerVariance;
     int particleNb;
 
-    Eigen::Matrix3d getRotationMatrix(Eigen::Vector3d eulerZYX);
     std::vector<Particle> particles;
 };
 

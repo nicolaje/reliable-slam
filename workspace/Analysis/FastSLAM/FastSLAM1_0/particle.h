@@ -26,6 +26,7 @@ private:
     Eigen::Vector3d robotOrientation; // Orientation of the robot
     Eigen::Vector3d robotLinearMotion; // Linear speed of the robot
     Eigen::Vector3d robotAngularMotion; // Linear speed of the robot
+    Eigen::Matrix3d getRotationMatrix(Eigen::Vector3d eulerZYX); // 3D Rotation matrix of the robot
     std::vector<KalmanFilter> landmarksKalmanFilters; // One Kalman Filter per landmark position
 };
 

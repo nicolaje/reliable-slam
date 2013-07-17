@@ -13,7 +13,7 @@ void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d ro
 {
     this->particleNb=particleNb;
     for(int i=0; i<particleNb; i++){
-        Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion, landmarksPosEstimates, landmarksCovEstimates);
+        Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion, landmarksPosEstimates, landmarksCovEstimates,pingerVariance);
         std::vector<KalmanFilter> initMap;
         // TODO: find a way to draw landmark positions from a multivariate normal distribution (http://stackoverflow.com/questions/6142576/sample-from-multivariate-normal-gaussian-distribution-in-c could do? )
         // But for now, all the particles are init the same,
@@ -37,11 +37,6 @@ void FastSLAM::predict(double dt)
 
 void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
-}
-
-Matrix3d FastSLAM::getRotationMatrix(Vector3d eulerZYX)
-{
-
 }
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
