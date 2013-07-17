@@ -326,6 +326,10 @@ ibex::IntervalVector *Robot::getObservationsAsIntervalVector()
     return res;
 }
 
+Eigen::Vector3d Robot::positionAsVect()
+{
+}
+
 string Robot::groundTruthToString()
 {
     std::string res;
@@ -336,6 +340,27 @@ string Robot::groundTruthToString()
     for(int i=0; i<3; i++){
         ss << orientation[i] <<";";
     }
+    for(int i=0; i<3; i++){
+        ss << linearSpeed[i] <<";";
+    }
+    for(int i=0; i<3; i++){
+        ss << angularSpeed[i] <<";";
+    }
     res=ss.str();
     return res+"\n";
+}
+
+
+Eigen::Vector3d Robot::angularMotionAsVect()
+{
+}
+
+
+Eigen::Vector3d Robot::linearMotionAsVect()
+{
+}
+
+
+Eigen::Vector3d Robot::orientationAsVect()
+{
 }

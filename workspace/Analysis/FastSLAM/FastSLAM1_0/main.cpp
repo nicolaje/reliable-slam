@@ -9,6 +9,8 @@
 #include "particle.h"
 #include "fastslam.h"
 
+#define PARTICLES_NB=10;
+
 using namespace Eigen;
 
 int main(int argc, char *argv[])
@@ -40,7 +42,9 @@ int main(int argc, char *argv[])
             0,0,0.01*M_PI;
     double pingerVariance=0.03;
 
-    FastSLAM estimator;
+//    FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
+//    estimator.initParticles(PARTICLES_NB,);
+
 
     return a.exec();
 }

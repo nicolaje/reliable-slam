@@ -4,7 +4,9 @@
 #include <sstream>
 #include <vector>
 #include <QDebug>
-#include <ibex.h>
+#include <ibex/ibex.h>
+#include <eigen3/Eigen/Eigen>
+
 using namespace std;
 
 class Robot
@@ -69,6 +71,11 @@ public:
     ibex::IntervalVector accelerationAsIntervalVector();
     ibex::IntervalVector pingerMeasurementsAsIntervalVector();
     ibex::IntervalVector *getObservationsAsIntervalVector();
+
+    Eigen::Vector3d positionAsVect();
+    Eigen::Vector3d orientationAsVect();
+    Eigen::Vector3d linearMotionAsVect();
+    Eigen::Vector3d angularMotionAsVect();
 
     std::string groundTruthToString();
 private:
