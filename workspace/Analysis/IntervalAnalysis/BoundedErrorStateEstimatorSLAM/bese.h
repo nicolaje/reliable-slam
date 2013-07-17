@@ -1,9 +1,8 @@
 #ifndef BESE_H
-#define BESE_H
-#include <ibex.h>
+#include <ibex/ibex.h>
 #include <string>
-#include <subpaving.h>
 #include <../../General/Utils/robot.h>
+#define BESE_H
 
 /**
  * @brief The BESE (Bounded Error State Estimator) class estimates the state of a robot

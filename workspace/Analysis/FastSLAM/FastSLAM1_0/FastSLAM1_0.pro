@@ -29,4 +29,4 @@ FORMS    += mainwindow.ui
 CONFIG += link_pkgconfig
 PKGCONFIG +=/usr/local/share/pkgconfig/ibex.pc
 PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc
-LIBS += -L"../../General/Utils-build-desktop-Qt_4_8_2_in_PATH__System__Release/" -lUtils
+LIBS += -L"../../General/build-Utils-Desktop_Qt_5_1_0_GCC_64bit-Debug/" -lUtils

@@ -1,10 +1,10 @@
 #ifndef MORSEDATAPARSER_H
-#define MORSEDATAPARSER_H
 #include <QFile>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
 #include "robot.h"
+#define MORSEDATAPARSER_H
 
 /**
  * @brief The MORSEDataParser class parses a .csv generated after a MORSE simulation
