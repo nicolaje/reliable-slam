@@ -10,6 +10,7 @@ class ReSampling
 {
 public:
     static void resamplingRoulette(std::vector<Particle> particles);
+    static void resamplingQuartil(std::vector<Particle> particles, int quartil);
 };
 
 #endif // RESAMPLING_H

@@ -9,8 +9,8 @@ class FastSLAM
 {
 public:
     static const uint RESAMPLE_EACH=0;
-    static const uint RESAMPLE_ALL=1;
-    static const uint RESAMPLE_EVERYTIME; // Resample for each landmark measurement incorpored, for each particle
+    static const uint RESAMPLE_ALL=1; // Resample after one landmark has been incorporated in every particle
+    static const uint RESAMPLE_EVERYTIME; // Resample for each landmark measurement incorpored, for each particle (resource consuming!!)
     static const uint ROULETTE=0;
     static const uint ROULETTE_1ST_QUARTIL=1;
     static const uint ROULETTE_2ST_QUARTIL=2;

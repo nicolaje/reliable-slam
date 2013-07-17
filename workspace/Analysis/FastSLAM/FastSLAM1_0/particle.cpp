@@ -23,7 +23,14 @@ void Particle::predict(double dt)
 
 void Particle::updateKF(double measurement, int landmarkIndex)
 {
-    weight*=landmarksKalmanFilters[landmarkIndex].update(measurement);
+    switch(weightingMethod){
+    case WEIGHT_INDEP:
+        weight=landmarksKalmanFilters[landmarkIndex].update(measurement);
+        break;
+    case WEIGHT_MULT:
+        weight*=landmarksKalmanFilters[landmarkIndex].update(measurement);
+        break;
+    }
 }
 
 double Particle::getWeight()

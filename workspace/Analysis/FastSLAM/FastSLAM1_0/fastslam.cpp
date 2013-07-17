@@ -46,12 +46,17 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
     for(int l=0;l<landmarksMeasurements.size();l++){
         for(int i=0;i<particleNb;i++){
             particles[i].updateKF(landmarksMeasurements[l],l);
+            if(resampling_strategy==RESAMPLE_EVERYTIME){
+                normalize();
+                handleReSampling();
+            }
         }
         normalize();
-        if(resampling_strategy==RESAMPLE_EACH){
+        if(resampling_strategy==RESAMPLE_EACH)
             handleReSampling();
-        }
     }
+    if(resampling_strategy==RESAMPLE_ALL)
+        handleReSampling();
 }
 
 void FastSLAM::handleReSampling()
