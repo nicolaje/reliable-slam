@@ -16,7 +16,7 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
 
 }
 
-double KalmanFilter::observationModel(Vector3d robotPosition)
+double KalmanFilter::observation(Vector3d robotPosition)
 {
     return (mean-robotPosition).squaredNorm();
 }
@@ -24,4 +24,8 @@ double KalmanFilter::observationModel(Vector3d robotPosition)
 
 RowVector3d KalmanFilter::jacobianObservationModel(Vector3d robotPosition)
 {
+    RowVector3d res;
+    Vector3d tmp=(mean-robotPosition);
+    res=(tmp/tmp.squaredNorm()).transpose(); // TODO test if it works
+    return res;
 }
