@@ -2,6 +2,7 @@
 #include "resampling.h"
 #include <iostream>
 #define SEED 1
+#define SIGMA_FACTOR 5
 
 using namespace Eigen;
 
@@ -121,15 +122,26 @@ void FastSLAM::normalize()
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
 {
-    std::normal_distribution<double> distribution(0,1);
-
+    std::vector<Vector3d> linearMotions=FastSLAM::drawSamples(particleNb,linearMotion,SIGMA_FACTOR*this->linearMotionCovariance);
+    std::vector<Vector3d> angularMotions=FastSLAM::drawSamples(particleNb,angularMotion,SIGMA_FACTOR*this->angularMotionCovariance);
+    for(int i=0;i<particleNb;i++){
+        particles[i].updateRobotLinearMotion(linearMotions[i]);
+        particles[i].updateRobotOrientationMotion(angularMotions[i]);
+    }
 }
 
 void FastSLAM::updateRobotOrientation(Vector3d orientation)
 {
-
+    std::vector<Vector3d> orientations=FastSLAM::drawSamples(particleNb,orientation,orientationCovariance);
+    for(int i=0;i<particleNb;i++){
+        particles[i].updateRobotOrientation(orientations[i]);
+    }
 }
 
 void FastSLAM::updateRobotPosition(Vector3d position)
 {
+    std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,position,positionCovariance);
+    for(int i=0;i<particleNb;i++){
+        particles[i].updateRobotPosition(positions[i]);
+    }
 }

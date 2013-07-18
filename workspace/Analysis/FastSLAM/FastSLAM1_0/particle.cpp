@@ -23,7 +23,6 @@ void Particle::predict(double dt)
     }
 }
 
-
 void Particle::updateKF(double measurement, int landmarkIndex)
 {
     switch(weightingMethod){
@@ -59,4 +58,24 @@ Matrix3d Particle::getRotationMatrix(Vector3d eulerZYX)
 void Particle::normalizeWeight(double norm)
 {
     weight/=norm;
+}
+
+void Particle::updateRobotPosition(Vector3d position)
+{
+    this->robotPosition=position;
+}
+
+void Particle::updateRobotOrientation(Vector3d orientation)
+{
+    this->robotOrientation=orientation;
+}
+
+void Particle::updateRobotLinearMotion(Vector3d linearMotion)
+{
+    this->robotLinearMotion=linearMotion;
+}
+
+void Particle::updateRobotOrientationMotion(Vector3d orientationMotion)
+{
+    this->robotAngularMotion=orientationMotion;
 }

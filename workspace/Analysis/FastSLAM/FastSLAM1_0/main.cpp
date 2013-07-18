@@ -64,7 +64,6 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-    std::vector<Particle> particles;
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
@@ -80,7 +79,7 @@ int main(int argc, char *argv[])
     double pingerVariance=PING_COV;
 
     // 4 landmarks here
-    //
+
     std::vector<Vector3d> landmarksEstimates;
     Vector3d l1,l2,l3,l4;
     l1 << LM1;
@@ -106,24 +105,14 @@ int main(int argc, char *argv[])
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
 
-    Vector3d v(0,0,0);
-    Matrix3d m;
-    m
-            << 1,0,0,
-            0,1,0,
-            0,0,1;
-
-    std::cout << FastSLAM::drawSamples(1,v,m)[0] << std::endl;
-
-//    estimator.predict(DT);
-
-//    while(p.hasDataLeft()){
-//        r=p.nextRecord()[0];
-//        estimator.updateMap(r.getLandmarksMeasurementsNoisy());
-//        estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
-//        estimator.updateRobotOrientation(r.orientationAsVect());
-//        estimator.predict(DT);
-//    }
+    while(p.hasDataLeft()){
+        estimator.updateMap(r.getLandmarksMeasurementsNoisy());
+        estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
+        estimator.updateRobotOrientation(r.orientationAsVect());
+        estimator.predict(DT);
+        r=p.nextRecord()[0];
+        std::cout << r.positionAsVect() << "==" << std::endl;
+    }
 
     return a.exec();
 }
