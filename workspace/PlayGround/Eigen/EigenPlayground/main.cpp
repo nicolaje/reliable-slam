@@ -22,5 +22,11 @@ int main(int argc, char *argv[])
 
     std::cout<<"v*m*vT: "<<v*m*(v.transpose())+3<<std::endl;
 
+    Vector3d v1(1,1,1),v2(0.5,0.6,0.7);
+    std::cout << v2(1) << ";" << v2(2) << std::endl;
+//    std::cout << v1 << std::endl;
+//    Vector3d vec=v1.cwise()*v;
+//    std::cout << vec << std::endl;
+
     return a.exec();
 }

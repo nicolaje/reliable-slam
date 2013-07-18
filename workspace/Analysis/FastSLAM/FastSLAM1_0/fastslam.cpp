@@ -7,6 +7,22 @@ using namespace Eigen;
 
 std::default_random_engine FastSLAM::generator=std::default_random_engine(SEED);
 
+std::vector<Vector3d> FastSLAM::drawSamples(int nb, Vector3d mean, Matrix3d covariance)
+{
+    std::vector<Vector3d> samples;
+    SelfAdjointEigenSolver<MatrixXd> eigenSolver(covariance);
+    std::normal_distribution<double> norm(1,0);
+
+    Matrix3d rot=eigenSolver.eigenvectors();
+    Vector3d scl=eigenSolver.eigenvalues();
+    for(int i=0; i<nb; i++){
+        Vector3d v(scl(0)*norm(generator),scl(1)*norm(generator),scl(2)*norm(generator)); // scale
+        v=rot*v; // rotate
+        samples.push_back(v);
+    }
+    return samples;
+}
+
 FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY, int percentil)
 {
     this->positionCovariance=positionCovariance;
@@ -109,11 +125,10 @@ void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
 
 }
 
-
 void FastSLAM::updateRobotOrientation(Vector3d orientation)
 {
-}
 
+}
 
 void FastSLAM::updateRobotPosition(Vector3d position)
 {

@@ -106,15 +106,15 @@ int main(int argc, char *argv[])
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
 
-    estimator.predict(DT);
+//    estimator.predict(DT);
 
-    while(p.hasDataLeft()){
-        r=p.nextRecord()[0];
-        estimator.updateMap(r.getLandmarksMeasurementsNoisy());
-        estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
-        estimator.updateRobotOrientation(r.orientationAsVect());
-        estimator.predict(DT);
-    }
+//    while(p.hasDataLeft()){
+//        r=p.nextRecord()[0];
+//        estimator.updateMap(r.getLandmarksMeasurementsNoisy());
+//        estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
+//        estimator.updateRobotOrientation(r.orientationAsVect());
+//        estimator.predict(DT);
+//    }
 
     return a.exec();
 }
