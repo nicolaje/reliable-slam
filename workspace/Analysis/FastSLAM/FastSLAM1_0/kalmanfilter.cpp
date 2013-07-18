@@ -19,6 +19,7 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
     double delta=(distance-zHat);
     std::cout <<"Delta: "<<delta<<std::endl;
     RowVector3d H=jacobianObservationModel(robotPos);
+    std::cout <<"H: "<<H<<std::endl;
     double Q=H*covariance*(H.transpose())+pingerVariance;
     std::cout << "Q: "<<Q<<std::endl;
     Vector3d K=(1/Q)*covariance*(H.transpose());
@@ -40,6 +41,8 @@ RowVector3d KalmanFilter::jacobianObservationModel(Vector3d robotPosition)
 {
     RowVector3d res;
     Vector3d tmp=(mean-robotPosition);
+    std::cout<<"Tmp: "<<tmp.transpose()<<std::endl;
     res=(tmp/tmp.squaredNorm()).transpose(); // TODO test if it works
+    std::cout<<"Res: "<<res<<std::endl;
     return res;
 }
