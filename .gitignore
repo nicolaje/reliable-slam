@@ -32,3 +32,4 @@ build-Utils-Desktop_Qt_5_1_0_GCC_64bit-Debug
 workspace/Analysis/IntervalAnalysis/build-BoundedErrorStateEstimatorSLAM-Desktop_Qt_5_1_0_GCC_64bit-Debug/
 workspace/Analysis/FastSLAM/build-FastSLAM1_0-Desktop_Qt_5_1_0_GCC_64bit-Debug/
 workspace/Analysis/build-ParticleFilterSLAM-Desktop_Qt_5_1_0_GCC_64bit-Debug/
+workspace/Analysis/IntervalAnalysis/BoundedErrorStateEstimatorSLAM/BoundedErrorStateEstimatorSLAM.pro.user

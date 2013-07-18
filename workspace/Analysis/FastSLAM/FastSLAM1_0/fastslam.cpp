@@ -1,7 +1,11 @@
 #include "fastslam.h"
 #include "resampling.h"
+#include <iostream>
+#define SEED 1
 
 using namespace Eigen;
+
+std::default_random_engine FastSLAM::generator=std::default_random_engine(SEED);
 
 FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY, int percentil)
 {
@@ -101,6 +105,8 @@ void FastSLAM::normalize()
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
 {
+    std::normal_distribution<double> distribution(0,1);
+
 }
 
 
