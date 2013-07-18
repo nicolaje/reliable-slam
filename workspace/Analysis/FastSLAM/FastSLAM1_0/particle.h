@@ -14,7 +14,7 @@ public:
     static const uint WEIGHT_INDEP=0;
     static const uint WEIGHT_MULT=1;
 
-    Particle(Eigen::Vector3d robotPosition, Eigen::Vector3d robotOrientation, Eigen::Vector3d robotLinearMotion, Eigen::Vector3d robotAngularMotion, std::vector<Eigen::Vector3d> landmarksPosEstimates, std::vector<Eigen::Matrix3d> landmarksPosCovs,double pingerVariance, int weightingMethond=WEIGHT_MULT);
+    Particle(Eigen::Vector3d robotPosition, Eigen::Vector3d robotOrientation, Eigen::Vector3d robotLinearMotion, Eigen::Vector3d robotAngularMotion, int weightingMethond=WEIGHT_MULT);
     void setInitMap(std::vector<KalmanFilter> landmarksKFs);
     void predict(double dt);
     void updateRobotPosition(Eigen::Vector3d position);
@@ -23,6 +23,9 @@ public:
     void updateRobotOrientationMotion(Eigen::Vector3d orientationMotion);
     void updateKF(double measurement, int landmarkIndex);
     double getWeight();
+    Eigen::Vector3d getPosition();
+    Eigen::Vector3d getOrientation();
+
     void normalizeWeight(double norm);
 private:
     double weight;

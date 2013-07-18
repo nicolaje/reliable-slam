@@ -1,7 +1,7 @@
 #include "particle.h"
 using namespace Eigen;
 
-Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion, std::vector<Vector3d> landmarksPosEstimates, std::vector<Matrix3d> landmarksPosCovs, double pingerVariance, int weightingMethond)
+Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion,int weightingMethond)
 {
     this->robotPosition=robotPosition;
     this->robotOrientation=robotOrientation;
@@ -18,7 +18,7 @@ void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)
 void Particle::predict(double dt)
 {
     robotPosition=robotPosition+dt*getRotationMatrix(robotOrientation)*robotLinearMotion;
-    for(int l=0;l<landmarksKalmanFilters.size();l++){
+    for(uint l=0;l<landmarksKalmanFilters.size();l++){
         landmarksKalmanFilters[l].predict(dt);
     }
 }
@@ -38,6 +38,11 @@ void Particle::updateKF(double measurement, int landmarkIndex)
 double Particle::getWeight()
 {
     return weight;
+}
+
+Vector3d Particle::getPosition()
+{
+    return robotPosition;
 }
 
 
@@ -78,4 +83,10 @@ void Particle::updateRobotLinearMotion(Vector3d linearMotion)
 void Particle::updateRobotOrientationMotion(Vector3d orientationMotion)
 {
     this->robotAngularMotion=orientationMotion;
+}
+
+
+Vector3d Particle::getOrientation()
+{
+    return robotOrientation;
 }

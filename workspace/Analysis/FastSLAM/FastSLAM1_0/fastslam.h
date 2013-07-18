@@ -8,14 +8,14 @@
 class FastSLAM
 {
 public:
-    static const uint RESAMPLE_EACH=0;
-    static const uint RESAMPLE_ALL=1; // Resample after one landmark has been incorporated in every particle
-    static const uint RESAMPLE_EVERYTIME=2; // Resample for each landmark measurement incorpored, for each particle (resource consuming!!)
-    static const uint ROULETTE=0;
-    static const uint ROULETTE_1ST_QUARTIL=1;
-    static const uint ROULETTE_2ST_QUARTIL=2;
-    static const uint ROULETTE_3ST_QUARTIL=3;
-    static const uint ROULETTE_PERCENTIL=4;
+    static const int RESAMPLE_EACH=0;
+    static const int RESAMPLE_ALL=1; // Resample after one landmark has been incorporated in every particle
+    static const int RESAMPLE_EVERYTIME=2; // Resample for each landmark measurement incorpored, for each particle (resource consuming!!)
+    static const int ROULETTE=0;
+    static const int ROULETTE_1ST_QUARTIL=1;
+    static const int ROULETTE_2ST_QUARTIL=2;
+    static const int ROULETTE_3ST_QUARTIL=3;
+    static const int ROULETTE_PERCENTIL=4;
 
     static std::default_random_engine generator;
     static std::vector<Eigen::Vector3d> drawSamples(int nb, Eigen::Vector3d mean, Eigen::Matrix3d covariance);
