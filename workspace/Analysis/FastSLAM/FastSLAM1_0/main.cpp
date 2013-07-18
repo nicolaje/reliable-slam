@@ -106,6 +106,15 @@ int main(int argc, char *argv[])
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
 
+    Vector3d v(0,0,0);
+    Matrix3d m;
+    m
+            << 1,0,0,
+            0,1,0,
+            0,0,1;
+
+    std::cout << FastSLAM::drawSamples(1,v,m)[0] << std::endl;
+
 //    estimator.predict(DT);
 
 //    while(p.hasDataLeft()){

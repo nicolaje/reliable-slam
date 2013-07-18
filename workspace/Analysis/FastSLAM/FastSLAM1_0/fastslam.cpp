@@ -11,14 +11,14 @@ std::vector<Vector3d> FastSLAM::drawSamples(int nb, Vector3d mean, Matrix3d cova
 {
     std::vector<Vector3d> samples;
     SelfAdjointEigenSolver<MatrixXd> eigenSolver(covariance);
-    std::normal_distribution<double> norm(1,0);
+    std::normal_distribution<double> norm(0,1);
 
     Matrix3d rot=eigenSolver.eigenvectors();
     Vector3d scl=eigenSolver.eigenvalues();
     for(int i=0; i<nb; i++){
         Vector3d v(scl(0)*norm(generator),scl(1)*norm(generator),scl(2)*norm(generator)); // scale
         v=rot*v; // rotate
-        samples.push_back(v);
+        samples.push_back(mean+v);
     }
     return samples;
 }
