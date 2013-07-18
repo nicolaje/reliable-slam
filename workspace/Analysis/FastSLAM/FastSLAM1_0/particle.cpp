@@ -4,6 +4,7 @@ using namespace Eigen;
 
 Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion,int weightingMethond)
 {
+    this->weight=1;
     this->robotPosition=robotPosition;
     this->robotOrientation=robotOrientation;
     this->robotLinearMotion=robotLinearMotion;

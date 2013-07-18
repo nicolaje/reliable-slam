@@ -2,7 +2,7 @@
 #include "resampling.h"
 #include <iostream>
 #define SEED 1
-#define SIGMA_FACTOR 10
+#define SIGMA_FACTOR 20
 
 using namespace Eigen;
 
@@ -119,6 +119,7 @@ Particle FastSLAM::getBestParticle()
             idx=i;
         }
     }
+    std::cout << "Best at: " << idx << "with weight: " << w << std::endl;
     return particles[idx];
 }
 

@@ -8,7 +8,7 @@
 #include "../../General/Utils/robot.h"
 #include "particle.h"
 #include "fastslam.h"
-#define PARTICLES_NB 10
+#define PARTICLES_NB 100
 #define DT 0.1
 
 /////////////////////////

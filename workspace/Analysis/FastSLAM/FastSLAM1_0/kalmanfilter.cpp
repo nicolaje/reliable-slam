@@ -24,6 +24,7 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
     mean=mean+K*delta;
     covariance=(Matrix<double,3,3>::Identity()-K*H)*covariance;
     weight=(1/sqrt(2*M_PI*abs(Q)))*exp((-0.5/Q)*pow(delta,2));
+    std::cout << "weight returned after KF update: "<<weight<<std::endl;
     return weight;
 }
 
