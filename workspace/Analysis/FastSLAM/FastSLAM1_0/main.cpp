@@ -71,6 +71,12 @@ int main(int argc, char *argv[])
     MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/2D-4Transponders-Circle.res",1,4);
     Robot r=p.nextRecord()[0];
 
+    QFile *out=new QFile("../Results/DeadReckoning3.res");
+    if(!out->open(QIODevice::WriteOnly)){
+        qDebug() << "Failed to open output file";
+        return 1;
+    }
+
     Matrix3d positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance;
     positionCovariance << POS_COV;
     orientationCovariance << OR_COV;
@@ -111,8 +117,14 @@ int main(int argc, char *argv[])
         estimator.updateRobotOrientation(r.orientationAsVect());
         estimator.predict(DT);
         r=p.nextRecord()[0];
-        std::cout << r.positionAsVect() << "==" << std::endl;
+        std::ostringstream posTrue,posEst;
+        posTrue << r.positionAsVect()[0]<<";"<<r.positionAsVect()[1]<<";"<<r.positionAsVect()[2]<<";";
+        out->write(posTrue.str().c_str());
+        posEst << estimator.getBestParticle().getPosition()[0]<<";"<<estimator.getBestParticle().getPosition()[1]<<";"<<estimator.getBestParticle().getPosition()[0]<<";";
+        out->write(posEst.str().c_str());
+        out->write("\n");
     }
 
+    out->close();
     return a.exec();
 }

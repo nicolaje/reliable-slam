@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 //    std::cout << v1 << std::endl;
 //    Vector3d vec=v1.cwise()*v;
 //    std::cout << vec << std::endl;
+    std::cout << v1.transpose() << std::endl;
 
     return a.exec();
 }

@@ -43,6 +43,8 @@ public:
     void updateMap(std::vector<double> landmarksMeasurements);
     void reSample();
     void setPercentilResampling(int percentil);
+
+    Particle getBestParticle();
 private:
     Eigen::Matrix3d positionCovariance;
     Eigen::Matrix3d orientationCovariance;
