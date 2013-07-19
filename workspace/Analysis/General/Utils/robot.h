@@ -72,6 +72,9 @@ public:
     ibex::IntervalVector pingerMeasurementsAsIntervalVector();
     ibex::IntervalVector *getObservationsAsIntervalVector();
 
+    Eigen::Vector3d positionTrueAsVect();
+    Eigen::Vector3d orientationTrueAsVect();
+
     Eigen::Vector3d positionAsVect();
     Eigen::Vector3d orientationAsVect();
     Eigen::Vector3d linearMotionAsVect();

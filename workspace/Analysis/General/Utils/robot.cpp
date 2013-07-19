@@ -375,3 +375,18 @@ Eigen::Vector3d Robot::angularMotionAsVect()
     angularMotionAsVect << angularSpeedNoisy[0],angularSpeedNoisy[1],angularSpeedNoisy[2];
     return angularMotionAsVect;
 }
+
+
+Eigen::Vector3d Robot::positionTrueAsVect()
+{
+    Eigen::Vector3d positionTrue;
+    positionTrue << position[0],position[1],position[2];
+    return positionTrue;
+}
+
+Eigen::Vector3d Robot::orientationTrueAsVect()
+{
+    Eigen::Vector3d orientationTrue;
+    orientationTrue << orientation[0],orientation[1],orientation[2];
+    return orientationTrue;
+}
