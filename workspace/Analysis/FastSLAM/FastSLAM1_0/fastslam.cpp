@@ -2,7 +2,7 @@
 #include "resampling.h"
 #include <iostream>
 #define SEED 1
-#define SIGMA_FACTOR 20
+#define SIGMA_FACTOR 30
 
 using namespace Eigen;
 
@@ -42,11 +42,8 @@ void FastSLAM::initParticles(int particleNb, Vector3d robotPosition, Vector3d ro
     for(int i=0; i<particleNb; i++){
         Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion);
         std::vector<KalmanFilter> initMap;
-        // TODO: find a way to draw landmark positions from a multivariate normal distribution (http://stackoverflow.com/questions/6142576/sample-from-multivariate-normal-gaussian-distribution-in-c could do? )
-        // But for now, all the particles are init the same,
-        // next step is drawing from uniform distribution, and doing it wrong because assuming the cov matrices are diagonals!
         for(uint j=0;j<landmarksPosEstimates.size();j++){
-            Vector3d pos=landmarksPosEstimates[j];
+            Vector3d pos=FastSLAM::drawSamples(1,landmarksPosEstimates[j],landmarksCovEstimates[j])[0];
             Matrix3d posCov=landmarksCovEstimates[j];
             KalmanFilter kf(pos, posCov, this->pingerVariance);
             initMap.push_back(kf);
@@ -119,6 +116,7 @@ Particle FastSLAM::getBestParticle()
             idx=i;
         }
     }
+    std::cout << "idx: " << idx<<std::endl;
     return particles[idx];
 }
 
