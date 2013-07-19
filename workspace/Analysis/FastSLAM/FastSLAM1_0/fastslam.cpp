@@ -2,7 +2,7 @@
 #include "resampling.h"
 #include <iostream>
 #define SEED 1
-#define SIGMA_FACTOR 30
+#define SIGMA_FACTOR 20
 
 using namespace Eigen;
 

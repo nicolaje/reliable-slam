@@ -25,6 +25,7 @@ public:
     double getWeight();
     Eigen::Vector3d getPosition();
     Eigen::Vector3d getOrientation();
+    std::vector<Eigen::Vector3d> getMap();
 
     void normalizeWeight(double norm);
 private:

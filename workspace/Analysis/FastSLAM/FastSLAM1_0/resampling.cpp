@@ -4,7 +4,6 @@
 
 std::vector<Particle> ReSampling::resamplingRoulette(std::vector<Particle> particles)
 {
-    std::cout << "Resampling Roulette" << std::endl;
     std::vector<Particle> res;
     std::vector<double> weights;
     std::uniform_real_distribution<double> d(0.0,1.0);

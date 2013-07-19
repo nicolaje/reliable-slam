@@ -12,9 +12,13 @@ void KalmanFilter::predict(double dt)
 {
     // Landmarks do not move in our situation, do nothing =)
 }
+
+Vector3d KalmanFilter::getMean()
+{
+    return mean;
+}
 double KalmanFilter::update(double distance, Vector3d robotPos)
 {
-    double weight=1;
     double zHat=observation(robotPos);
     double delta=(distance-zHat);
     RowVector3d H=jacobianObservationModel(robotPos);
@@ -22,7 +26,7 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
     Vector3d K=(1/Q)*covariance*(H.transpose());
     mean=mean+K*delta;
     covariance=(Matrix<double,3,3>::Identity()-K*H)*covariance;
-    weight=(1/sqrt(2*M_PI*fabs(Q)))*exp((-0.5/Q)*pow(delta,2));
+    return (1/sqrt(2*M_PI*fabs(Q)))*exp((-0.5/Q)*pow(delta,2));
 
 //    std::cout << "zHat: " << zHat << std::endl;
 //    std::cout << "delta: " << delta << std::endl;
@@ -32,7 +36,6 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
 //    std::cout << "Covariance: " << covariance << std::endl;
 //    std::cout << "fabs(Q): " << fabs(Q) << std::endl;
 //    std::cout << "weight: " << weight << std::endl;
-    return weight;
 }
 
 double KalmanFilter::observation(Vector3d robotPosition)
@@ -43,8 +46,6 @@ double KalmanFilter::observation(Vector3d robotPosition)
 
 RowVector3d KalmanFilter::jacobianObservationModel(Vector3d robotPosition)
 {
-    RowVector3d res;
     Vector3d tmp=(mean-robotPosition);
-    res=(tmp/tmp.norm()).transpose();
-    return res;
+    return (tmp/tmp.norm()).transpose();
 }

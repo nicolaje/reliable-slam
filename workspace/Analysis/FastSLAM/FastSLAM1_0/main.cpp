@@ -47,18 +47,18 @@
     0,2.5,0,\
     0,0,0.15
 #define OR_COV \
-    0.02*M_PI/180,0,0,\
-    0,0.02*M_PI/180,0,\
-    0,0,0.02*M_PI/180
+    pow(0.02*M_PI/180.,2),0,0,\
+    0,pow(0.02*M_PI/180.,2),0,\
+    0,0,pow(0.02*M_PI/180.,2)
 #define LIN_COV \
-    0.04,0,0,\
-    0,0.04,0,\
-    0,0,0.04
+    pow(0.04,2),0,0,\
+    0,pow(0.04,2),0,\
+    0,0,pow(0.04,2)
 #define ANG_COV \
-    0.01*M_PI/180,0,0,\
-    0,0.01*M_PI/180,0,\
-    0,0,0.01*M_PI/180
-#define PING_COV 0.03
+    pow(0.01*M_PI/180.,2),0,0,\
+    0,pow(0.01*M_PI/180.,2),0,\
+    0,0,pow(0.01*M_PI/180.,2)
+#define PING_COV pow(0.03,2)
 
 using namespace Eigen;
 
@@ -108,6 +108,12 @@ int main(int argc, char *argv[])
     landmarksPosCovariances.push_back(c3);
     landmarksPosCovariances.push_back(c4);
 
+    std::cout << "Position covariance: "<< positionCovariance << std::endl;
+    std::cout << "Orientation covariance: " << orientationCovariance << std::endl;
+    std::cout << "Motion covariance: " << linearMotionCovariance << std::endl;
+    std::cout << "Orientation Speed covariance: " << angularMotionCovariance << std::endl;
+
+
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
 
@@ -127,6 +133,10 @@ int main(int argc, char *argv[])
         out->write("\n");
     }
 
+    std::vector<Vector3d> map=estimator.getBestParticle().getMap();
+    for(int i=0;i<map.size();i++){
+        std::cout << i <<" : "<< map[i] <<std::endl;
+    }
     out->close();
     return a.exec();
 }

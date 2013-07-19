@@ -12,6 +12,8 @@ public:
     KalmanFilter(Eigen::Vector3d mean, Eigen::Matrix3d covariance, double pingerVariance);
     void predict(double dt);
 
+    Eigen::Vector3d getMean();
+
     /**
      * @brief update updates the Kalman filter
      * @param distance the measured distances to the landmarks

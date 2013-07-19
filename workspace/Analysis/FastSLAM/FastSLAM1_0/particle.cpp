@@ -92,3 +92,12 @@ Vector3d Particle::getOrientation()
 {
     return robotOrientation;
 }
+
+std::vector<Vector3d> Particle::getMap()
+{
+    std::vector<Vector3d> map;
+    for(int i=0;i<landmarksKalmanFilters.size();i++){
+        map.push_back(landmarksKalmanFilters[i].getMean());
+    }
+    return map;
+}
