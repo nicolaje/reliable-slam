@@ -2,7 +2,7 @@
 #include "resampling.h"
 #include <iostream>
 #define SEED 1
-#define SIGMA_FACTOR 0
+#define SIGMA_FACTOR 30
 
 using namespace Eigen;
 
@@ -132,6 +132,8 @@ void FastSLAM::normalize()
     for(int i=0;i<particleNb;i++){
         particles[i].normalizeWeight(sum);
     }
+
+    std::cout << "Sum: " << sum<<std::endl;
 }
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
