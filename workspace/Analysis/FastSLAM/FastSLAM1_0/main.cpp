@@ -8,7 +8,7 @@
 #include "../../General/Utils/robot.h"
 #include "particle.h"
 #include "fastslam.h"
-#define PARTICLES_NB 10
+#define PARTICLES_NB 100
 #define DT 0.1
 
 /////////////////////////
@@ -55,9 +55,9 @@
     0,0.04,0,\
     0,0,0.04
 #define ANG_COV \
-    0.01*M_PI,0,0,\
-    0,0.01*M_PI,0,\
-    0,0,0.01*M_PI
+    0.01*M_PI/180,0,0,\
+    0,0.01*M_PI/180,0,\
+    0,0,0.01*M_PI/180
 #define PING_COV 0.03
 
 using namespace Eigen;

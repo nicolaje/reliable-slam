@@ -70,37 +70,37 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
             particles[i].updateKF(landmarksMeasurements[l],l);
             if(resampling_strategy==RESAMPLE_EVERYTIME){
                 normalize();
-                reSample();
+                particles=reSample();
             }
         }
         normalize();
         if(resampling_strategy==RESAMPLE_EACH)
-            reSample();
+            particles=reSample();
     }
     if(resampling_strategy==RESAMPLE_ALL)
-        reSample();
+        particles=reSample();
 }
 
-void FastSLAM::reSample()
+std::vector<Particle> FastSLAM::reSample()
 {
     switch(resampling_method){
     case ROULETTE:
-        ReSampling::resamplingRoulette(particles);
+        return ReSampling::resamplingRoulette(particles);
         break;
     case ROULETTE_1ST_QUARTIL:
-        ReSampling::resamplingPercentil(particles,25);
+        return ReSampling::resamplingPercentil(particles,25);
         break;
     case ROULETTE_2ST_QUARTIL:
-        ReSampling::resamplingPercentil(particles,50);
+        return ReSampling::resamplingPercentil(particles,50);
         break;
     case ROULETTE_3ST_QUARTIL:
-        ReSampling::resamplingPercentil(particles,75);
+        return ReSampling::resamplingPercentil(particles,75);
         break;
     case ROULETTE_PERCENTIL:
-        ReSampling::resamplingPercentil(particles,percentil);
+        return ReSampling::resamplingPercentil(particles,percentil);
         break;
     default:
-        ReSampling::resamplingRoulette(particles);
+        return ReSampling::resamplingRoulette(particles);
     }
 }
 
@@ -119,7 +119,6 @@ Particle FastSLAM::getBestParticle()
             idx=i;
         }
     }
-    std::cout << "Best at: " << idx << "with weight: " << w << std::endl;
     return particles[idx];
 }
 
@@ -132,8 +131,6 @@ void FastSLAM::normalize()
     for(int i=0;i<particleNb;i++){
         particles[i].normalizeWeight(sum);
     }
-
-    std::cout << "Sum: " << sum<<std::endl;
 }
 
 void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
