@@ -390,3 +390,18 @@ Eigen::Vector3d Robot::orientationTrueAsVect()
     orientationTrue << orientation[0],orientation[1],orientation[2];
     return orientationTrue;
 }
+
+Eigen::Vector3d Robot::linearMotionTrueAsVect()
+{
+    Eigen::Vector3d linearMotionTrue;
+    linearMotionTrue << linearSpeed[0],linearSpeed[1],linearSpeed[2];
+    return linearMotionTrue;
+}
+
+
+Eigen::Vector3d Robot::angularMotionTrueAsVect()
+{
+    Eigen::Vector3d angularMotionTrue;
+    angularMotionTrue << angularSpeed[0],angularSpeed[1],angularSpeed[2];
+    return angularMotionTrue;
+}

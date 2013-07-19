@@ -1,5 +1,9 @@
-raw_file=read_csv('/home/jem/reliable-slam/workspace/Analysis/FastSLAM/Results/DeadReckoning3.res',';');
-data=evstr(raw_file);
-plot(data(:,1),data(:,2),'red');
-plot(data(:,4),data(:,5),'blue');
-plot(data(:,7),data(:,8),'green');
+//raw_file=read_csv('/home/jem/reliable-slam/workspace/Analysis/FastSLAM/Results/DeadReckoning3.res',';');
+//data=evstr(raw_file);
+r=1:500;
+plot(data(r,1),data(r,2),'red');
+plot(data(r,4),data(r,5),'blue');
+plot(data(r,7),data(r,8));
+//plot(data(r,10),data(r,11));
+//plot(data(r,13),data(r,14));
+//plot(data(r,16),data(r,17));

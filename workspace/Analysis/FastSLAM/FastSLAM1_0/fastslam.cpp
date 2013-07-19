@@ -116,7 +116,7 @@ Particle FastSLAM::getBestParticle()
             idx=i;
         }
     }
-    std::cout << "idx: " << idx<<std::endl;
+    std::cout << "idx: " << idx<< " , with weight: " << w << std::endl;
     return particles[idx];
 }
 
