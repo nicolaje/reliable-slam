@@ -117,10 +117,12 @@ int main(int argc, char *argv[])
         estimator.updateRobotOrientation(r.orientationAsVect());
         estimator.predict(DT);
         r=p.nextRecord()[0];
-        std::ostringstream posTrue,posEst;
-        posTrue << r.positionAsVect()[0]<<";"<<r.positionAsVect()[1]<<";"<<r.positionAsVect()[2]<<";";
-        out->write(posTrue.str().c_str());
+        std::ostringstream posTrue,posNoisy,posEst;
+        posTrue << r.positionTrueAsVect()[0]<<";"<<r.positionTrueAsVect()[1]<<";"<<r.positionTrueAsVect()[2]<<";";
+        posNoisy << r.positionAsVect()[0]<<";"<<r.positionAsVect()[1]<<";"<<r.positionAsVect()[2]<<";";
         posEst << estimator.getBestParticle().getPosition()[0]<<";"<<estimator.getBestParticle().getPosition()[1]<<";"<<estimator.getBestParticle().getPosition()[0]<<";";
+        out->write(posTrue.str().c_str());
+        out->write(posNoisy.str().c_str());
         out->write(posEst.str().c_str());
         out->write("\n");
     }
