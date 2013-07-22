@@ -68,22 +68,22 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
             Vector3d zeroMean;
             zeroMean << 0,0,0;
             particles[i].addMapError(FastSLAM::drawSamples(1,zeroMean,this->errorCovariance)[0],l);
-            if(resampling_strategy==RESAMPLE_EVERYTIME){
+            if(resampling_method==RESAMPLE_EVERYTIME){
                 normalize();
                 particles=reSample();
             }
         }
         normalize();
-        if(resampling_strategy==RESAMPLE_EACH)
+        if(resampling_method==RESAMPLE_EACH)
             particles=reSample();
     }
-    if(resampling_strategy==RESAMPLE_ALL)
+    if(resampling_method==RESAMPLE_ALL)
         particles=reSample();
 }
 
 std::vector<Particle> FastSLAM::reSample()
 {
-    switch(resampling_method){
+    switch(resampling_strategy){
     case ROULETTE:
         return ReSampling::resamplingRoulette(particles);
         break;

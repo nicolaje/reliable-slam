@@ -20,26 +20,26 @@
 //## MAP PARAMETERS #//
 //##################//
 /////////////////////
-#define LM1 0,0,0//18,-30,3
-#define LM2 0,0,0//-7,12,17
-#define LM3 0,0,0//0,20,5
-#define LM4 0,0,0//-27,-20,10
+#define LM1 0,0,3//18,-30,3
+#define LM2 0,0,17//-7,12,17
+#define LM3 0,0,5//0,20,5
+#define LM4 0,0,10//-27,-20,10
 #define C1 \
-    10,0,0,\
-    0,10,0,\
-    0,0,10
+    50,0,0,\
+    0,50,0,\
+    0,0,50
 #define C2 \
-    10,0,0,\
-    0,10,0,\
-    0,0,10
+    50,0,0,\
+    0,50,0,\
+    0,0,50
 #define C3 \
-    10,0,0,\
-    0,10,0,\
-    0,0,10
+    50,0,0,\
+    0,50,0,\
+    0,0,50
 #define C4 \
-    10,0,0,\
-    0,10,0,\
-    0,0,10
+    50,0,0,\
+    0,50,0,\
+    0,0,50
 
 ////////////////////////////
 //#######################//
@@ -124,7 +124,6 @@ int main(int argc, char *argv[])
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
     estimator.setErrorCovariance(errorCovariance);
-
 
     while(p.hasDataLeft()){
         estimator.updateMap(r.getLandmarksMeasurementsNoisy());

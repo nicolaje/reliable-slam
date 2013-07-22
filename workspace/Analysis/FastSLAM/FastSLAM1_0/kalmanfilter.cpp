@@ -1,6 +1,9 @@
 #include "kalmanfilter.h"
 #include <iostream>
 using namespace Eigen;
+
+Matrix<double,3,3> KalmanFilter::ID3D=Eigen::Matrix<double,3,3>::Identity();
+
 KalmanFilter::KalmanFilter(Vector3d mean, Matrix3d covariance, double pingerVariance)
 {
     this->mean=mean;
@@ -36,9 +39,7 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
 //    std::cout << "Mean: "<<mean<<std::endl;
 //    std::cout <<"Mean+K*delta: "<<mean+K*delta<<std::endl;
     mean=mean+K*delta;
-    std::cout <<"Old covariance: "<<covariance<<std::endl;
-    covariance=(Matrix<double,3,3>::Identity()-K*H)*covariance;
-    std::cout << "New Covariance: "<<covariance<<std::endl;
+    covariance=(ID3D-K*H)*covariance;
     //    std::cout << "H: " << H << std::endl;
     //    std::cout << "Q: " << Q << std::endl;
     //    std::cout << "K: " << K << std::endl;

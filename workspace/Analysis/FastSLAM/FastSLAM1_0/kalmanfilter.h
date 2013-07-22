@@ -9,6 +9,7 @@
 class KalmanFilter
 {
 public:
+    static Eigen::Matrix<double,3,3> ID3D;
     KalmanFilter(Eigen::Vector3d mean, Eigen::Matrix3d covariance, double pingerVariance);
     void predict(double dt);
 

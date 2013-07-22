@@ -20,7 +20,7 @@ public:
     static std::default_random_engine generator;
     static std::vector<Eigen::Vector3d> drawSamples(int nb, Eigen::Vector3d mean, Eigen::Matrix3d covariance);
 
-    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_EACH,uint RESAMPLE_STRATEGY=ROULETTE, int percentil=25);
+    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_EVERYTIME,uint RESAMPLE_STRATEGY=ROULETTE, int percentil=25);
     /**
      * @brief initParticles Draws a particle swarm from the initial estimation of the robot & landmarks positions.
      * @param landmarksPosEstimates
