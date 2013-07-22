@@ -1,4 +1,8 @@
 language: cpp
 compiler:
  - gcc
-script: qmake && make
+script: 
+ - cd workspace/Analysis/FastSLAM/FastSLAM1_0/
+ - qmake -project
+ - qmake
+ - make
