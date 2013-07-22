@@ -11,6 +11,7 @@ public:
     static const int RESAMPLE_EACH=0;
     static const int RESAMPLE_ALL=1; // Resample after one landmark has been incorporated in every particle
     static const int RESAMPLE_EVERYTIME=2; // Resample for each landmark measurement incorpored, for each particle (resource consuming!!)
+    static const int RESAMPLE_ALL_AT_ONCE=4;
     static const int ROULETTE=0;
     static const int ROULETTE_1ST_QUARTIL=1;
     static const int ROULETTE_2ST_QUARTIL=2;
@@ -20,7 +21,7 @@ public:
     static std::default_random_engine generator;
     static std::vector<Eigen::Vector3d> drawSamples(int nb, Eigen::Vector3d mean, Eigen::Matrix3d covariance);
 
-    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_EVERYTIME,uint RESAMPLE_STRATEGY=ROULETTE, int percentil=25);
+    FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_ALL_AT_ONCE,uint RESAMPLE_STRATEGY=ROULETTE, int percentil=25);
     /**
      * @brief initParticles Draws a particle swarm from the initial estimation of the robot & landmarks positions.
      * @param landmarksPosEstimates
@@ -34,6 +35,7 @@ public:
      * @param orientation
      */
     void updateRobotPosition(Eigen::Vector3d position);
+    void updateRobotDepth(double depth);
     /**
      * @brief updateRobotState updates the orientation of the robot in each particle by sampling from a normal distribution centered on the given vector and covariance matrix.
      * @param orientation
@@ -47,6 +49,7 @@ public:
     void setErrorCovariance(Eigen::Matrix3d errorCovariance);
 
     Particle getBestParticle();
+    void normalize();
 private:
     Eigen::Matrix3d errorCovariance;
 
@@ -60,7 +63,6 @@ private:
     int resampling_strategy;
     int percentil;
 
-    void normalize();
     std::vector<Particle> particles;
 };
 

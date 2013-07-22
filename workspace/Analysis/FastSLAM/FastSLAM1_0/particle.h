@@ -21,7 +21,9 @@ public:
     void updateRobotOrientation(Eigen::Vector3d orientation);
     void updateRobotLinearMotion(Eigen::Vector3d linearMotion);
     void updateRobotOrientationMotion(Eigen::Vector3d orientationMotion);
+    void updateRobotDepth(double depth);
     void updateKF(double measurement, int landmarkIndex);
+    void updateAllKFs(std::vector<double> landmarksMeasurements);
     double getWeight();
     Eigen::Vector3d getPosition();
     Eigen::Vector3d getOrientation();

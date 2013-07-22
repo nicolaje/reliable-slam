@@ -62,104 +62,127 @@ void FastSLAM::predict(double dt)
 
 void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
-    for(uint l=0;l<landmarksMeasurements.size();l++){
-        for(int i=0;i<particleNb;i++){
-            particles[i].updateKF(landmarksMeasurements[l],l);
-            Vector3d zeroMean;
-            zeroMean << 0,0,0;
-            particles[i].addMapError(FastSLAM::drawSamples(1,zeroMean,this->errorCovariance)[0],l);
-            if(resampling_method==RESAMPLE_EVERYTIME){
-                normalize();
+    if(resampling_method!=RESAMPLE_ALL_AT_ONCE){
+        for(uint l=0;l<landmarksMeasurements.size();l++){
+            for(int i=0;i<particleNb;i++){
+                particles[i].updateKF(landmarksMeasurements[l],l);
+                Vector3d zeroMean;
+                zeroMean << 0,0,0;
+                particles[i].addMapError(FastSLAM::drawSamples(1,zeroMean,this->errorCovariance)[0],l);
+                if(resampling_method==RESAMPLE_EVERYTIME){
+                                    std::cout<<"Resampling everytime"<<std::endl;
+                    normalize();
+                    particles=reSample();
+                }
+            }
+            normalize();
+            if(resampling_method==RESAMPLE_EACH){
+                            std::cout<<"Resampling after each landmark"<<std::endl;
                 particles=reSample();
             }
         }
-        normalize();
-        if(resampling_method==RESAMPLE_EACH)
+        if(resampling_method==RESAMPLE_ALL){
+                    std::cout<<"Resampling after every landmark has been incorporated in every particle"<<std::endl;
             particles=reSample();
-    }
-    if(resampling_method==RESAMPLE_ALL)
+        }
+    }else{
+        for(uint p=0;p<particleNb;p++){
+            particles[p].updateAllKFs(landmarksMeasurements);
+        }
+        normalize();
         particles=reSample();
-}
-
-std::vector<Particle> FastSLAM::reSample()
-{
-    switch(resampling_strategy){
-    case ROULETTE:
-        return ReSampling::resamplingRoulette(particles);
-        break;
-    case ROULETTE_1ST_QUARTIL:
-        return ReSampling::resamplingPercentil(particles,25);
-        break;
-    case ROULETTE_2ST_QUARTIL:
-        return ReSampling::resamplingPercentil(particles,50);
-        break;
-    case ROULETTE_3ST_QUARTIL:
-        return ReSampling::resamplingPercentil(particles,75);
-        break;
-    case ROULETTE_PERCENTIL:
-        return ReSampling::resamplingPercentil(particles,percentil);
-        break;
-    default:
-        return ReSampling::resamplingRoulette(particles);
     }
 }
 
-void FastSLAM::setPercentilResampling(int percentil)
-{
-    this->percentil=percentil;
-}
-
-void FastSLAM::setErrorCovariance(Matrix3d errorCovariance)
-{
-    this->errorCovariance=errorCovariance;
-}
-
-Particle FastSLAM::getBestParticle()
-{
-    double w=0;
-    int idx=0;
-    for(int i=0;i<particleNb;i++){
-        if(particles[i].getWeight()>w){
-            w=particles[i].getWeight();
-            idx=i;
+    std::vector<Particle> FastSLAM::reSample()
+    {
+        switch(resampling_strategy){
+        case ROULETTE:
+            return ReSampling::resamplingRoulette(particles);
+            break;
+        case ROULETTE_1ST_QUARTIL:
+            return ReSampling::resamplingPercentil(particles,25);
+            break;
+        case ROULETTE_2ST_QUARTIL:
+            return ReSampling::resamplingPercentil(particles,50);
+            break;
+        case ROULETTE_3ST_QUARTIL:
+            return ReSampling::resamplingPercentil(particles,75);
+            break;
+        case ROULETTE_PERCENTIL:
+            return ReSampling::resamplingPercentil(particles,percentil);
+            break;
+        default:
+            return ReSampling::resamplingRoulette(particles);
         }
     }
-    return particles[idx];
-}
 
-void FastSLAM::normalize()
-{
-    double sum=0;
-    for(int i=0;i<particleNb;i++){
-        sum+=particles[i].getWeight();
+    void FastSLAM::setPercentilResampling(int percentil)
+    {
+        this->percentil=percentil;
     }
-    for(int i=0;i<particleNb;i++){
-        particles[i].normalizeWeight(sum);
-    }
-}
 
-void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
-{
-    std::vector<Vector3d> linearMotions=FastSLAM::drawSamples(particleNb,linearMotion,SIGMA_FACTOR*this->linearMotionCovariance);
-    std::vector<Vector3d> angularMotions=FastSLAM::drawSamples(particleNb,angularMotion,SIGMA_FACTOR*this->angularMotionCovariance);
-    for(int i=0;i<particleNb;i++){
-        particles[i].updateRobotLinearMotion(linearMotions[i]);
-        particles[i].updateRobotOrientationMotion(angularMotions[i]);
+    void FastSLAM::setErrorCovariance(Matrix3d errorCovariance)
+    {
+        this->errorCovariance=errorCovariance;
     }
-}
 
-void FastSLAM::updateRobotOrientation(Vector3d orientation)
-{
-    std::vector<Vector3d> orientations=FastSLAM::drawSamples(particleNb,orientation,orientationCovariance);
-    for(int i=0;i<particleNb;i++){
-        particles[i].updateRobotOrientation(orientations[i]);
+    Particle FastSLAM::getBestParticle()
+    {
+        double w=0;
+        int idx=0;
+        for(int i=0;i<particleNb;i++){
+            if(particles[i].getWeight()>w){
+                w=particles[i].getWeight();
+                idx=i;
+            }
+        }
+        return particles[idx];
     }
-}
 
-void FastSLAM::updateRobotPosition(Vector3d position)
-{
-    std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,position,positionCovariance);
-    for(int i=0;i<particleNb;i++){
-        particles[i].updateRobotPosition(positions[i]);
+    void FastSLAM::normalize()
+    {
+        double sum=0;
+        for(int i=0;i<particleNb;i++){
+            sum+=particles[i].getWeight();
+        }
+        for(int i=0;i<particleNb;i++){
+            particles[i].normalizeWeight(sum);
+        }
     }
-}
+
+    void FastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
+    {
+        std::vector<Vector3d> linearMotions=FastSLAM::drawSamples(particleNb,linearMotion,SIGMA_FACTOR*this->linearMotionCovariance);
+        std::vector<Vector3d> angularMotions=FastSLAM::drawSamples(particleNb,angularMotion,SIGMA_FACTOR*this->angularMotionCovariance);
+        for(int i=0;i<particleNb;i++){
+            particles[i].updateRobotLinearMotion(linearMotions[i]);
+            particles[i].updateRobotOrientationMotion(angularMotions[i]);
+        }
+    }
+
+    void FastSLAM::updateRobotOrientation(Vector3d orientation)
+    {
+        std::vector<Vector3d> orientations=FastSLAM::drawSamples(particleNb,orientation,orientationCovariance);
+        for(int i=0;i<particleNb;i++){
+            particles[i].updateRobotOrientation(orientations[i]);
+        }
+    }
+
+    void FastSLAM::updateRobotPosition(Vector3d position)
+    {
+        std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,position,positionCovariance);
+        for(int i=0;i<particleNb;i++){
+            particles[i].updateRobotPosition(positions[i]);
+        }
+    }
+
+    void FastSLAM::updateRobotDepth(double depth)
+    {
+        Vector3d v3d;
+        v3d<<0,0,depth;
+        std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,v3d,positionCovariance);
+        for(int i=0;i<particleNb;i++){
+            particles[i].updateRobotDepth(positions[i][3]);
+        }
+    }

@@ -37,6 +37,14 @@ void Particle::updateKF(double measurement, int landmarkIndex)
     }
 }
 
+void Particle::updateAllKFs(std::vector<double> landmarksMeasurements)
+{
+    this->weight=1;
+    for(int i=0;i<landmarksKalmanFilters.size();i++){
+        this->weight*=landmarksKalmanFilters[i].update(landmarksMeasurements[i],robotPosition);
+    }
+}
+
 double Particle::getWeight()
 {
     return weight;
@@ -85,6 +93,11 @@ void Particle::updateRobotLinearMotion(Vector3d linearMotion)
 void Particle::updateRobotOrientationMotion(Vector3d orientationMotion)
 {
     this->robotAngularMotion=orientationMotion;
+}
+
+void Particle::updateRobotDepth(double depth)
+{
+    this->robotPosition(3)=depth;
 }
 
 

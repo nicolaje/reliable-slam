@@ -145,7 +145,7 @@ if(len(sys.argv)>3):
 			sleep(1/frequency)
 			after=datetime.now()
 			delta2=(after-now).seconds+(after-now).microseconds/1000000
-			print("Time Ellapsed %f"%delta2)
+#			print("Time Ellapsed %f"%delta2)
 			_storage_time=_storage_time+str(delta2)+'\n'
 #			time_log.write(str(delta2))
 #			time_log.write('\n')
