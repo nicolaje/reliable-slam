@@ -1,3 +1,4 @@
+install: libeigen3-dev
 language: cpp
 compiler:
  - gcc
