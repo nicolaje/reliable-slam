@@ -44,8 +44,12 @@ public:
     std::vector<Particle> reSample();
     void setPercentilResampling(int percentil);
 
+    void setErrorCovariance(Eigen::Matrix3d errorCovariance);
+
     Particle getBestParticle();
 private:
+    Eigen::Matrix3d errorCovariance;
+
     Eigen::Matrix3d positionCovariance;
     Eigen::Matrix3d orientationCovariance;
     Eigen::Matrix3d linearMotionCovariance;

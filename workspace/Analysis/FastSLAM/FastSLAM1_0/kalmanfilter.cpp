@@ -17,6 +17,11 @@ Vector3d KalmanFilter::getMean()
 {
     return mean;
 }
+
+void KalmanFilter::setMean(Vector3d mean)
+{
+    this->mean=mean;
+}
 double KalmanFilter::update(double distance, Vector3d robotPos)
 {
     double zHat=observation(robotPos);
@@ -24,14 +29,16 @@ double KalmanFilter::update(double distance, Vector3d robotPos)
     RowVector3d H=jacobianObservationModel(robotPos);
     double Q=H*covariance*(H.transpose())+pingerVariance;
     Vector3d K=(1/Q)*covariance*(H.transpose());
-    std::cout << "distance: " << distance << std::endl;
-    std::cout << "zHat: " << zHat << std::endl;
+//    std::cout << "distance: " << distance << std::endl;
+//    std::cout << "zHat: " << zHat << std::endl;
 //    std::cout << "delta: " << delta << std::endl;
 //    std::cout << "K*delta: " <<K*delta << std::endl;
 //    std::cout << "Mean: "<<mean<<std::endl;
 //    std::cout <<"Mean+K*delta: "<<mean+K*delta<<std::endl;
     mean=mean+K*delta;
+    std::cout <<"Old covariance: "<<covariance<<std::endl;
     covariance=(Matrix<double,3,3>::Identity()-K*H)*covariance;
+    std::cout << "New Covariance: "<<covariance<<std::endl;
     //    std::cout << "H: " << H << std::endl;
     //    std::cout << "Q: " << Q << std::endl;
     //    std::cout << "K: " << K << std::endl;

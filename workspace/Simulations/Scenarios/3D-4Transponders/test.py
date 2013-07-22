@@ -1,20 +1,19 @@
 from morse.builder import *
-from math import *
 
-################################
-#			       #
-# Tunable parameters           #
-#			       #
-################################
-sensors_freq=10                # 1 Hz enough for now
-range_pinger=100	       # the pinger can detect transponders up to 100 m
-orientation_std=0.02*pi/180    # 0.02 ° => 0.02*pi/180 rad
-gyro_std=0.01*pi/180           # 0.01 °/s => 0.01*pi/180 rad/s
-accelero_std=0.01*9.81         # 10 mg
-pinger_std=0.03                # 0.03 m
-pressure_std=0.15              # 0.15 m
-loch_doppler_std=0.04          # 0.04 m/s
-################################
+#########################
+#			#
+# Tunable parameters    #
+#			#
+#########################
+sensors_freq=3          # 1 Hz enough for now
+range_pinger=100	# the pinger can detect transponders up to 100 m
+orientation_std=0.02    # 0.02 °
+gyro_std=0.01           # 0.01 °/s
+accelero_std=0.01*9.81  # 10 mg
+pinger_std=0.3          # 0.3 m
+pressure_std=0.15       # 0.15 m
+loch_doppler_std=0.04   # 0.04 m/s
+#########################
 
 sub=Submarine()
 
@@ -89,6 +88,8 @@ sub.append(loch_doppler_noisy)
 loch_doppler_noisy.frequency(sensors_freq)
 loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
 
+sub.translate(z=0.5,y=-30)
+
 ####################
 # Environment      #
 # trans1=[20,0,0]  #
@@ -98,19 +99,16 @@ loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
 ####################
 
 transponder1=Robot('../../Models/Transponder.blend')
-transponder1.translate(x=18,y=-30,z=3)
+transponder1.translate(x=20)
 
 transponder2=Robot('../../Models/Transponder.blend')
-transponder2.translate(x=-7,y=12,z=17)
+transponder2.translate(x=-20)
 
 transponder3=Robot('../../Models/Transponder.blend')
-transponder3.translate(y=20,z=5)
+transponder3.translate(y=20)
 
 transponder4=Robot('../../Models/Transponder.blend')
-transponder4.translate(x=-27,y=-20,z=10)
-
-sub.translate(z=30,y=-30)
-sub.rotate(x=-0.5)
+transponder4.translate(y=-20)
 
 env=Environment('../../Models/SimpleOceanGround.blend')
 env.place_camera([-20,-20,10])

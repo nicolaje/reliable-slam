@@ -65,6 +65,9 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
     for(uint l=0;l<landmarksMeasurements.size();l++){
         for(int i=0;i<particleNb;i++){
             particles[i].updateKF(landmarksMeasurements[l],l);
+            Vector3d zeroMean;
+            zeroMean << 0,0,0;
+            particles[i].addMapError(FastSLAM::drawSamples(1,zeroMean,this->errorCovariance)[0],l);
             if(resampling_strategy==RESAMPLE_EVERYTIME){
                 normalize();
                 particles=reSample();
@@ -106,6 +109,11 @@ void FastSLAM::setPercentilResampling(int percentil)
     this->percentil=percentil;
 }
 
+void FastSLAM::setErrorCovariance(Matrix3d errorCovariance)
+{
+    this->errorCovariance=errorCovariance;
+}
+
 Particle FastSLAM::getBestParticle()
 {
     double w=0;
@@ -116,7 +124,6 @@ Particle FastSLAM::getBestParticle()
             idx=i;
         }
     }
-    std::cout << "idx: " << idx<< " , with weight: " << w << std::endl;
     return particles[idx];
 }
 

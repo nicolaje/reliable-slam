@@ -2,14 +2,14 @@
 #include <iostream>
 using namespace Eigen;
 
-Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion,int weightingMethond)
+Particle::Particle(Vector3d robotPosition, Vector3d robotOrientation, Vector3d robotLinearMotion, Vector3d robotAngularMotion,int weightingMethod)
 {
     this->weight=1;
     this->robotPosition=robotPosition;
     this->robotOrientation=robotOrientation;
     this->robotLinearMotion=robotLinearMotion;
     this->robotAngularMotion=robotAngularMotion;
-    this->weightingMethod=weightingMethond;
+    this->weightingMethod=weightingMethod;
 }
 
 void Particle::setInitMap(std::vector<KalmanFilter> landmarksKFs)
@@ -100,4 +100,10 @@ std::vector<Vector3d> Particle::getMap()
         map.push_back(landmarksKalmanFilters[i].getMean());
     }
     return map;
+}
+
+void Particle::addMapError(Vector3d error, uint landmarkIndex)
+{
+    Vector3d lmPos=landmarksKalmanFilters[landmarkIndex].getMean();
+    landmarksKalmanFilters[landmarkIndex].setMean((lmPos+error));
 }

@@ -109,8 +109,8 @@ transponder3.translate(y=20,z=5)
 transponder4=Robot('../../Models/Transponder.blend')
 transponder4.translate(x=-27,y=-20,z=10)
 
-sub.translate(z=30,y=-30)
-sub.rotate(x=-0.5)
+sub.translate(y=-30,z=30)
+sub.rotate(y=0.6,z=1.5)
 
 env=Environment('../../Models/SimpleOceanGround.blend')
 env.place_camera([-20,-20,10])

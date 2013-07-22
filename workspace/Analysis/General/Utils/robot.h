@@ -74,6 +74,8 @@ public:
 
     Eigen::Vector3d positionTrueAsVect();
     Eigen::Vector3d orientationTrueAsVect();
+    Eigen::Vector3d linearMotionTrueAsVect();
+    Eigen::Vector3d angularMotionTrueAsVect();
 
     Eigen::Vector3d positionAsVect();
     Eigen::Vector3d orientationAsVect();

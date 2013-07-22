@@ -8,34 +8,38 @@
 #include "../../General/Utils/robot.h"
 #include "particle.h"
 #include "fastslam.h"
-#define PARTICLES_NB 1
+#define PARTICLES_NB 500
 #define DT 0.1
+#define ERR_COV \
+    0.5,0,0, \
+    0,0.5,0, \
+    0,0,0.5
 
 /////////////////////////
 //####################//
 //## MAP PARAMETERS #//
 //##################//
 /////////////////////
-#define LM1 18,-30,3
-#define LM2 -7,12,17
-#define LM3 0,20,5
-#define LM4 -27,-20,10
+#define LM1 0,0,0//18,-30,3
+#define LM2 0,0,0//-7,12,17
+#define LM3 0,0,0//0,20,5
+#define LM4 0,0,0//-27,-20,10
 #define C1 \
-    1,0,0,\
-    0,1,0,\
-    0,0,1
+    10,0,0,\
+    0,10,0,\
+    0,0,10
 #define C2 \
-    1,0,0,\
-    0,1,0,\
-    0,0,1
+    10,0,0,\
+    0,10,0,\
+    0,0,10
 #define C3 \
-    1,0,0,\
-    0,1,0,\
-    0,0,1
+    10,0,0,\
+    0,10,0,\
+    0,0,10
 #define C4 \
-    1,0,0,\
-    0,1,0,\
-    0,0,1
+    10,0,0,\
+    0,10,0,\
+    0,0,10
 
 ////////////////////////////
 //#######################//
@@ -45,7 +49,7 @@
 #define POS_COV \
     2.5,0,0,\
     0,2.5,0,\
-    0,0,pow(0.15,2)
+    0,0,0.15
 #define OR_COV \
     pow(0.02*M_PI/180.,2),0,0,\
     0,pow(0.02*M_PI/180.,2),0,\
@@ -58,7 +62,7 @@
     pow(0.01*M_PI/180.,2),0,0,\
     0,pow(0.01*M_PI/180.,2),0,\
     0,0,pow(0.01*M_PI/180.,2)
-#define PING_COV pow(0.03,2)
+#define PING_COV 3
 
 using namespace Eigen;
 
@@ -68,7 +72,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/2D-4Transponders-Circle.res",1,4);
+    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-line.res",1,4);
     Robot r=p.nextRecord()[0];
 
     QFile *out=new QFile("../Results/DeadReckoning3.res");
@@ -76,6 +80,9 @@ int main(int argc, char *argv[])
         qDebug() << "Failed to open output file";
         return 1;
     }
+
+    Matrix3d errorCovariance;
+    errorCovariance << ERR_COV;
 
     Matrix3d positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance;
     positionCovariance << POS_COV;
@@ -115,20 +122,22 @@ int main(int argc, char *argv[])
 
 
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance);
-    estimator.initParticles(PARTICLES_NB,r.positiontionTrueAsVect(),r.orientationTrueAsVect(),r.linearMotionTrueAsVect(),r.angularMotionTrueAsVect(),landmarksEstimates,landmarksPosCovariances);
+    estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);
+    estimator.setErrorCovariance(errorCovariance);
+
 
     while(p.hasDataLeft()){
         estimator.updateMap(r.getLandmarksMeasurementsNoisy());
-        estimator.updateRobotMotion(r.linearMotionTrueAsVect(),r.angularMotionTrueAsVect());
-        estimator.updateRobotOrientation(r.orientationTrueAsVect());
+        estimator.updateRobotMotion(r.linearMotionAsVect(),r.angularMotionAsVect());
+        estimator.updateRobotOrientation(r.orientationAsVect());
         estimator.predict(DT);
         r=p.nextRecord()[0];
         std::ostringstream posTrue,posNoisy,posEst;
         posTrue << r.positionTrueAsVect()[0]<<";"<<r.positionTrueAsVect()[1]<<";"<<r.positionTrueAsVect()[2]<<";";
         posNoisy << r.positionAsVect()[0]<<";"<<r.positionAsVect()[1]<<";"<<r.positionAsVect()[2]<<";";
-        posEst << estimator.getBestParticle().getPosition()[0]<<";"<<estimator.getBestParticle().getPosition()[1]<<";"<<estimator.getBestParticle().getPosition()[0]<<";";
+        posEst << estimator.getBestParticle().getPosition()[0]<<";"<<estimator.getBestParticle().getPosition()[1]<<";"<<estimator.getBestParticle().getPosition()[2]<<";";
         out->write(posTrue.str().c_str());
-//        out->write(posNoisy.str().c_str());
+        out->write(posNoisy.str().c_str());
         out->write(posEst.str().c_str());
         for(int i=0;i<4;i++){
             Vector3d lmV=estimator.getBestParticle().getMap()[i];
@@ -139,8 +148,11 @@ int main(int argc, char *argv[])
         out->write("\n");
     }
 
-    std::vector<Vector3d> map=estimator.getBestParticle().getMap();
-    for(int i=0;i<map.size();i++){
+
+    Particle bestParticle=estimator.getBestParticle();
+    std::vector<Vector3d> map=bestParticle.getMap();
+    std::cout << "Best Particle with weight: " <<bestParticle.getWeight()<<std::endl;
+    for(uint i=0;i<map.size();i++){
         std::cout << i <<" : "<< map[i] <<std::endl;
     }
     out->close();

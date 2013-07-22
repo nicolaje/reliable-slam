@@ -13,6 +13,7 @@ public:
     void predict(double dt);
 
     Eigen::Vector3d getMean();
+    void setMean(Eigen::Vector3d mean);
 
     /**
      * @brief update updates the Kalman filter

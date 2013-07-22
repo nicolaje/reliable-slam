@@ -27,6 +27,8 @@ public:
     Eigen::Vector3d getOrientation();
     std::vector<Eigen::Vector3d> getMap();
 
+    void addMapError(Eigen::Vector3d error, uint landmarkIndex);
+
     void normalizeWeight(double norm);
 private:
     double weight;
