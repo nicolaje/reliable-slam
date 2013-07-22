@@ -1,6 +1,7 @@
 language: cpp
 before_install:
  - which g++
+ - g++ --version
  - sudo apt-get update
  - sudo apt-get install libeigen3-dev
 compiler:
