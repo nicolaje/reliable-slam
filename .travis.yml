@@ -1,5 +1,7 @@
-install: libeigen3-dev
 language: cpp
+before_install:
+ - sudo apt-get update
+ - sudo apt-get install libeigen3-dev
 compiler:
  - gcc
 script: 
