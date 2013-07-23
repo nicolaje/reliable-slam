@@ -85,13 +85,6 @@ int main(int argc, char *argv[])
             for(int i=0;i<3;i++){
                 posV[i]=pos[i];
             }
-//            IntervalVector posE=estimator.getPosition();
-//            std::cout << "The pos in question: " << p << std::endl;
-//            std::cout << "The estimated one: " << posE << std::endl;
-//            if((posE&posV).diam()==0)
-//                std::cout << "LULZ" << std::endl;
-//            else
-//                std::cout << "Pas Lulz D: ?? : " << (posE&posV) << std::endl;
         estimator.update(&updObs);
     }
     std::cout << "Position: " << estimator.getPosition() << std::endl;

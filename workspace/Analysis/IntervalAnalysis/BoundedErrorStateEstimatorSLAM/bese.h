@@ -38,21 +38,7 @@ private:
      */
     ibex::IntervalVector *measurements;
 
-    ibex::Function* motionModel;
-
     ibex::Function* fPrime;
-
-    ibex::Function* observationModel;
-
-    ibex::Function* motionModelByContractor;
-    ibex::CtcFwdBwd* motionContractor;
-    ibex::CtcFixPoint* motionFixPointContractor;
-
-    ibex::Function* sensorsModelByContractor;
-    ibex::CtcFwdBwd* sensorsContractor;
-    ibex::CtcFixPoint* sensorsFixPointContractor;
-
-    ibex::Function makeObservationModel(ibex::IntervalVector obs);
 
     ibex::SubPaving stateAsSubPaving;
     int nbRobots;
