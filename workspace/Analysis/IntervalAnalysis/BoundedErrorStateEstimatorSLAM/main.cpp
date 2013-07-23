@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-lines.res",1,4);
+    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-lines-long.res",1,4);
     IntervalVector initState(3+3+3*4);
     Robot r=p.nextRecord()[0];
 
