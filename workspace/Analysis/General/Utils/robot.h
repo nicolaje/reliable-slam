@@ -20,7 +20,7 @@ public:
      * @brief SIGMA_FACTOR determines the confidence interval
      *  used to bound the noisy measurements.
      */
-    static const int SIGMA_FACTOR=19;
+    static const int SIGMA_FACTOR=0;
 
     double* getPosition();
     double* getOrientation();

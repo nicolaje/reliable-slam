@@ -8,28 +8,32 @@ BESE::BESE(IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubP
     this->nbRobots=nbRobots;
     this->useSubPavings=useSubPavings;
 
-    this->fPrime=new Function("f_prime.txt");
-}
-
-void BESE::predictByContractor(IntervalVector vector, Interval dt)
-{
+//    this->fPrime=new Function("f_prime.txt");
+    this->euler=new Function("euler.txt");
 }
 
 void BESE::predict(Interval dt)
 {
-    IntervalVector v(9);
+    IntervalVector v(3);
+    IntervalVector ori(3);
+    IntervalVector x(3);
+    for(int i=0;i<3;i++){
+        x[i]=(*state)[i];
+        v[i]=(*measurements)[i+3]; // CP linear speed in v
+        ori[i]=(*measurements)[i];//(*state)[i]; // cp orientation
+    }
+    x+=dt*(*euler).eval_matrix(ori)*v;
+    for(int i=0;i<3;i++)
+        (*state)[i]=x[i]; // Update the position of the robot
+    /*IntervalVector v(9);
     for(int i=0; i<9; i++){
         v[i]=(*measurements)[i];
     }
-    (*state)+=dt*(*fPrime).eval_vector(v);
+    (*state)+=dt*(*fPrime).eval_vector(v);*/
 }
 
 void BESE::update(IntervalVector *vector)
 {
-    // For now we cheat, and don't
-    // predict/update on the orientation
-//    (*this->state)[2]=(*vector)[0]; // Pressure sensor
-
     for(int i=0; i<3; i++){
         (*this->state)[3+i]=(*vector)[1+i];
     }
@@ -51,15 +55,6 @@ void BESE::update(IntervalVector *vector)
     try{
         fix.contract(extState);
         outFix.contract(extState);
-//        fix.contract((*state));
-//        if(stateBack!=(*state)){
-//            IntervalVector *v;
-//            std::cout << "Inner contraction useful" << std::endl;
-//            std::cout << stateBack.diff((*state),v) << std::endl;
-//        }
-//        out.contract((*state));
-//        if(stateBack!=(*state))
-//            std::cout << "Outer contraction useful" << std::endl;
     }catch(EmptyBoxException e){
         std::cout << "Empty box!!" << std::endl;
         std::cout << "ExtState: " << extState << std::endl;

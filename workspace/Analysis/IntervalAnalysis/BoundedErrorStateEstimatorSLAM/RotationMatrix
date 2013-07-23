@@ -1,6 +1,0 @@
-/*
-* Inclusion function of Z,Y,X Rotation Matrix
-*/
-function MotionModel(x,y,z,phi,theta,psi,dphi,dtheta,dpsi,dx,dy,dz,ddx,ddy,ddz)
-
-end

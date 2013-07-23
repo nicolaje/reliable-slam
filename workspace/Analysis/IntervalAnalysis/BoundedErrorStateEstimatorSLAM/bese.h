@@ -15,7 +15,6 @@ public:
     BESE(ibex::IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubPavings=false);
 
     void predict(ibex::Interval dt);
-    void predictByContractor(ibex::IntervalVector vector, ibex::Interval dt);
     void update(ibex::IntervalVector *vector);
     void updateData(Robot robot);
 
@@ -39,6 +38,8 @@ private:
     ibex::IntervalVector *measurements;
 
     ibex::Function* fPrime;
+
+    ibex::Function* euler;
 
     ibex::SubPaving stateAsSubPaving;
     int nbRobots;

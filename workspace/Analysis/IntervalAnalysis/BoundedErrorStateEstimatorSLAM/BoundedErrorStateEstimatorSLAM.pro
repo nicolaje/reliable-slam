@@ -12,10 +12,9 @@ TARGET = BoundedErrorStateEstimatorSLAM
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp\
     bese.cpp \
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     bese.h \
 
 FORMS    += mainwindow.ui

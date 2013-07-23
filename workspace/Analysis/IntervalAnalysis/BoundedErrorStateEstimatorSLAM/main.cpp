@@ -1,5 +1,3 @@
-#include <QApplication>
-#include "mainwindow.h"
 #include <ibex/ibex.h>
 #include <QDebug>
 #include <bese.h>
@@ -11,10 +9,6 @@ using namespace ibex;
 
 int main(int argc, char *argv[])
 {
-    //QApplication a(argc, argv);
-    //MainWindow w;
-    //w.show();
-
     QFile *out=new QFile("../Results/BESE/DeadReckoning3.res");
     if(!out->open(QIODevice::WriteOnly)){
         qDebug() << "Failed to open output file";
@@ -26,7 +20,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/2D-4Transponders/2D-4Transponders-Circle.res",1,4);
+    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-lines.res",1,4);
     IntervalVector initState(3+3+3*4);
     Robot r=p.nextRecord()[0];
 
@@ -58,7 +52,7 @@ int main(int argc, char *argv[])
     Interval dt(0.1,0.11);
 
     int j=0;
-    while(p.hasDataLeft()){//j<374){//
+    while(p.hasDataLeft()){
         std::cout << estimator.debugToString() << std::endl;
         j++;
         std::cout << j << std::endl;
@@ -66,7 +60,6 @@ int main(int argc, char *argv[])
         r=p.nextRecord()[0];
         estimator.updateData(r);
         IntervalVector p=r.positionAsIntervalVector();
-
 
         IntervalVector *obs=r.getObservationsAsIntervalVector();
         IntervalVector updObs(1+3+estimator.getLandmarkNB());
@@ -85,10 +78,9 @@ int main(int argc, char *argv[])
             for(int i=0;i<3;i++){
                 posV[i]=pos[i];
             }
-        estimator.update(&updObs);
+        //estimator.update(&updObs);
     }
     std::cout << "Position: " << estimator.getPosition() << std::endl;
     out->close();
     groundTruth->close();
-    //return a.exec();
 }
