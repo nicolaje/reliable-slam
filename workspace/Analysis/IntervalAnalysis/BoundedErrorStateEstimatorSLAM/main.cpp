@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
 
     int j=0;
     while(p.hasDataLeft()){
-        std::cout << estimator.debugToString() << std::endl;
         j++;
         std::cout << j << std::endl;
         estimator.predict(dt);
