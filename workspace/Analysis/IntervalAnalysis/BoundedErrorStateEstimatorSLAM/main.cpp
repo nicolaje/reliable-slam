@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
             for(int i=0;i<3;i++){
                 posV[i]=pos[i];
             }
-        //estimator.update(&updObs);
+        estimator.update(&updObs);
     }
     std::cout << "Position: " << estimator.getPosition() << std::endl;
     out->close();
