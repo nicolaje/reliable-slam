@@ -1,0 +1,13 @@
+function(vx,vy,vz,dphi,dtheta,dpsi,dxx,dyy,dzz)
+  cphi   = cos(phi);
+  sphi   = sin(phi);
+  ctheta = cos(theta);
+  stheta = sin(theta);
+  cpsi   = cos(psi);
+  spsi   = sin(psi);
+  
+  return 
+  ( (ctheta*cpsi, -cphi*spsi+stheta*cpsi*sphi, spsi*sphi+stheta*cpsi*cphi) ; 
+    (ctheta*spsi, cpsi*cphi+stheta*spsi*sphi, -cpsi*sphi+stheta*cphi*spsi) ;
+    (-stheta, ctheta*sphi, ctheta*cphi) );
+end

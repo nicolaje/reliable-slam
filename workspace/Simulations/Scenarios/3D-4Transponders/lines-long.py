@@ -40,19 +40,28 @@ with pymorse.Morse() as simu:
 	motion.publish({'v':2.5,'w':0.4})
 	sleep(10)
 	print("Changing speed 5");
-	motion.publish({'v':0.1,'w':0})
+	motion.publish({'v':0.9,'w':0})
 	sleep(19)
 	print("Changing speed 6");
-	motion.publish({'v':5,'w':0.1})
-	sleep(30)
+	motion.publish({'v':2,'w':0.1})
+	sleep(5)
 	print("Changing speed 7");
-	motion.publish({'v':4,'w':0})
+	motion.publish({'v':1,'w':0})
+	sleep(10)
+	print("Changing speed 7");
+	motion.publish({'v':1,'w':-1})
 	sleep(10)
 	print("Changing speed 8");
-	motion.publish({'v':0.4,'w':-0.7})
-	sleep(40)
+	motion.publish({'v':2,'w':1.5})
+	sleep(1)
 	print("Changing speed 9");
-	motion.publish({'v':0.4,'w':0})
+	motion.publish({'v':3,'w':0})
+	sleep(5)
+	print("Changing speed 10");
+	motion.publish({'v':0,'w':-1.5})
+	sleep(1)
+	print("Changing speed 10");
+	motion.publish({'v':1.5,'w':-0.05})
 #	v=0
 #	w=pi/20
 #	motion.publish({'v':v,'w':w})

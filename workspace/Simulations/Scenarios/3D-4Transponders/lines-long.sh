@@ -14,4 +14,3 @@ sleep 5s
 
 # Control the trajectory
 python3.3 lines-long.py
-

@@ -6,31 +6,28 @@ from math import *
 # Tunable parameters           #
 #			       #
 ################################
-sensors_freq=10                 # 1 Hz enough for now
+sensors_freq=10                # 1 Hz enough for now
 range_pinger=100	       # the pinger can detect transponders up to 100 m
 orientation_std=0.02*pi/180    # 0.02 ° => 0.02*pi/180 rad
 gyro_std=0.01*pi/180           # 0.01 °/s => 0.01*pi/180 rad/s
 accelero_std=0.01*9.81         # 10 mg
-pinger_std=0.03                 # 0.3 m
+pinger_std=0.03                # 0.3 m
 pressure_std=0.15              # 0.15 m
 loch_doppler_std=0.04          # 0.04 m/s
 ################################
 
 sub=Submarine()
+sub.set_mass(1.0)
 
 #############
 # Actuators #
 #############
 
 # V,W controller
-motion=MotionVW()
-motion.add_stream('socket')
+motion=ForceTorque() #MotionVW()
+motion.properties(RobotFrame=True)
+motion.add_stream('ros')
 sub.append(motion)
-
-motion2=MotionVW()
-motion2.add_stream('socket')
-motion2.rotate(y=180)
-sub.append(motion2)
 
 ###########
 # Sensors #

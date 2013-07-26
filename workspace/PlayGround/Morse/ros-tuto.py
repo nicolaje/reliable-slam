@@ -1,10 +1,5 @@
-import time
-import pymorse
-import sys
-from datetime import datetime
-from time import sleep
-from math import *
 import rospy
+from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist
 
 cmd = rospy.Publisher("/atrv/motion", Twist)

@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
 
     IntervalVector robot=r.asIntervalVector();
     for(int i=0;i<3; i++){
-        initState[i]=robot[i];//+Interval(-100,100); // pos
-        initState[3+i]=robot[3+i]; // or
+        initState[i]=robot[i];
+        initState[3+i]=robot[3+i];
     }
 
     initState[6]=Interval(10,25);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     initState[9]=Interval(-21,10);
     initState[10]=Interval(-1,20);
-    initState[11]=Interval(15,17);
+    initState[11]=Interval(5,17);
 
     initState[12]=Interval(-10,7);
     initState[13]=Interval(19,29);
