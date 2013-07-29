@@ -8,55 +8,50 @@ from morse.helpers.components import add_data, add_property
 
 class Motionfull(morse.core.actuator.Actuator):
     _name = "Motionfull"
-    _short_desc = "Control the 6DOF speed of a robot"
-
-    # define here the data fields required by your actuator
-    # format is: field name, initial value, type, description
-    add_data('counter', 0, 'int', 'A dummy counter, for testing purposes')
+    _short_desc = "Full 6DOF speed control."
+    
+    add_data('vx', 0.0, 'float', 'Linear velocity in x direction (forward movement) (m/s)')
+    add_data('vy', 0.0, 'float', 'Linear velocity in y direction (sideward movement) (m/s)')
+    add_data('vz', 0.0, 'float', 'Linear velocity in z direction (vectical movement) (m/s)')
+    add_data('wx', 0.0, 'float', 'Angular velocity around x axis (rad/s')
+    add_data('wy', 0.0, 'float', 'Angular velocity around y axis (rad/s')
+    add_data('wz', 0.0, 'float', 'Angular velocity around z axis (rad/s')
+    add_property('_type', 'Position', 'ControlType', 'string',"Kind of control, can be one of ['Velocity', 'Position']")
 
     def __init__(self, obj, parent=None):
         logger.info("%s initialization" % obj.name)
         # Call the constructor of the parent class
         super(self.__class__, self).__init__(obj, parent)
 
-        # Do here actuator specific initializations
-
-        self._target_count = 0 # dummy internal variable, for testing purposes
-
         logger.info('Component initialized')
 
-    @service
-    def get_counter(self):
-        """ This is a sample service.
-
-        Simply returns the value of the internal counter.
-
-        You can access it as a RPC service from clients.
-        """
-        logger.info("%s counter is %s" % (self.name, self.local_data['counter']))
-
-        return self.local_data['counter']
-
-    @interruptible
-    @async_service
-    def async_test(self, value):
-        """ This is a sample asynchronous service.
-
-        Returns when the internal counter reaches ``value``.
-
-        You can access it as a RPC service from clients.
-        """
-        self._target_count = value
-
     def default_action(self):
-        """ Main loop of the actuator.
+        """ Apply (vx, vy, vz, wx, wy, wz) to the parent robot. """
 
-        Implements the component behaviour
-        """
+        # Reset movement variables
+        vx, vy, vz = 0.0, 0.0, 0.0
+        wx, wy, wz = 0.0, 0.0, 0.0
+        
+        # Scale the speeds to the time used by Blender
+        try:
+            if self._type == 'Position':
+                vx = self.local_data['vx'] / self.frequency
+                vy = self.local_data['vy'] / self.frequency
+                vz = self.local_data['vz'] / self.frequency
+                wx = self.local_data['wx'] / self.frequency
+                wy = self.local_data['wy'] / self.frequency
+                wz = self.local_data['wz'] / self.frequency
+            else:
+                vx = self.local_data['vx']
+                vy = self.local_data['vy']
+                vz = self.local_data['vz']
+                wx = self.local_data['wx']
+                wy = self.local_data['wy']
+                wz = self.local_data['wz']
+                
+        # For the moment ignoring the division by zero
+        # It happens apparently when the simulation starts
+        except ZeroDivisionError:
+            pass
 
-        # check if we have an on-going asynchronous tasks...
-        if self._target_count and self.local_data['counter'] > self._target_count:
-            self.completed(status.SUCCESS, self.local_data['counter'])
-
-        # implement here the behaviour of your actuator
-        self.local_data['counter'] += 1
+        self.apply_speed(self._type, [vx, vy, vz], [wx, wy, wz])
