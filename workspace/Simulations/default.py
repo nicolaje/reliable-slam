@@ -1,27 +1,23 @@
 #! /usr/bin/env morseexec
 
 import sys
+import os
+import random
 from morse.builder import *
 import logging; logger = logging.getLogger("morse." + __name__)
 from Simulations.builder.robots import Transponder
 from Simulations.builder.actuators import Motionfull
 from math import *
 
-file_name=0
+file_name="default.pos"
 
-if len(sys.argv) <2:
-    logger.info('Loading default landmarks positions file.')
-    file_name="data/default.pos"
-else:
-    file_name=sys.argv[1]
-    
-f=open("data/"+file_name,'r')
+f=open("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/"+file_name) #os.environ['WORKSPACE_DIR']+"Simulations/data/"+file_name,'r')
 
 idx=1
 for line in f:
-    transponder=Transponder()
+    transponder=Robot('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/Simulations/robots/Transponder.blend') # Transponder()
     pos=line.split(';')
-    transponder.translate(x=float(pos[0]), y=float(pos[1]), z=float(pos[2]))
+    transponder.translate(x=1.1*float(pos[0]), y=float(pos[1]), z=float(pos[2]))
     idx+=1
 f.close()
 
@@ -115,6 +111,6 @@ sub.append(loch_doppler_noisy)
 #loch_doppler_noisy.frequency(sensors_freq)
 #loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
 
-env=Environment('water-1/deep_water',True)
+env=Environment('water-1/deep_water',False)
 env.place_camera([-20,-20,10])
 env.aim_camera([45,0,-90])

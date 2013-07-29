@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-#!/usr/bin/env python3
+
 import sys
 import time
 import curses
@@ -43,6 +43,13 @@ velocity.subscribe(speed_received)
 def run(win):
     win.timeout(100)
     while True:
+        global motion
+        global vx
+        global vy
+        global vz
+        global wx
+        global wy
+        global wz
         win.addstr(0, 0, "Arrow Keys to move the robot horizontally,")
         win.addstr(1, 0, "Page Up/Down Keys to move the robot vertically")
         if position != 0 and linear_speed !=0 and angular_speed != 0 :
@@ -64,13 +71,6 @@ def run(win):
             "{0:.2f}".format(angular_speed[2])+']')
         if wz >-0.1 and wz < 0.1 :
             wz=0
-        global motion
-        global vx
-        global vy
-        global vz
-        global wx
-        global wy
-        global wz
         
         if position !=0 and position['z'] >= 0 and vz >=0 :
             vz=0
