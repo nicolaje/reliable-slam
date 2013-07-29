@@ -1,9 +1,7 @@
 #! /usr/bin/env python3
 
 import sys
-import time
 import curses
-from datetime import datetime
 import os
 
 try:
@@ -26,8 +24,6 @@ angular_speed=0
 start=datetime.now()
 max_duration=int(os.environ['SIMU_DURATION'])
 
-duration=0
-
 def pose_received(p):
     global position
     position=p
@@ -49,10 +45,8 @@ velocity.subscribe(speed_received)
 
 def run(win):
     win.timeout(100)
-    while duration < max_duration : #True:
+    while True:
         global duration
-        now=datetime.now()
-        duration=(now-start).seconds+(now-start).microseconds/1000000
         global motion
         global vx
         global vy
