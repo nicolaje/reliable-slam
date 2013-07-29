@@ -12,9 +12,9 @@ if [ "$1" != "" ] && [ "$2" != "" ]
 	fi
 	optirun morse run Simulations &
 	sleep 15
-	if [ -f "$WORKSPACE_DIR/Simulations/scripts/$2" ]
+	if [ ! -f "$WORKSPACE_DIR/Simulations/scripts/$2" ]
 	then
-		echo "Control script doesn't exist, using manual control instead"
+		echo "Control script $WORKSPACE_DIR/Simulations/scripts/$2 doesn't exist, using manual control instead"
 		export CTL_SCRIPT="ManualCtl.py"
 	else
 		echo "Using control script $2"

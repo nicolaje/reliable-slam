@@ -3,6 +3,8 @@
 import sys
 import time
 import curses
+from datetime import datetime
+import os
 
 try:
     from pymorse import Morse
@@ -20,6 +22,11 @@ wz = 0.0
 position=0
 linear_speed=0
 angular_speed=0
+
+start=datetime.now()
+max_duration=os.environ['SIMU_DURATION']
+
+duration=0
 
 def pose_received(p):
     global position
@@ -42,7 +49,10 @@ velocity.subscribe(speed_received)
 
 def run(win):
     win.timeout(100)
-    while True:
+    while duration < max_duration : #True:
+        global duration
+        now=datetime.now()
+        duration=(now-start).seconds+(now-start).microseconds/1000000
         global motion
         global vx
         global vy
