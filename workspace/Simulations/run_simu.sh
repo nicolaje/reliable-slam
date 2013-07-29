@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 if [ "$1" != "" ] && [ "$2" != "" ]
-	export SIMULATION_DURATION=$3
+	export SIMU_DURATION=$3
 	then
 	if [ -f "$WORKSPACE_DIR/Simulations/data/$1" ]
 	then

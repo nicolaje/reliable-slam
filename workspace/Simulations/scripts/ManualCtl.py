@@ -24,7 +24,7 @@ linear_speed=0
 angular_speed=0
 
 start=datetime.now()
-max_duration=os.environ['SIMU_DURATION']
+max_duration=int(os.environ['SIMU_DURATION'])
 
 duration=0
 
