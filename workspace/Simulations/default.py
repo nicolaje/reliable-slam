@@ -1,9 +1,31 @@
 #! /usr/bin/env morseexec
 
+import sys
 from morse.builder import *
+import logging; logger = logging.getLogger("morse." + __name__)
 from Simulations.builder.robots import Transponder
 from Simulations.builder.actuators import Motionfull
 from math import *
+
+file_name=0
+
+if len(sys.argv) <2:
+    logger.info('Loading default landmarks positions file.')
+    file_name="data/default.pos"
+else:
+    file_name=sys.argv[1]
+    
+f=open("data/"+file_name,'r')
+
+idx=1
+for line in f:
+    transponder=Transponder()
+    pos=line.split(';')
+    transponder.translate(x=float(pos[0]), y=float(pos[1]), z=float(pos[2]))
+    idx+=1
+f.close()
+
+logger.info(str(idx)+' landmarks positioned from '+file_name+' file.')
 
 ################################
 #			       #
@@ -92,18 +114,6 @@ loch_doppler_noisy.add_stream('socket')
 sub.append(loch_doppler_noisy)
 #loch_doppler_noisy.frequency(sensors_freq)
 #loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
-
-####################
-# Transponders     #
-####################
-transponder_positions=[\
-[300,0,-100],\
-[630,-80,-250],\
-[],\
-[-1,97,-68]]
-
-Transponder=Transponder()
-Transponder.translate(trans1[0],trans1[1],trans1[2])
 
 env=Environment('water-1/deep_water',True)
 env.place_camera([-20,-20,10])
