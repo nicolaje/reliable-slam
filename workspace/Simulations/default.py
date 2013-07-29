@@ -15,9 +15,8 @@ f=open("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/
 
 idx=1
 for line in f:
-    transponder=Robot('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/Simulations/robots/Transponder.blend') # Transponder()
     pos=line.split(';')
-    transponder.translate(x=1.1*float(pos[0]), y=float(pos[1]), z=float(pos[2]))
+    Robot('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/Simulations/robots/Transponder.blend').translate(x=1.1*float(pos[0]), y=float(pos[1]), z=float(pos[2]))
     idx+=1
 f.close()
 
