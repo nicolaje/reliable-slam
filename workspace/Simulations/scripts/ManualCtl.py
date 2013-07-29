@@ -79,6 +79,9 @@ def run(win):
             win.addstr(5, 15, '['+"{0:.2f}".format(angular_speed[0])+", "+\
             "{0:.2f}".format(angular_speed[1])+", "+\
             "{0:.2f}".format(angular_speed[2])+']')
+        win.addstr(6, 0, "Time left: ")
+        win.addstr(6, 12, "{0:.1f}".format(max_duration-duration))
+
         if wz >-0.1 and wz < 0.1 :
             wz=0
         
@@ -105,5 +108,4 @@ def run(win):
         elif c == curses.KEY_NPAGE and vz >= -1:
             vz-=0.1
         motion.publish({"vx": vx,"vy": vy,"vz": vz,"wx": wx,"wy": wy,"wz": wz})
-        
 curses.wrapper(run)
