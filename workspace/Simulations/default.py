@@ -9,19 +9,6 @@ from Simulations.builder.robots import Transponder
 from Simulations.builder.actuators import Motionfull
 from math import *
 
-file_name="default.pos"
-
-f=open("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/"+file_name) #os.environ['WORKSPACE_DIR']+"Simulations/data/"+file_name,'r')
-
-idx=1
-for line in f:
-    pos=line.split(';')
-    Robot('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/Simulations/robots/Transponder.blend').translate(x=1.1*float(pos[0]), y=float(pos[1]), z=float(pos[2]))
-    idx+=1
-f.close()
-
-logger.info(str(idx)+' landmarks positioned from '+file_name+' file.')
-
 ################################
 #			       #
 # Tunable parameters           #
@@ -36,6 +23,26 @@ pinger_std=0.03                # 0.03 m
 pressure_std=0.15              # 0.15 m
 loch_doppler_std=0.04          # 0.04 m/s
 ################################
+
+######################
+# Load and position  #
+# the transponders   #
+######################
+
+file_name="default.pos"
+if os.environ['TRANSPONDERS_POS'] != "":
+    file_name=os.environ['TRANSPONDERS_POS']
+
+f=open(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+file_name,'r')
+
+idx=1
+for line in f:
+    pos=line.split(';')
+    Robot(os.environ['WORKSPACE_DIR']+"/Simulations/data/Simulations/robots/Transponder.blend").translate(x=float(pos[0]), y=float(pos[1]), z=float(pos[2]))
+    idx+=1
+f.close()
+
+logger.info(str(idx)+' landmarks positioned from '+file_name+' file.')
 
 sub=Submarine()
 
