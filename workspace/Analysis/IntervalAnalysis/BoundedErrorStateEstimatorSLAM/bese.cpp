@@ -20,16 +20,11 @@ void BESE::predict(Interval dt)
     for(int i=0;i<3;i++){
         x[i]=(*state)[i];
         v[i]=(*measurements)[i+3]; // CP linear speed in v
-        ori[i]=(*measurements)[i];//(*state)[i]; // cp orientation
+        ori[i]=(*measurements)[i]; //(*state)[i]; // cp orientation
     }
     x+=dt*(*euler).eval_matrix(ori)*v;
     for(int i=0;i<3;i++)
         (*state)[i]=x[i]; // Update the position of the robot
-    /*IntervalVector v(9);
-    for(int i=0; i<9; i++){
-        v[i]=(*measurements)[i];
-    }
-    (*state)+=dt*(*fPrime).eval_vector(v);*/
 }
 
 void BESE::update(IntervalVector *vector)

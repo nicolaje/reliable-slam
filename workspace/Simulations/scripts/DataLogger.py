@@ -98,6 +98,7 @@ def run(win):
 		win.addstr(2,0,"Press q to quit.")
 		time=datetime.now()
 		win.addstr(4,0,"Wrote "+str(lines)+ " lines in "+str((time-start).seconds)+" seconds.")
+		win.addstr(5,0,"Shift is: "+str((time-start).seconds-lines/10.0))
 		c = win.getch()
 		if c == 113: # if the "q" key is pressed, exit data logging
 			doRun=False

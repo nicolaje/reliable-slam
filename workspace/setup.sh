@@ -4,5 +4,5 @@
 export WORKSPACE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export SIMU_DURATION=200
-export TRANSPONDERS_POS="default.pos"
+export TRANSPONDERS_POS="4-150_150_30_25.pos"
 export OUTPUT_LOG="out.res"

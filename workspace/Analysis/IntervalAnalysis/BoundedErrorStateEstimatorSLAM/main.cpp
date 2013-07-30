@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-lines-long.res",1,4);
+    MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_long.log",1,4);
     IntervalVector initState(3+3+3*4);
     Robot r=p.nextRecord()[0];
 
@@ -30,21 +30,21 @@ int main(int argc, char *argv[])
         initState[3+i]=robot[3+i];
     }
 
-    initState[6]=Interval(10,25);
-    initState[7]=Interval(-50,1);
-    initState[8]=Interval(-1,5);
+    initState[6]=Interval(-64.84536338313981,-44.84536338313981);
+    initState[7]=Interval(42.115060540584906,62.115060540584906);
+    initState[8]=Interval(-36.18112690511693,-16.18112690511693);
 
-    initState[9]=Interval(-21,10);
-    initState[10]=Interval(-1,20);
-    initState[11]=Interval(5,17);
+    initState[9]=Interval(-46.739646139086744,-26.739646139086744);
+    initState[10]=Interval(-1.6847369362088642,1.6847369362088642);
+    initState[11]=Interval(-37.75254467605631,-17.75254467605631);
 
-    initState[12]=Interval(-10,7);
-    initState[13]=Interval(19,29);
-    initState[14]=Interval(0,10);
+    initState[12]=Interval(12.738945908414436,32.738945908414436);
+    initState[13]=Interval(33.30850267032697,53.30850267032697);
+    initState[14]=Interval(-39.530702066128825,-19.530702066128825);
 
-    initState[15]=Interval(-50,1);
-    initState[16]=Interval(-21,-9);
-    initState[17]=Interval(0,20);
+    initState[15]=Interval(-80.74787852169905,-60.74787852169905);
+    initState[16]=Interval(40.36476558798046,60.36476558798046);
+    initState[17]=Interval(-37.836164660474733,-17.836164660474733);
 
     BESE estimator(initState,1,4);
 
