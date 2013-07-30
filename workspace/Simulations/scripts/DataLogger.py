@@ -66,7 +66,13 @@ def run(win):
 	win.timeout(100)
 	
 	doRun=True
-	f=open(str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']),'w')
+	f=0
+	if len(sys.argv) >=2: # Did we receive a file name as an argument?
+		f=open(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+sys.argv[1],'w')
+		win.addstr(1,0,os.environ['WORKSPACE_DIR']+"/Simulations/data/"+sys.argv[1])
+	else:
+		f=open(str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']),'w')
+		win.addstr(1,0,str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']))
 	
 	global readyToWrite
 	global firstRun
@@ -89,7 +95,6 @@ def run(win):
 	lines=0
 	while doRun:
 		win.addstr(0,0,"Data logger. Writing the log to: ")
-		win.addstr(1,0,str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']))
 		win.addstr(2,0,"Press q to quit.")
 		time=datetime.now()
 		win.addstr(4,0,"Wrote "+str(lines)+ " lines in "+str((time-start).seconds)+" seconds.")
