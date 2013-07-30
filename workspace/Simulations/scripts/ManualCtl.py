@@ -21,9 +21,6 @@ position=0
 linear_speed=0
 angular_speed=0
 
-start=datetime.now()
-max_duration=int(os.environ['SIMU_DURATION'])
-
 def pose_received(p):
     global position
     position=p
@@ -73,8 +70,6 @@ def run(win):
             win.addstr(5, 15, '['+"{0:.2f}".format(angular_speed[0])+", "+\
             "{0:.2f}".format(angular_speed[1])+", "+\
             "{0:.2f}".format(angular_speed[2])+']')
-        win.addstr(6, 0, "Time left: ")
-        win.addstr(6, 12, "{0:.1f}".format(max_duration-duration))
 
         if wz >-0.1 and wz < 0.1 :
             wz=0

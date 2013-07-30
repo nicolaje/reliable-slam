@@ -73,6 +73,7 @@ imu_pure.frequency(sensors_freq)
 
 # Proximity Sensor(pinger)
 pinger_pure=Proximity()
+pinger_pure.properties(Track="Transponder_Tag")
 pinger_pure.add_stream('socket')
 sub.append(pinger_pure)
 pinger_pure.frequency(sensors_freq)
@@ -104,6 +105,7 @@ imu_noisy.alter('','morse.modifiers.imu_noise.IMUNoiseModifier', gyro_std=gyro_s
 
 # Proximity Sensor(pinger)
 pinger_noisy=Proximity()
+pinger_noisy.properties(Track="Transponder_Tag")
 pinger_noisy.add_stream('socket')
 sub.append(pinger_noisy)
 #pinger_noisy.frequency(sensors_freq)
