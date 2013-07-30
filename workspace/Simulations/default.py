@@ -108,8 +108,8 @@ pinger_noisy=Proximity()
 pinger_noisy.properties(Track="Transponder_Tag")
 pinger_noisy.add_stream('socket')
 sub.append(pinger_noisy)
-#pinger_noisy.frequency(sensors_freq)
-#pinger_noisy.properties(Range=range_pinger)
+pinger_noisy.frequency(sensors_freq)
+pinger_noisy.properties(Range=range_pinger)
 #pinger_noisy.alter('', 'ProximityModifier.ProximityModifier')
 
 # Velocity (Loch-Doppler): vx, vy, vz
