@@ -42,7 +42,8 @@ velocity.subscribe(speed_received)
 
 def run(win):
     win.timeout(100)
-    while True:
+    doRun=True
+    while doRun:
         global duration
         global motion
         global vx
@@ -70,6 +71,7 @@ def run(win):
             win.addstr(5, 15, '['+"{0:.2f}".format(angular_speed[0])+", "+\
             "{0:.2f}".format(angular_speed[1])+", "+\
             "{0:.2f}".format(angular_speed[2])+']')
+            win.addstr(7,0,"Press q to quit.")
 
         if wz >-0.1 and wz < 0.1 :
             wz=0
@@ -96,5 +98,8 @@ def run(win):
             vz+=0.1
         elif c == curses.KEY_NPAGE and vz >= -1:
             vz-=0.1
+        elif c == 113: # q is pressed, close the loop
+            doRun = False
         motion.publish({"vx": vx,"vy": vy,"vz": vz,"wx": wx,"wy": wy,"wz": wz})
+
 curses.wrapper(run)
