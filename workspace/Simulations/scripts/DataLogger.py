@@ -10,6 +10,7 @@ from time import sleep
 from pymorse import Morse
 
 readyToWrite=False
+firstRun=True
 
 _pose_pure=0
 _pose_noisy=0
@@ -68,6 +69,7 @@ def run(win):
 	f=open(str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']),'w')
 	
 	global readyToWrite
+	global firstRun
 	
 	simu=Morse()
 	sub=simu.sub
@@ -79,19 +81,81 @@ def run(win):
 	sub.pinger_noisy.subscribe(update_pinger_noisy)
 	sub.loch_doppler_pure.subscribe(update_loch_doppler_pure)
 	sub.loch_doppler_noisy.subscribe(update_loch_doppler_noisy)
+	while not readyToWrite:
+		sleep(0.1)
+	sleep(1)
 	start=datetime.now()
+	data=""
+	lines=0
 	while doRun:
 		win.addstr(0,0,"Data logger. Writing the log to: ")
 		win.addstr(1,0,str(os.environ['WORKSPACE_DIR']+"/Simulations/data/"+os.environ['OUTPUT_LOG']))
 		win.addstr(2,0,"Press q to quit.")
 		time=datetime.now()
-		win.addstr(4,0,"Running since : "+str((time-start).seconds)+" seconds.")
+		win.addstr(4,0,"Wrote "+str(lines)+ " lines in "+str((time-start).seconds)+" seconds.")
 		c = win.getch()
 		if c == 113: # if the "q" key is pressed, exit data logging
 			doRun=False
-			# TODO: close the file
+			win.addstr(6,0,"Closing the file...")
+			f.write(data)
+			f.close()
+			sleep(1)
+			win.addstr(6,20,"File Closed.")
+			sleep(1)
 		elif readyToWrite:
-			pass
+			lines+=1
+			linear_acceleration_pure=_imu_pure['linear_acceleration']
+			linear_acceleration_noisy=_imu_noisy['linear_acceleration']
+			
+			angular_velocity_pure=_imu_pure['angular_velocity']
+			angular_velocity_noisy=_imu_noisy['angular_velocity']
+			
+			loch_doppler_pure=_loch_doppler_pure['linear_velocity']
+			loch_doppler_noisy=_loch_doppler_noisy['linear_velocity']
+			
+			transponders_pure=sorted(_pinger_pure['near_objects'].items())
+			transponders_noisy=sorted(_pinger_noisy['near_objects'].items())
+
+			if firstRun:
+				firstRun=False
+				tp=""
+				for s in transponders_pure:
+					tp+=';'+s[0]
+				data+=\
+				'pose_pure.x;pose_pure.y;pose_pure.z;'\
+				'pose_pure.yaw;pose_pure.pitch;pose_pure.roll;'\
+				'imu_pure.dtheta;imu_pure.dphi;imu_pure.dpsi;'\
+				'loch_doppler_pure.vx;loch_doppler_pure.vy;loch_doppler_pure.vz;'\
+				'imu_pure.ddx;imu_pure.ddy;imu_pure.ddz'+\
+				tp+';'\
+				'pose_noisy.x;pose_noisy.y;pose_noisy.z;'\
+				'pose_noisy.yaw;pose_noisy.pitch;pose_noisy.roll;'\
+				'imu_noisy.dtheta;imu_noisy.dphi;imu_noisy.dpsi;'\
+				'loch_doppler_noisy.vx;loch_doppler_noisy.vy;loch_doppler_noisy.vz;'\
+				'imu_noisy.ddx;imu_noisy.ddy;imu_noisy.ddz'+\
+				tp+"\n"
+				
+			# Reference data
+			data+=str(_pose_pure['x'])+';'+str(_pose_pure['y'])+';'+str(_pose_pure['z'])+';'+\
+			str(_pose_pure['roll'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['yaw'])+';'+\
+			str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"+\
+			str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"+\
+			str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])
+			
+			for s in transponders_pure:
+				data+=';'+str(s[1])
+			
+			# Noisy data
+			data+=';'+str(_pose_noisy['x'])+';'+str(_pose_noisy['y'])+';'+str(_pose_noisy['z'])+';'+\
+			str(_pose_noisy['roll'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['yaw'])+';'+\
+			str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"+\
+			str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"+\
+			str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])
+			
+			for s in transponders_noisy:
+				data+=';'+str(s[1])
+			data+='\n'
+			
 curses.wrapper(run)
 
 #f=open(str(file_name), 'w')
