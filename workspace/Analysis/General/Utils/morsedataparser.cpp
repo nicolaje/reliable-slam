@@ -4,7 +4,7 @@ MORSEDataParser::MORSEDataParser(QString data_file, int nbRobots, int nbLandmark
 {
     file=new QFile(data_file);
     if(!file->open(QIODevice::ReadOnly)){
-        qDebug() << "fail";
+        qDebug() << "Failed to open log file.";
     }else{
         file->readLine(); // drop the 1st comment line
 

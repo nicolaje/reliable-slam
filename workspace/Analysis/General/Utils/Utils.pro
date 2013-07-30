@@ -17,13 +17,15 @@ SOURCES += main.cpp\
     morsedataparser.cpp \
     morserosconnector.cpp \
     robot.cpp \
-    sivia.cpp
+    sivia.cpp \
+    positionloader.cpp
 
 HEADERS  += mainwindow.h \
     morsedataparser.h \
     morserosconnector.h \
     robot.h \
-    sivia.h
+    sivia.h \
+    positionloader.h
 
 FORMS    += mainwindow.ui
 CONFIG += link_pkgconfig
