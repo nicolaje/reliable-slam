@@ -7,7 +7,6 @@ MORSEDataParser::MORSEDataParser(QString data_file, int nbRobots, int nbLandmark
         qDebug() << "Failed to open log file.";
     }else{
         file->readLine(); // drop the 1st comment line
-
         this->nbRobots=nbRobots;
         this->nbLandmarks=nbLandmarks;
 

@@ -44,3 +44,8 @@ std::vector<IntervalVector> PositionLoader::getLandmarksAsIntervalVector(double 
     }
     return res;
 }
+
+int PositionLoader::getLandmarksNB()
+{
+    return landmarks.size();
+}

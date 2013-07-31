@@ -20,6 +20,7 @@ public:
 
     ibex::IntervalVector getPosition();
     ibex::IntervalVector getOrientation();
+    ibex::IntervalVector getMap();
 
     int getLandmarkNB();
     int getRobotNB();

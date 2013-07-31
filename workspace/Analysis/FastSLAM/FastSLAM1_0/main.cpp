@@ -1,13 +1,13 @@
-#include <QApplication>
 #include <iostream>
-#include "mainwindow.h"
 #include <eigen3/Eigen/Eigen>
 #include <QDebug>
 #include <vector>
 #include "../../General/Utils/morsedataparser.h"
 #include "../../General/Utils/robot.h"
+#include "../../General/Utils/positionloader.h"
 #include "particle.h"
 #include "fastslam.h"
+
 #define PARTICLES_NB 1000
 #define DT 0.1
 #define ERR_COV \
@@ -20,10 +20,7 @@
 //## MAP PARAMETERS #//
 //##################//
 /////////////////////
-#define LM1 18,-23/*-30*/,3
-#define LM2 /*-7*/-1,12,17
-#define LM3 0,20,5
-#define LM4 /*-27*/-20,-20,10
+
 #define C1 \
     1,0,0,\
     0,1,0,\
@@ -68,11 +65,11 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    std::cout << "Weird1"<<std::endl;
+    PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
+    std::cout << "Weird2"<<std::endl;
+    MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());
 
-    MORSEDataParser p("/home/jem/reliable-slam/workspace/Simulations/Scenarios/3D-4Transponders/3D-4Transponders-lines.res",1,4);
     Robot r=p.nextRecord()[0];
 
     QFile *out=new QFile("../Results/DeadReckoning3.res");
@@ -91,18 +88,8 @@ int main(int argc, char *argv[])
     angularMotionCovariance << ANG_COV;
     double pingerVariance=PING_COV;
 
-    // 4 landmarks here
 
-    std::vector<Vector3d> landmarksEstimates;
-    Vector3d l1,l2,l3,l4;
-    l1 << LM1;
-    l2 << LM2;
-    l3 << LM3;
-    l4 << LM4;
-    landmarksEstimates.push_back(l1);
-    landmarksEstimates.push_back(l2);
-    landmarksEstimates.push_back(l3);
-    landmarksEstimates.push_back(l4);
+    std::vector<Vector3d> landmarksEstimates=pLoader.getLandmarksAsVector();
 
     std::vector<Matrix3d> landmarksPosCovariances;
     Matrix3d c1,c2,c3,c4;
@@ -159,5 +146,4 @@ int main(int argc, char *argv[])
         std::cout << i+1 <<" : "<< map[i].transpose() <<std::endl;
     }
     out->close();
-    return a.exec();
 }

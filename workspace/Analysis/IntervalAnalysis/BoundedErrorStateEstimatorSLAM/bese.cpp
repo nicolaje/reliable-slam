@@ -105,6 +105,15 @@ IntervalVector BESE::getOrientation()
     return res;
 }
 
+IntervalVector BESE::getMap()
+{
+    IntervalVector map(this->getLandmarkNB()*3);
+    for(int i=0;i<this->getLandmarkNB()*3;i++){
+        map[i]=(*this->state)[6+i];
+    }
+    return map;
+}
+
 int BESE::getLandmarkNB()
 {
     return this->nbLandmarks;

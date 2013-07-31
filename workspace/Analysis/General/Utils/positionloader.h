@@ -27,6 +27,11 @@ public:
      * @return
      */
     std::vector<ibex::IntervalVector> getLandmarksAsIntervalVector(double errorX, double errorY, double errorZ);
+    /**
+     * @brief getLandmarksNB returns the number of landmarks.
+     * @return the number of landmarks.
+     */
+    int getLandmarksNB();
 private:
     std::vector<Eigen::Vector3d> landmarks;
 };
