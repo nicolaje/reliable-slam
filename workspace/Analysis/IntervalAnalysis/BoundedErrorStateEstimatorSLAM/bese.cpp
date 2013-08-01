@@ -27,7 +27,9 @@ void BESE::predict(Interval dt)
 
 void BESE::update(IntervalVector vector)
 {
-    this->measurements=&vector;
+    measurements=new IntervalVector(vector.size());
+    (*measurements)=vector;
+
     for(int i=0; i<3; i++){
         (*this->state)[3+i]=vector[3+i]; // Update orientation
     }
