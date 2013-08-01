@@ -15,8 +15,7 @@ public:
     BESE(ibex::IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubPavings=false);
 
     void predict(ibex::Interval dt);
-    void update(ibex::IntervalVector *vector);
-    void updateData(Robot robot);
+    void update(ibex::IntervalVector vector);
 
     ibex::IntervalVector getPosition();
     ibex::IntervalVector getOrientation();

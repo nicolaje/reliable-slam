@@ -53,27 +53,11 @@ int main(int argc, char *argv[])
         std::cout << j << std::endl;
         estimator.predict(dt);
         r=p.nextRecord()[0];
-        estimator.updateData(r);
-        IntervalVector p=r.positionAsIntervalVector();
 
-        IntervalVector *obs=r.getObservationsAsIntervalVector();
-        IntervalVector updObs(1+3+estimator.getLandmarkNB());
-        updObs[0]=p[2]; // Pressure sensor
-        for(int i=0; i<3; i++){
-            updObs[1+i]=(*obs)[i];
-        }
-        for(int i=0; i<estimator.getLandmarkNB(); i++){
-            updObs[1+3+i]=(*obs)[9+i];
-        }
+        out->write(estimator.toString().c_str());
+        groundTruth->write(r.groundTruthToString().c_str());
 
-            out->write(estimator.toString().c_str());
-            groundTruth->write(r.groundTruthToString().c_str());
-            double *pos=r.getPosition();
-            IntervalVector posV(3);
-            for(int i=0;i<3;i++){
-                posV[i]=pos[i];
-            }
-        estimator.update(&updObs);
+        estimator.update((*r.getObservationsAsIntervalVector()));
     }
     std::cout << "Position: " << estimator.getPosition() << std::endl;
     std::cout << "Map: " << estimator.getMap() << std::endl;
