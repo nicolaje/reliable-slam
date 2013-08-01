@@ -20,10 +20,18 @@ public:
 
     void predict(ibex::Interval dt);
     void update(ibex::IntervalVector data);
+    void normalize();
 private:
     BESE *beseEstimator;
     std::vector<Particle> particles;
     void reSample();
+
+    void updateRobotPosition(Eigen::Vector3d position);
+    void updateRobotOrientation(Eigen::Vector3d orientation);
+    void updateRobotMotion(Eigen::Vector3d linearMotion, Eigen::Vector3d angularMotion);
+
+    void updateMap(std::vector<double> landmarksMeasurements);
+    bool isConsistent(ibex::IntervalVector iVector, Eigen::VectorXd eVector);
 
     Eigen::Matrix3d positionCovariance;
     Eigen::Matrix3d orientationCovariance;

@@ -11,10 +11,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ExtendedKalmanFilterSLAM
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
-        mainwindow.cpp
+    ekfslam.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    ekfslam.h
 
-FORMS    += mainwindow.ui
+PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc

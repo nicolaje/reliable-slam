@@ -108,6 +108,11 @@ IntervalVector BESE::getMap()
     return map;
 }
 
+IntervalVector BESE::getState()
+{
+    return *state;
+}
+
 int BESE::getLandmarkNB()
 {
     return this->nbLandmarks;

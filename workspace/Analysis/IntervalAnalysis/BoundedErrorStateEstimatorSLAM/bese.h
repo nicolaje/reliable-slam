@@ -21,6 +21,8 @@ public:
     ibex::IntervalVector getOrientation();
     ibex::IntervalVector getMap();
 
+    ibex::IntervalVector getState();
+
     int getLandmarkNB();
     int getRobotNB();
 
@@ -28,7 +30,7 @@ public:
     std::string debugToString();
 private:
     /**
-     * @brief state is a box containing the robot position and the map.
+     * @brief state is a box containing the robot position, orientation and the map.
      */
     ibex::IntervalVector *state;
 

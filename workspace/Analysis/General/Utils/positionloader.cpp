@@ -39,11 +39,6 @@ IntervalVector PositionLoader::createInitState(IntervalVector robotState, std::v
         for(int j=0;j<3;j++)
             fullState[6+3*i+j]=lPos[j];
     }
-//    for(uint i=0;i<map.size();i++){
-//        fullState[robotState.size()+3*i]=map[i][0];
-//        fullState[robotState.size()+3*i+1]=map[i][1];
-//        fullState[robotState.size()+3*i+2]=map[i][2];
-//    }
     return fullState;
 }
 

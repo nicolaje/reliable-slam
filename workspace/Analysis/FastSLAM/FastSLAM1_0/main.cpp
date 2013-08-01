@@ -71,10 +71,7 @@ int main(int argc, char *argv[])
     Robot r=p.nextRecord()[0];
 
     QFile *out=new QFile("../Results/DeadReckoning3.res");
-    if(!out->open(QIODevice::WriteOnly)){
-        qDebug() << "Failed to open output file";
-        return 1;
-    }
+    if(!out->open(QIODevice::WriteOnly)){qDebug() << "Failed to open output file";return 1;}
 
     Matrix3d errorCovariance;
     errorCovariance << ERR_COV;

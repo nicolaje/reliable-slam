@@ -16,13 +16,15 @@ SOURCES +=\
     morsedataparser.cpp \
     morserosconnector.cpp \
     robot.cpp \
-    positionloader.cpp
+    positionloader.cpp \
+    utils.cpp
 
 HEADERS  += \
     morsedataparser.h \
     morserosconnector.h \
     robot.h \
-    positionloader.h
+    positionloader.h \
+    utils.h
 
 FORMS    +=
 CONFIG += link_pkgconfig
