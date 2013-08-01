@@ -30,22 +30,22 @@ void BESE::predict(Interval dt)
 void BESE::update(IntervalVector vector)
 {
     this->measurements=vector;
-    (*this->state)[2]=
     for(int i=0; i<3; i++){
-        (*this->state)[3+i]=vector[1+i];
+        (*this->state)[3+i]=vector[3+i]; // Update orientation
     }
+
     System sys("ObservationModelSystem.txt");
     CtcFwdBwd out1(sys.f,LT);
     CtcFwdBwd out2(sys.f,GT);
     CtcCompo out(out1,out2);
     CtcFixPoint outFix(out,0.001);
 
-    IntervalVector extState((*state).size()+(*vector).size());
+    IntervalVector extState((*state).size()+vector.size());
     for(int i=0;i<(*state).size();i++){
         extState[i]=(*state)[i];
     }
-    for(int i=0;i<(*vector).size();i++){
-        extState[(*state).size()+i]=(*vector)[i];
+    for(int i=0;i<vector.size();i++){
+        extState[(*state).size()+i]=vector[i];
     }
     CtcFwdBwd ctc(sys.f);
     CtcFixPoint fix(ctc);
