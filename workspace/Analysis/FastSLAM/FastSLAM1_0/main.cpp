@@ -65,9 +65,7 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Weird1"<<std::endl;
     PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
-    std::cout << "Weird2"<<std::endl;
     MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());
 
     Robot r=p.nextRecord()[0];
@@ -101,12 +99,6 @@ int main(int argc, char *argv[])
     landmarksPosCovariances.push_back(c2);
     landmarksPosCovariances.push_back(c3);
     landmarksPosCovariances.push_back(c4);
-
-    std::cout << "Position covariance: "<< positionCovariance << std::endl;
-    std::cout << "Orientation covariance: " << orientationCovariance << std::endl;
-    std::cout << "Motion covariance: " << linearMotionCovariance << std::endl;
-    std::cout << "Orientation Speed covariance: " << angularMotionCovariance << std::endl;
-
 
     FastSLAM estimator(positionCovariance,orientationCovariance,linearMotionCovariance,angularMotionCovariance,pingerVariance,FastSLAM::RESAMPLE_ALL_AT_ONCE);
     estimator.initParticles(PARTICLES_NB,r.positionAsVect(),r.orientationAsVect(),r.linearMotionAsVect(),r.angularMotionAsVect(),landmarksEstimates,landmarksPosCovariances);

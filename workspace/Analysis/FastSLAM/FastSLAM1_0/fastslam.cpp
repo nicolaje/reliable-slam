@@ -86,7 +86,7 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
             particles=reSample();
         }
     }else{
-        for(uint p=0;p<particleNb;p++){
+        for(int p=0;p<particleNb;p++){
             particles[p].updateAllKFs(landmarksMeasurements);
         }
         normalize();

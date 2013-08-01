@@ -1,7 +1,7 @@
 #ifndef RESAMPLING_H
-#define RESAMPLING_H
 #include <vector>
 #include "particle.h"
+#define RESAMPLING_H
 
 /**
  * @brief The ReSampling class contains some methods to resample a particle population.

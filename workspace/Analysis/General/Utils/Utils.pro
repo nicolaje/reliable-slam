@@ -12,21 +12,18 @@ TARGET = Utils
 TEMPLATE = lib
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES +=\
     morsedataparser.cpp \
     morserosconnector.cpp \
     robot.cpp \
-    sivia.cpp \
     positionloader.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     morsedataparser.h \
     morserosconnector.h \
     robot.h \
-    sivia.h \
     positionloader.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 CONFIG += link_pkgconfig
 PKGCONFIG += /usr/local/share/pkgconfig/ibex.pc

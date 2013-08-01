@@ -1,4 +1,4 @@
-raw_file=read_csv('/home/jem/reliable-slam/workspace/Analysis/FastSLAM/Results/DeadReckoning3.res',';');
+raw_file=read_csv('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/FastSLAM/Results/DeadReckoning3.res',';');
 data=evstr(raw_file);
 param3d(data(:,1),data(:,2),data(:,3));
 h=gce();

@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
     MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());
 
-    std::vector<IntervalVector> initMap=pLoader.getLandmarksAsIntervalVector(10,10,10);
+    std::vector<IntervalVector> initMap=pLoader.getLandmarksAsIntervalVector(30,30,10);
 
     IntervalVector initState(3+3+3*pLoader.getLandmarksNB());
     Robot r=p.nextRecord()[0];

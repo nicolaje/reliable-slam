@@ -1,8 +1,8 @@
 #ifndef PARTICLE_H
-#define PARTICLE_H
 #include <eigen3/Eigen/Eigen>
 #include <vector>
 #include "kalmanfilter.h"
+#define PARTICLE_H
 
 /**
  * @brief The Particle class contains the position of the robot

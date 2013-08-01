@@ -1,11 +1,11 @@
 #ifndef ROBOT_H
-#define ROBOT_H
 #include <string>
 #include <sstream>
 #include <vector>
 #include <QDebug>
 #include <ibex/ibex.h>
 #include <eigen3/Eigen/Eigen>
+#define ROBOT_H
 
 using namespace std;
 

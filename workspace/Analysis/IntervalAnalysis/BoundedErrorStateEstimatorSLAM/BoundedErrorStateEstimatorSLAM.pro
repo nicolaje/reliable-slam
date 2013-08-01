@@ -17,7 +17,7 @@ SOURCES += main.cpp\
 HEADERS  += \
     bese.h \
 
-FORMS    += mainwindow.ui
+FORMS    +=
 CONFIG += link_pkgconfig
 PKGCONFIG +=/usr/local/share/pkgconfig/ibex.pc
 PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc

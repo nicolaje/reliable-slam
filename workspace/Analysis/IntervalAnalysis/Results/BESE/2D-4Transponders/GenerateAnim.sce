@@ -1,5 +1,5 @@
 funcprot(0);
-//clear;
+clear;
 xdel(winsid()); // close all previously opened windows
 
 // Personal workstation (Linux)
@@ -7,13 +7,6 @@ exec('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/wo
 path_in='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/IntervalAnalysis/Results/BESE/';
 path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/IntervalAnalysis/Results/BESE/';
 
-// Circle trajectory
-//raw_file=read_csv(path_in+'DeadReckoning.res',';');
-//ground_truth=read_csv(path_in+'GroundTruth.res',';');
-//data=evstr(raw_file);
-//data_truth=evstr(ground_truth);
-
-// Smaller circle trajectory
 raw_file=read_csv(path_in+'DeadReckoning3.res',';');
 ground_truth=read_csv(path_in+'GroundTruth3.res',';');
 data=evstr(raw_file);

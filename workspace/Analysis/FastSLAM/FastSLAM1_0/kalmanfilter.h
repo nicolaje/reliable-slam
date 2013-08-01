@@ -1,6 +1,6 @@
 #ifndef KALMANFILTER_H
-#define KALMANFILTER_H
 #include <eigen3/Eigen/Eigen>
+#define KALMANFILTER_H
 
 /**
  * @brief The KalmanFilter class is a Kalman Filter to estimate the 3D position of
