@@ -12,12 +12,11 @@ TARGET = IBEXPlayground
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  +=
 
-FORMS    += mainwindow.ui
+FORMS    +=
 CONFIG += link_pkgconfig
 PKGCONFIG +=/usr/local/share/pkgconfig/ibex.pc
 PKGCONFIG +=/usr/lib/pkgconfig/eigen3.pc

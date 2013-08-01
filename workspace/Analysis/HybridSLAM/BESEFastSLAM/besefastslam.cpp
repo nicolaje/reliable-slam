@@ -39,14 +39,14 @@ void BESEFastSLAM::setPingerCovariance(double pingerVariance)
 void BESEFastSLAM::predict(ibex::Interval dt)
 {
     this->beseEstimator->predict(dt);
-    for(int i=0;i<particleNb;i++){
-        particles[i].predict(dt.mid());
-    }
+//    for(int i=0;i<particleNb;i++){
+//        particles[i].predict(dt.mid());
+//    }
 }
 
 void BESEFastSLAM::update(ibex::IntervalVector data)
 {
-
+    this->beseEstimator->update(data);
 }
 
 
@@ -63,5 +63,5 @@ void BESEFastSLAM::reSample()
 
 bool BESEFastSLAM::isConsistent(IntervalVector iVector, VectorXd eVector)
 {
-    return iVector.contains(Utils::eigenVectorToIntervalVector(eVector));
+    return iVector.is_superset(Utils::eigenVectorToIntervalVector(eVector));
 }
