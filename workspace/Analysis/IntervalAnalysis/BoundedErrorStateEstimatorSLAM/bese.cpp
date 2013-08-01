@@ -19,8 +19,8 @@ void BESE::predict(Interval dt)
     IntervalVector x(3);
     for(int i=0;i<3;i++){
         x[i]=(*state)[i];
-        v[i]=(*measurements)[i+3]; // CP linear speed in v
-        ori[i]=(*measurements)[i]; // (*state)[i]; // cp orientation
+        v[i]=(*measurements)[6+i]; // CP linear speed in v
+        ori[i]=(*measurements)[3+i]; // (*state)[i]; // cp orientation
     }
     x+=dt*(*euler).eval_matrix(ori)*v;
     for(int i=0;i<3;i++)
