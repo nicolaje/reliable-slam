@@ -24,22 +24,8 @@ int main(int argc, char *argv[])
     PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
     MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());
 
-    std::vector<IntervalVector> initMap=pLoader.getLandmarksAsIntervalVector(30,30,10);
-
-    IntervalVector initState(3+3+3*pLoader.getLandmarksNB());
     Robot r=p.nextRecord()[0];
-
-    IntervalVector robot=r.asIntervalVector();
-    for(int i=0;i<3; i++){
-        initState[i]=robot[i];
-        initState[3+i]=robot[3+i];
-    }
-
-    for(int i=0;i<pLoader.getLandmarksNB();i++){
-        IntervalVector lPos=initMap[i];
-        for(int j=0;j<3;j++)
-            initState[6+3*i+j]=lPos[j];
-    }
+    IntervalVector initState=pLoader.createInitState(r.asIntervalVector(),pLoader.getLandmarksAsIntervalVector(30,30,10));
 
     BESE estimator(initState,1,pLoader.getLandmarksNB());
     std::cout << "Init state: "<<initState<<std::endl;
@@ -51,7 +37,7 @@ int main(int argc, char *argv[])
     while(p.hasDataLeft()){
         j++;
 
-        std::cout << j << "the iteration." << std::endl;
+        std::cout << j << "th iteration." << std::endl;
         estimator.predict(dt);
         r=p.nextRecord()[0];
 
