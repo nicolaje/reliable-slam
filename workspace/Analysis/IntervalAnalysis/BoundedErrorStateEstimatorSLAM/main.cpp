@@ -37,9 +37,8 @@ int main(int argc, char *argv[])
 
     for(int i=0;i<pLoader.getLandmarksNB();i++){
         IntervalVector lPos=initMap[i];
-        for(int j=0;j<3;j++){
+        for(int j=0;j<3;j++)
             initState[6+3*i+j]=lPos[j];
-        }
     }
 
     BESE estimator(initState,1,pLoader.getLandmarksNB());
@@ -51,7 +50,8 @@ int main(int argc, char *argv[])
     int j=0;
     while(p.hasDataLeft()){
         j++;
-        std::cout << j << std::endl;
+
+        std::cout << j << "the iteration." << std::endl;
         estimator.predict(dt);
         r=p.nextRecord()[0];
 

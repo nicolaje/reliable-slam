@@ -26,6 +26,15 @@ public:
      * @param errorZ
      * @return
      */
+
+    /**
+     * @brief createInitState concatenates the robot state vector and the map vector in one full state vector.
+     * @param robotState
+     * @param map
+     * @return
+     */
+    ibex::IntervalVector createInitState(ibex::IntervalVector robotState, std::vector<ibex::IntervalVector> map);
+
     std::vector<ibex::IntervalVector> getLandmarksAsIntervalVector(double errorX, double errorY, double errorZ);
     /**
      * @brief getLandmarksNB returns the number of landmarks.

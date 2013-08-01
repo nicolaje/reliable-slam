@@ -28,6 +28,19 @@ std::vector<Vector3d> PositionLoader::getLandmarksAsVector()
     return landmarks;
 }
 
+IntervalVector PositionLoader::createInitState(IntervalVector robotState, std::vector<IntervalVector> map)
+{
+    IntervalVector fullState(robotState.size()+map.size());
+    for(int i=0;i<robotState.size();i++){
+        fullState[i]=robotState[i];
+    }
+    for(int i=0;i<map.size();i++){
+        for(int j=0;j<3;j++)
+            fullState[i]=map[i][j];
+    }
+    return fullState;
+}
+
 
 std::vector<IntervalVector> PositionLoader::getLandmarksAsIntervalVector(double errorX, double errorY, double errorZ)
 {

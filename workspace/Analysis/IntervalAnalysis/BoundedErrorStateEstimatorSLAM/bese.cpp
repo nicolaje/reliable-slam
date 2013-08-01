@@ -7,8 +7,6 @@ BESE::BESE(IntervalVector initState, int nbRobots, int nbLandmarks, bool useSubP
     this->nbLandmarks=nbLandmarks;
     this->nbRobots=nbRobots;
     this->useSubPavings=useSubPavings;
-
-//    this->fPrime=new Function("f_prime.txt");
     this->euler=new Function("euler.txt");
 }
 
