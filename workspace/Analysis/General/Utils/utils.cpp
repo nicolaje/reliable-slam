@@ -9,3 +9,11 @@ IntervalVector Utils::eigenVectorToIntervalVector(VectorXd vector)
         res[i]=vector[i];
     return res;
 }
+
+VectorXd Utils::intervalVectorToEigenVector(IntervalVector vector)
+{
+    VectorXd res(vector.size());
+    for(int i=0;i<res.rows();i++)
+        res[i]=vector[i].mid();
+    return res;
+}

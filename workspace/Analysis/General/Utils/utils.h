@@ -7,6 +7,7 @@ class Utils
 {
 public:
     static ibex::IntervalVector eigenVectorToIntervalVector(Eigen::VectorXd vector);
+    static Eigen::VectorXd intervalVectorToEigenVector(ibex::IntervalVector vector);
 };
 
 #endif // UTILS_H

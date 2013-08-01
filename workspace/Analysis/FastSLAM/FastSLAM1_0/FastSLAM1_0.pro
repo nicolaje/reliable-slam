@@ -13,7 +13,7 @@ HEADERS += fastslam.h \
            resampling.h \
            ../../General/Utils/morsedataparser.h \
            ../../General/Utils/robot.h
-FORMS += mainwindow.ui
+
 SOURCES += fastslam.cpp \
            kalmanfilter.cpp \
            main.cpp \

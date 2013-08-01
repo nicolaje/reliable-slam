@@ -28,3 +28,8 @@ std::vector<Particle>  ReSampling::resamplingPercentil(std::vector<Particle> par
 
     return res;
 }
+
+std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particles, ibex::IntervalVector box)
+{
+
+}
