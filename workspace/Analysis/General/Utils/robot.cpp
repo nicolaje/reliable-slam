@@ -312,16 +312,17 @@ int Robot::getLandmarksNumber()
     return this->pingerMeasurements.size();
 }
 
-ibex::IntervalVector *Robot::getObservationsAsIntervalVector()
+ibex::IntervalVector Robot::getObservationsAsIntervalVector()
 {
-    ibex::IntervalVector *res=new ibex::IntervalVector(9+this->getLandmarksNumber());
+    ibex::IntervalVector *res=new ibex::IntervalVector(12+this->getLandmarksNumber());
     for(int i=0; i<3; i++){
-        (*res)[i]=orientationAsIntervalVector()[i];
-        (*res)[3+i]=linearSpeedAsIntervalVector()[i];
-        (*res)[6+i]=angularSpeedAsIntervalVector()[i];
+        (*res)[i]=positionAsIntervalVector()[i];
+        (*res)[3+i]=orientationAsIntervalVector()[i];
+        (*res)[6+i]=linearSpeedAsIntervalVector()[i];
+        (*res)[9+i]=angularSpeedAsIntervalVector()[i];
     }
     for(int i=0; i<getLandmarksNumber(); i++){
-        (*res)[9+i]=pingerMeasurementsAsIntervalVector()[i];
+        (*res)[12+i]=pingerMeasurementsAsIntervalVector()[i];
     }
     return res;
 }

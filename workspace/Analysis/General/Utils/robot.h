@@ -70,7 +70,7 @@ public:
     ibex::IntervalVector linearSpeedAsIntervalVector();
     ibex::IntervalVector accelerationAsIntervalVector();
     ibex::IntervalVector pingerMeasurementsAsIntervalVector();
-    ibex::IntervalVector *getObservationsAsIntervalVector();
+    ibex::IntervalVector getObservationsAsIntervalVector();
 
     Eigen::Vector3d positionTrueAsVect();
     Eigen::Vector3d orientationTrueAsVect();

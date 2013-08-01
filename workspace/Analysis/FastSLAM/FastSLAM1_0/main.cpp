@@ -86,7 +86,6 @@ int main(int argc, char *argv[])
     angularMotionCovariance << ANG_COV;
     double pingerVariance=PING_COV;
 
-
     std::vector<Vector3d> landmarksEstimates=pLoader.getLandmarksAsVector();
 
     std::vector<Matrix3d> landmarksPosCovariances;

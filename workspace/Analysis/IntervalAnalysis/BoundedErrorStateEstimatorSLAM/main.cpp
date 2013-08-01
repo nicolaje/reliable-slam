@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
 
     BESE estimator(initState,1,pLoader.getLandmarksNB());
     std::cout << "Init state: "<<initState<<std::endl;
-    estimator.updateData(r);
+
+    estimator.update((*r.getObservationsAsIntervalVector()));
     Interval dt(0.1,0.11);
 
     int j=0;

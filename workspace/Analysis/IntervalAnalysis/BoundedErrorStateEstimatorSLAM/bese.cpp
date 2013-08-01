@@ -30,8 +30,9 @@ void BESE::predict(Interval dt)
 void BESE::update(IntervalVector vector)
 {
     this->measurements=vector;
+    (*this->state)[2]=
     for(int i=0; i<3; i++){
-        (*this->state)[3+i]=(*vector)[1+i];
+        (*this->state)[3+i]=vector[1+i];
     }
     System sys("ObservationModelSystem.txt");
     CtcFwdBwd out1(sys.f,LT);
