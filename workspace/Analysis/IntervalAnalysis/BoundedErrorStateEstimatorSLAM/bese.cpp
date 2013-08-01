@@ -29,11 +29,10 @@ void BESE::predict(Interval dt)
 
 void BESE::update(IntervalVector vector)
 {
-    this->measurements=vector;
+    this->measurements=&vector;
     for(int i=0; i<3; i++){
         (*this->state)[3+i]=vector[3+i]; // Update orientation
     }
-
     System sys("ObservationModelSystem.txt");
     CtcFwdBwd out1(sys.f,LT);
     CtcFwdBwd out2(sys.f,GT);

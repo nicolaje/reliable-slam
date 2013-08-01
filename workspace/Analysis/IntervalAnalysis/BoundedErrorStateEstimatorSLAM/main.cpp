@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     BESE estimator(initState,1,pLoader.getLandmarksNB());
     std::cout << "Init state: "<<initState<<std::endl;
 
-    estimator.update((*r.getObservationsAsIntervalVector()));
+    estimator.update(r.getObservationsAsIntervalVector());
     Interval dt(0.1,0.11);
 
     int j=0;
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         out->write(estimator.toString().c_str());
         groundTruth->write(r.groundTruthToString().c_str());
 
-        estimator.update((*r.getObservationsAsIntervalVector()));
+        estimator.update(r.getObservationsAsIntervalVector());
     }
     std::cout << "Position: " << estimator.getPosition() << std::endl;
     std::cout << "Map: " << estimator.getMap() << std::endl;
