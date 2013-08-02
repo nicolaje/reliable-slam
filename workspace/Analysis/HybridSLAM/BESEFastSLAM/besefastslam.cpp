@@ -47,7 +47,6 @@ void BESEFastSLAM::initParticles(Vector3d linearMotion, Vector3d angularMotion)
     robotAngularMotion=angularMotion; // = Utils::intervalVectorToEigenVector(this->beseEstimator->getAngularMotion());
 
     for(int i=0; i<particleNb; i++){
-        std::cout << "i : " << i << std::endl;
         Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion);
         std::vector<KalmanFilter> initMap;
         for(uint j=0;j<beseEstimator->getLandmarkNB();j++){
@@ -88,6 +87,7 @@ void BESEFastSLAM::update(ibex::IntervalVector data)
     updateRobotDepth(depth);
     updateRobotOrientation(orient);
     updateRobotMotion(linMotion,angMotion);
+    updateMap(landmarksMeasurements);
     reSample();
 }
 
@@ -147,6 +147,7 @@ void BESEFastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMoti
 
 void BESEFastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
+    std::cout << "Map up"<<std::endl;
     for(int p=0;p<particleNb;p++){
         particles[p].updateAllKFs(landmarksMeasurements);
     }

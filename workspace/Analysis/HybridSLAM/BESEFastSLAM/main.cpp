@@ -11,7 +11,7 @@
 using namespace ibex;
 using namespace Eigen;
 
-#define PARTICLE_NB 1000
+#define PARTICLE_NB 2000
 #define LM_COV \
     5,0,0,\
     0,5,0,\
@@ -38,7 +38,7 @@ using namespace Eigen;
     pow(0.01*M_PI/180.,2),0,0,\
     0,pow(0.01*M_PI/180.,2),0,\
     0,0,pow(0.01*M_PI/180.,2)
-#define PING_COV 0.3
+#define PING_COV 0.03
 
 int main(int argc, char *argv[])
 {

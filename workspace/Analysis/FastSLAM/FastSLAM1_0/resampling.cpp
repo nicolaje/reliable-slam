@@ -35,9 +35,9 @@ std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particl
     std::vector<Particle> res;
     std::uniform_real_distribution<double> d(0.0,1.0);
 
-
     // Warning: a while loop with probability may (probably) lead to some long execution...
     // TODO: remove the unconsistent particles, !!NORMALIZE!!, then draw from them consistent ones
+    bool dismissed=false;
     while(res.size()<particles.size()){
         double wsum=particles[0].getWeight(),wobj=d(FastSLAM::generator);
         int idx=1;
@@ -48,8 +48,10 @@ std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particl
         if(Utils::eigenVectorToIntervalVector(particles[idx-1].toVector()).is_subset(box))
             res.push_back(particles[idx-1]);
         else
-            std::cout << "A particle was dismissed, hurray!" << std::endl;
+            dismissed=true;
     }
+    if(dismissed)
+        std::cout << "hurray"<<std::endl;
     return res;
 }
 

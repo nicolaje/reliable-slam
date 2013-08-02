@@ -20,6 +20,8 @@ public:
      * @return
      */
     static std::vector<Particle> resamplingHybrid(std::vector<Particle> particles, ibex::IntervalVector box);
+
+    static std::vector<Particle> normalize(std::vector<Particle> particles);
 };
 
 #endif // RESAMPLING_H
