@@ -2,6 +2,7 @@
 #include <ibex/ibex.h>
 #include <eigen3/Eigen/Eigen>
 #include <../../General/Utils/utils.h>
+#include <../../FastSLAM/FastSLAM1_0/resampling.h>
 
 using namespace Eigen;
 using namespace ibex;
@@ -72,6 +73,23 @@ void BESEFastSLAM::predict(ibex::Interval dt)
 void BESEFastSLAM::update(ibex::IntervalVector data)
 {
     this->beseEstimator->update(data);
+    // We could:
+    // - put the midbox state in the particles
+    // - put the measurements in the particles <- the one we use
+    double depth=data[2].mid();
+    Vector3d orient,linMotion,angMotion;
+    std::vector<double> landmarksMeasurements;
+    for(int i=0;i<3;i++){
+        orient[i]=data[3+i].mid();
+        linMotion[i]=data[6+i].mid();
+        angMotion[i]=data[9+i].mid();
+    }
+    for(int j=0;j<this->beseEstimator->getLandmarkNB();j++)
+        landmarksMeasurements.push_back(data[12+j].mid());
+    updateRobotDepth(depth);
+//    updateRobotOrientation(orient);
+//    updateRobotMotion(linMotion,angMotion);
+//    reSample();
 }
 
 void BESEFastSLAM::normalize()
@@ -88,12 +106,7 @@ void BESEFastSLAM::normalize()
 
 void BESEFastSLAM::reSample()
 {
-    IntervalVector robotPosition=beseEstimator->getPosition();
-    IntervalVector robotOrientation=beseEstimator->getOrientation();
-
-    IntervalVector map=beseEstimator->getMap();
-
-
+    this->particles=ReSampling::resamplingHybrid(this->particles,this->beseEstimator->getState());
 }
 
 void BESEFastSLAM::updateRobotPosition(Vector3d position)
@@ -110,7 +123,12 @@ void BESEFastSLAM::updateRobotDepth(double depth)
     v3d<<0,0,depth;
     std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,v3d,positionCovariance);
     for(int i=0;i<particleNb;i++){
-        particles[i].updateRobotDepth(positions[i][3]);
+        std::cout << positions[i] << std::endl;
+        std::cout << "====" << std::endl;
+        std::cout << positions[i][2] << std::endl;
+        std::cout << "====" << std::endl;
+        double d=positions[i][2];
+        particles[i].updateRobotDepth(d);
     }
 }
 
@@ -124,8 +142,8 @@ void BESEFastSLAM::updateRobotOrientation(Vector3d orientation)
 
 void BESEFastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMotion)
 {
-    std::vector<Vector3d> linearMotions=FastSLAM::drawSamples(particleNb,linearMotion,SIGMA_FACTOR*this->linearMotionCovariance);
-    std::vector<Vector3d> angularMotions=FastSLAM::drawSamples(particleNb,angularMotion,SIGMA_FACTOR*this->angularMotionCovariance);
+    std::vector<Vector3d> linearMotions=FastSLAM::drawSamples(particleNb,linearMotion,Robot::SIGMA_FACTOR*this->linearMotionCovariance);
+    std::vector<Vector3d> angularMotions=FastSLAM::drawSamples(particleNb,angularMotion,Robot::SIGMA_FACTOR*this->angularMotionCovariance);
     for(int i=0;i<particleNb;i++){
         particles[i].updateRobotLinearMotion(linearMotions[i]);
         particles[i].updateRobotOrientationMotion(angularMotions[i]);
@@ -138,7 +156,6 @@ void BESEFastSLAM::updateMap(std::vector<double> landmarksMeasurements)
         particles[p].updateAllKFs(landmarksMeasurements);
     }
     normalize();
-    particles=reSample();
 }
 
 

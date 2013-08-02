@@ -29,6 +29,7 @@ private:
     void reSample();
 
     void updateRobotPosition(Eigen::Vector3d position);
+    void updateRobotDepth(double depth);
     void updateRobotOrientation(Eigen::Vector3d orientation);
     void updateRobotMotion(Eigen::Vector3d linearMotion, Eigen::Vector3d angularMotion);
 

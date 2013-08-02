@@ -97,7 +97,7 @@ void Particle::updateRobotOrientationMotion(Vector3d orientationMotion)
 
 void Particle::updateRobotDepth(double depth)
 {
-    this->robotPosition(3)=depth;
+    this->robotPosition[2]=depth;
 }
 
 
