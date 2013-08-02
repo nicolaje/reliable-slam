@@ -38,17 +38,16 @@ void BESEFastSLAM::setPingerCovariance(double pingerVariance)
     this->pingerVariance=pingerVariance;
 }
 
-void BESEFastSLAM::initParticles()
+void BESEFastSLAM::initParticles(Vector3d linearMotion, Vector3d angularMotion)
 {
     Vector3d robotPosition,robotOrientation,robotLinearMotion,robotAngularMotion;
-
     robotPosition=Utils::intervalVectorToEigenVector(this->beseEstimator->getPosition());
     robotOrientation=Utils::intervalVectorToEigenVector(this->beseEstimator->getOrientation());
-    robotLinearMotion=Utils::intervalVectorToEigenVector(this->beseEstimator->getLinearMotion());
-    robotAngularMotion=Utils::intervalVectorToEigenVector(this->beseEstimator->getAngularMotion());
-
+    robotLinearMotion=linearMotion; // = Utils::intervalVectorToEigenVector(this->beseEstimator->getLinearMotion());
+    robotAngularMotion=angularMotion; // = Utils::intervalVectorToEigenVector(this->beseEstimator->getAngularMotion());
 
     for(int i=0; i<particleNb; i++){
+        std::cout << "i : " << i << std::endl;
         Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion);
         std::vector<KalmanFilter> initMap;
         for(uint j=0;j<beseEstimator->getLandmarkNB();j++){
@@ -87,9 +86,9 @@ void BESEFastSLAM::update(ibex::IntervalVector data)
     for(int j=0;j<this->beseEstimator->getLandmarkNB();j++)
         landmarksMeasurements.push_back(data[12+j].mid());
     updateRobotDepth(depth);
-//    updateRobotOrientation(orient);
-//    updateRobotMotion(linMotion,angMotion);
-//    reSample();
+    updateRobotOrientation(orient);
+    updateRobotMotion(linMotion,angMotion);
+    reSample();
 }
 
 void BESEFastSLAM::normalize()
@@ -123,10 +122,6 @@ void BESEFastSLAM::updateRobotDepth(double depth)
     v3d<<0,0,depth;
     std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,v3d,positionCovariance);
     for(int i=0;i<particleNb;i++){
-        std::cout << positions[i] << std::endl;
-        std::cout << "====" << std::endl;
-        std::cout << positions[i][2] << std::endl;
-        std::cout << "====" << std::endl;
         double d=positions[i][2];
         particles[i].updateRobotDepth(d);
     }

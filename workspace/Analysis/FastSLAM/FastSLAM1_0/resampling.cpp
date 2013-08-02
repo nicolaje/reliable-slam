@@ -52,3 +52,7 @@ std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particl
     }
     return res;
 }
+
+std::vector<Particle> ReSampling::normalize(std::vector<Particle> particles)
+{
+}

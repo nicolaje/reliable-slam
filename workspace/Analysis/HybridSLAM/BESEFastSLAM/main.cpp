@@ -72,21 +72,26 @@ int main(int argc, char *argv[])
     landmarksPosCovariances.push_back(c2);
     landmarksPosCovariances.push_back(c3);
     landmarksPosCovariances.push_back(c4);
+
     BESEFastSLAM estimator(PARTICLE_NB,initState,1,pLoader.getLandmarksNB());
     estimator.setPositionCovariance(positionCovariance);
     estimator.setOrientationCovariance(orientationCovariance);
     estimator.setLinearMotionCovariance(linearMotionCovariance);
     estimator.setAngularMotionCovariance(angularMotionCovariance);
     estimator.setPingerCovariance(pingerVariance);
-    estimator.update(r.getObservationsAsIntervalVector());
-//    Interval dt(0.1,0.11);
 
-//    int j=0;
-//    while(p.hasDataLeft()){
-//        j++;
-//        std::cout << j<<"th iteration"<<std::endl;
-//        estimator.predict(dt);
-//        r=p.nextRecord()[0];
-//        estimator.update(r.getObservationsAsIntervalVector());
-//    }
+    estimator.initParticles(r.linearMotionAsVect(),r.angularMotionAsVect());
+
+    estimator.update(r.getObservationsAsIntervalVector());
+
+    Interval dt(0.1,0.11);
+
+    int j=0;
+    while(p.hasDataLeft()){
+        j++;
+        std::cout << j<<"th iteration"<<std::endl;
+        estimator.predict(dt);
+        r=p.nextRecord()[0];
+        estimator.update(r.getObservationsAsIntervalVector());
+    }
 }

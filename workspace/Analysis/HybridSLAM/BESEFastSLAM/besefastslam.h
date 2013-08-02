@@ -18,7 +18,7 @@ public:
     void setAngularMotionCovariance(Eigen::Matrix3d angularMotionCovariance);
     void setPingerCovariance(double pingerVariance);
 
-    void initParticles();
+    void initParticles(Eigen::Vector3d linearMotion, Eigen::Vector3d angularMotion);
 
     void predict(ibex::Interval dt);
     void update(ibex::IntervalVector data);
