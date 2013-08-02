@@ -51,8 +51,8 @@ void BESEFastSLAM::initParticles()
         Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion);
         std::vector<KalmanFilter> initMap;
         for(uint j=0;j<beseEstimator->getLandmarkNB();j++){
-            Vector3d pos=FastSLAM::drawSamples(1,beseEstimator->getLandmark(j));
-            Matrix3d posCov=Utils::boxToCovarianceMatrix(beseEstimator->getLandmark(j));
+            Vector3d pos=FastSLAM::drawSamples(1,beseEstimator->getLandmark(j))[0];
+            Matrix3d posCov=Utils::boxToCovarianceMatrix(beseEstimator->getLandmark(j),3);
 //            KalmanFilter kf(pos, posCov, this->pingerVariance);
 //            initMap.push_back(kf);
         }

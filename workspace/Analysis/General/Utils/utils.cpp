@@ -21,7 +21,8 @@ VectorXd Utils::intervalVectorToEigenVector(IntervalVector vector)
 MatrixXd Utils::boxToCovarianceMatrix(IntervalVector box, int confidence)
 {
     MatrixXd mat(box.size(),box.size());
-    for(int i=0,j=0;i<box.size(),j<box.size();i++,j++)
-        mat(i,j)=(i==j?pow(box[i].mid()/confidence,2):0);
+    for(int i=0;i<box.size();i++)
+        for(int j=0;j<box.size();j++)
+            mat(i,j)=(i==j?pow(box[i].diam()/confidence,2):0);
     return mat;
 }

@@ -5,6 +5,7 @@
 #include "besefastslam.h"
 #include <ibex/ibex.h>
 #include <eigen3/Eigen/Eigen>
+#include "../../General/Utils/utils.h"
 #include <vector>
 
 using namespace ibex;

@@ -23,6 +23,7 @@ public:
     ibex::IntervalVector getLinearMotion();
     ibex::IntervalVector getAngularMotion();
 
+    ibex::IntervalVector getLandmark(int index);
     ibex::IntervalVector getMap();
 
     ibex::IntervalVector getState();
