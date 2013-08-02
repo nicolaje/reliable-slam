@@ -1,12 +1,12 @@
 #include <iostream>
-#include "../../General/Utils/morsedataparser.h"
-#include "../../General/Utils/robot.h"
-#include "../../General/Utils/positionloader.h"
 #include "besefastslam.h"
 #include <ibex/ibex.h>
 #include <eigen3/Eigen/Eigen>
-#include "../../General/Utils/utils.h"
 #include <vector>
+#include "../../General/Utils/morsedataparser.h"
+#include "../../General/Utils/robot.h"
+#include "../../General/Utils/positionloader.h"
+#include "../../General/Utils/utils.h"
 
 using namespace ibex;
 using namespace Eigen;
@@ -38,7 +38,7 @@ using namespace Eigen;
     pow(0.01*M_PI/180.,2),0,0,\
     0,pow(0.01*M_PI/180.,2),0,\
     0,0,pow(0.01*M_PI/180.,2)
-#define PING_COV 0.03
+#define PING_COV 0.3
 
 int main(int argc, char *argv[])
 {

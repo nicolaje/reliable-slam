@@ -1,4 +1,6 @@
 #include "particle.h"
+#include "fastslam.h"
+#include "../../General/Utils/utils.h"
 #include <iostream>
 using namespace Eigen;
 
@@ -48,6 +50,16 @@ void Particle::updateAllKFs(std::vector<double> landmarksMeasurements)
 double Particle::getWeight()
 {
     return weight;
+}
+
+void Particle::shakeMap(std::vector<ibex::IntervalVector> mapBox)
+{
+    for(int i=0;i<this->landmarksKalmanFilters;i++){
+        KalmanFilter k=landmarksKalmanFilters[i];
+        k.setMean(FastSLAM::drawSamples(1,mapBox[i])[0]);
+        k.setCovariance(Utils::boxToCovarianceMatrix(mapBox[i],3));
+        landmarksKalmanFilters[i]=k;
+    }
 }
 
 Vector3d Particle::getPosition()

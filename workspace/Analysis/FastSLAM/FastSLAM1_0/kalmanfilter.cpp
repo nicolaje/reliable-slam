@@ -25,6 +25,11 @@ void KalmanFilter::setMean(Vector3d mean)
 {
     this->mean=mean;
 }
+
+void KalmanFilter::setCovariance(Matrix3d covariance)
+{
+    this->covariance=covariance;
+}
 double KalmanFilter::update(double distance, Vector3d robotPos)
 {
     double zHat=observation(robotPos);

@@ -1,5 +1,6 @@
 #ifndef PARTICLE_H
 #include <eigen3/Eigen/Eigen>
+#include <ibex/ibex.h>
 #include <vector>
 #include "kalmanfilter.h"
 #define PARTICLE_H
@@ -25,6 +26,8 @@ public:
     void updateKF(double measurement, int landmarkIndex);
     void updateAllKFs(std::vector<double> landmarksMeasurements);
     double getWeight();
+    void shakeMap(std::vector<ibex::IntervalVector> mapBox);
+
     Eigen::Vector3d getPosition();
     Eigen::Vector3d getOrientation();
     std::vector<Eigen::Vector3d> getMap();

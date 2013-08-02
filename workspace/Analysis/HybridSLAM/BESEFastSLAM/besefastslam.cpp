@@ -147,7 +147,6 @@ void BESEFastSLAM::updateRobotMotion(Vector3d linearMotion, Vector3d angularMoti
 
 void BESEFastSLAM::updateMap(std::vector<double> landmarksMeasurements)
 {
-    std::cout << "Map up"<<std::endl;
     for(int p=0;p<particleNb;p++){
         particles[p].updateAllKFs(landmarksMeasurements);
     }
