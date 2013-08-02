@@ -115,6 +115,19 @@ std::vector<Vector3d> Particle::getMap()
     return map;
 }
 
+VectorXd Particle::toVector()
+{
+    VectorXd res(6+3*landmarksKalmanFilters.size());
+    for(int i=0;i<3;i++){
+        res[i]=getPosition()[i];
+        res[3+i]=getOrientation()[i];
+        for(int j=0;j<landmarksKalmanFilters.size();j++){
+            res[6+3*j+i]=landmarksKalmanFilters[j].getMean()[i];
+        }
+    }
+    return res;
+}
+
 void Particle::addMapError(Vector3d error, uint landmarkIndex)
 {
     Vector3d lmPos=landmarksKalmanFilters[landmarkIndex].getMean();

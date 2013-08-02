@@ -31,5 +31,9 @@ std::vector<Particle>  ReSampling::resamplingPercentil(std::vector<Particle> par
 
 std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particles, ibex::IntervalVector box)
 {
+    // First, remove non-consistent particles
+    for(int i=0;i<particles.size();i++)
+    {
 
+    }
 }
