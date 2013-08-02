@@ -18,6 +18,8 @@ public:
     void setAngularMotionCovariance(Eigen::Matrix3d angularMotionCovariance);
     void setPingerCovariance(double pingerVariance);
 
+    void initParticles();
+
     void predict(ibex::Interval dt);
     void update(ibex::IntervalVector data);
     void normalize();

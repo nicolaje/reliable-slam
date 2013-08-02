@@ -47,6 +47,8 @@ std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particl
         }
         if(Utils::eigenVectorToIntervalVector(particles[idx-1].toVector()).is_subset(box))
             res.push_back(particles[idx-1]);
+        else
+            std::cout << "A particle was dismissed, hurray!" << std::endl;
     }
     return res;
 }

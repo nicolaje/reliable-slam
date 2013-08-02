@@ -19,6 +19,10 @@ public:
 
     ibex::IntervalVector getPosition();
     ibex::IntervalVector getOrientation();
+
+    ibex::IntervalVector getLinearMotion();
+    ibex::IntervalVector getAngularMotion();
+
     ibex::IntervalVector getMap();
 
     ibex::IntervalVector getState();

@@ -24,6 +24,19 @@ std::vector<Vector3d> FastSLAM::drawSamples(int nb, Vector3d mean, Matrix3d cova
     return samples;
 }
 
+std::vector<Vector3d> FastSLAM::drawSamples(int nb, ibex::IntervalVector box)
+{
+    std::vector<Vector3d> samples;
+    std::uniform__real_distribution<> uniform(0,1);
+    for(int i=0;i<nb;i++){
+        Vector3d v;
+        for(int j=0;j<3;j++)
+            v[j]=uniform(generator)*box[j].diam()+box[j].lb();
+        samples.push_back(v);
+    }
+    return samples;
+}
+
 FastSLAM::FastSLAM(Matrix3d positionCovariance, Matrix3d orientationCovariance, Matrix3d linearMotionCovariance, Matrix3d angularMotionCovariance, double pingerVariance, uint RESAMPLE_METHOD, uint RESAMPLE_STRATEGY, int percentil)
 {
     this->positionCovariance=positionCovariance;

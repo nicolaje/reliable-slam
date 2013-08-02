@@ -10,9 +10,6 @@ BESEFastSLAM::BESEFastSLAM(int particleNb, ibex::IntervalVector initState, int n
 {
     this->beseEstimator=new BESE(initState,nbRobots,nbLandmarks);
     this->particleNb=particleNb;
-    for(int i=0;i<particleNb;i++){
-        Particle p()
-    }
 }
 
 void BESEFastSLAM::setPositionCovariance(Eigen::Matrix3d positionCovariance)
@@ -38,6 +35,31 @@ void BESEFastSLAM::setAngularMotionCovariance(Eigen::Matrix3d angularMotionCovar
 void BESEFastSLAM::setPingerCovariance(double pingerVariance)
 {
     this->pingerVariance=pingerVariance;
+}
+
+void BESEFastSLAM::initParticles()
+{
+    Vector3d robotPosition,robotOrientation,robotLinearMotion,robotAngularMotion;
+    for(int i=0;i<3;i++){
+        robotPosition[i]=Utils::intervalVectorToEigenVector(this->beseEstimator->getPosition()[i].mid());
+        robotOrientation[i]=Utils::intervalVectorToEigenVector(this->beseEstimator->getOrientation()[i].mid());
+        robotLinearMotion[i]=Utils::intervalVectorToEigenVector(this->beseEstimator->getLinearMotion()[i].mid());
+        robotAngularMotion[i]=Utils::intervalVectorToEigenVector(this->beseEstimator->getAngularMotion()[i].mid());
+    }
+
+    for(int i=0; i<particleNb; i++){
+        Particle p(robotPosition, robotOrientation, robotLinearMotion, robotAngularMotion);
+        std::vector<KalmanFilter> initMap;
+        for(uint j=0;j<beseEstimator->getLandmarkNB();j++){
+
+            Vector3d pos=FastSLAM::drawSamples(1,landmarksPosEstimates[j],landmarksCovEstimates[j])[0];
+            Matrix3d posCov=landmarksCovEstimates[j];
+            KalmanFilter kf(pos, posCov, this->pingerVariance);
+            initMap.push_back(kf);
+        }
+        p.setInitMap(initMap);
+        particles.push_back(p);
+    }
 }
 
 void BESEFastSLAM::predict(ibex::Interval dt)

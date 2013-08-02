@@ -30,9 +30,8 @@ void BESE::update(IntervalVector vector)
     measurements=new IntervalVector(vector.size());
     (*measurements)=vector;
 
-    for(int i=0; i<3; i++){
+    for(int i=0; i<3; i++)
         (*this->state)[3+i]=vector[3+i]; // Update orientation
-    }
     System sys("ObservationModelSystem.txt");
     CtcFwdBwd out1(sys.f,LT);
     CtcFwdBwd out2(sys.f,GT);
@@ -40,12 +39,10 @@ void BESE::update(IntervalVector vector)
     CtcFixPoint outFix(out,0.001);
 
     IntervalVector extState((*state).size()+vector.size());
-    for(int i=0;i<(*state).size();i++){
+    for(int i=0;i<(*state).size();i++)
         extState[i]=(*state)[i];
-    }
-    for(int i=0;i<vector.size();i++){
+    for(int i=0;i<vector.size();i++)
         extState[(*state).size()+i]=vector[i];
-    }
     CtcFwdBwd ctc(sys.f);
     CtcFixPoint fix(ctc,0.001);
     try{
@@ -64,9 +61,8 @@ void BESE::update(IntervalVector vector)
 IntervalVector BESE::getPosition()
 {
     IntervalVector res(3);
-    for(int i=0; i<3; i++){
+    for(int i=0; i<3; i++)
         res[i]=(*this->state)[i];
-    }
     return res;
 }
 
@@ -74,9 +70,8 @@ std::string BESE::toString()
 {
     std::string res;
     std::ostringstream ss;
-    for(int i=0; i<(*state).size(); i++){
+    for(int i=0; i<(*state).size(); i++)
         ss << (*state)[i].lb() <<";"<<(*state)[i].ub()<<";";
-    }
     res=ss.str();
     return res+"\n";
 }
@@ -85,9 +80,8 @@ std::string BESE::debugToString()
 {
     std::string res;
     std::ostringstream ss;
-    for(int i=0; i<(*state).size(); i++){
+    for(int i=0; i<(*state).size(); i++)
         ss << (*state)[i].lb() <<";"<<(*state)[i].ub()<<";\n";
-    }
     res=ss.str();
     return res+"\n";
 }
@@ -95,18 +89,32 @@ std::string BESE::debugToString()
 IntervalVector BESE::getOrientation()
 {
     IntervalVector res(3);
-    for(int i=0; i<3; i++){
+    for(int i=0; i<3; i++)
         res[i]=(*this->state)[3+i];
-    }
+    return res;
+}
+
+IntervalVector BESE::getLinearMotion()
+{
+    IntervalVector res(3);
+    for(int i=0;i<3;i++)
+        res[i]=(*measurements)[6+i];
+    return res;
+}
+
+IntervalVector BESE::getAngularMotion()
+{
+    IntervalVector res(3);
+    for(int i=0;i<3;i++)
+        res[i]=(*measurements)[9+i];
     return res;
 }
 
 IntervalVector BESE::getMap()
 {
     IntervalVector map(this->getLandmarkNB()*3);
-    for(int i=0;i<this->getLandmarkNB()*3;i++){
+    for(int i=0;i<this->getLandmarkNB()*3;i++)
         map[i]=(*this->state)[6+i];
-    }
     return map;
 }
 

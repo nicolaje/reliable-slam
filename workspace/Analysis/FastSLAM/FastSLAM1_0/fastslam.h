@@ -1,8 +1,10 @@
 #ifndef FASTSLAM_H
 #include <eigen3/Eigen/Eigen>
+#include <ibex/ibex.h>
 #include <vector>
 #include "particle.h"
 #include "kalmanfilter.h"
+#include <random>
 #define FASTSLAM_H
 
 class FastSLAM
@@ -20,6 +22,7 @@ public:
 
     static std::default_random_engine generator;
     static std::vector<Eigen::Vector3d> drawSamples(int nb, Eigen::Vector3d mean, Eigen::Matrix3d covariance);
+    static std::vector<Eigen::Vector3d> drawSamples(int nb, Eigen::Vector3d mean, ibex::IntervalVector box);
 
     FastSLAM(Eigen::Matrix3d positionCovariance, Eigen::Matrix3d orientationCovariance, Eigen::Matrix3d linearMotionCovariance,Eigen::Matrix3d angularMotionCovariance, double pingerVariance,uint RESAMPLE_METHOD=RESAMPLE_ALL_AT_ONCE,uint RESAMPLE_STRATEGY=ROULETTE, int percentil=25);
     /**
