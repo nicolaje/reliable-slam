@@ -83,19 +83,19 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
                 zeroMean << 0,0,0;
                 particles[i].addMapError(FastSLAM::drawSamples(1,zeroMean,this->errorCovariance)[0],l);
                 if(resampling_method==RESAMPLE_EVERYTIME){
-                                    std::cout<<"Resampling everytime"<<std::endl;
+                    std::cout<<"Resampling everytime"<<std::endl;
                     normalize();
                     particles=reSample();
                 }
             }
             normalize();
             if(resampling_method==RESAMPLE_EACH){
-                            std::cout<<"Resampling after each landmark"<<std::endl;
+                std::cout<<"Resampling after each landmark"<<std::endl;
                 particles=reSample();
             }
         }
         if(resampling_method==RESAMPLE_ALL){
-                    std::cout<<"Resampling after every landmark has been incorporated in every particle"<<std::endl;
+            std::cout<<"Resampling after every landmark has been incorporated in every particle"<<std::endl;
             particles=reSample();
         }
     }else{

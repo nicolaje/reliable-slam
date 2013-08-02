@@ -37,7 +37,7 @@ std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particl
 
 
     // Warning: a while loop with probability may (probably) lead to some long execution...
-    // TODO: remove the unconsistent particles, then draw from them consistent ones
+    // TODO: remove the unconsistent particles, !!NORMALIZE!!, then draw from them consistent ones
     while(res.size()<particles.size()){
         double wsum=particles[0].getWeight(),wobj=d(FastSLAM::generator);
         int idx=1;
