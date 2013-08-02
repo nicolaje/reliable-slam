@@ -110,6 +110,14 @@ IntervalVector BESE::getAngularMotion()
     return res;
 }
 
+IntervalVector BESE::getLandmark(int index)
+{
+    IntervalVector v(3);
+    for(int i=0;i<3;i++)
+        v[i]=getMap()[3*index+i];
+    return v;
+}
+
 IntervalVector BESE::getMap()
 {
     IntervalVector map(this->getLandmarkNB()*3);

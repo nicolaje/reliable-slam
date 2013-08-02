@@ -8,6 +8,7 @@ class Utils
 public:
     static ibex::IntervalVector eigenVectorToIntervalVector(Eigen::VectorXd vector);
     static Eigen::VectorXd intervalVectorToEigenVector(ibex::IntervalVector vector);
+    static Eigen::MatrixXd boxToCovarianceMatrix(ibex::IntervalVector box, int confidence);
 };
 
 #endif // UTILS_H

@@ -41,15 +41,6 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-
-    double d[3][2]={{-10,10},{-200,200},{-3000,3000}};
-    IntervalVector v(3,d);
-    std::vector<Vector3d> vs=FastSLAM::drawSamples(10,v);
-    for(int i=0;i<10;i++){
-        std::cout << vs[i] << std::endl;
-        std::cout<<"===="<<std::endl;
-    }
-
 //    QFile *out=new QFile("../Results/DeadReckoning3.res");
 //    if(!out->open(QIODevice::WriteOnly)){qDebug() << "Failed to open output file";return 1;}
 

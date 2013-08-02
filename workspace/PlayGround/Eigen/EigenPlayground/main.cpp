@@ -4,13 +4,11 @@
 using namespace Eigen;
 int main()
 {
-    VectorXd xD(7);
-    xD << 1,2,3,4,5,6,9;
-    std::cout << xD.rows() << std::endl;
-    Vector3d v;
-    v[0]=0;
-    v[1]=1;
-    v[2]=9;
-    std::cout << v<< std::endl;
+    MatrixXd m(2,2);
+    m(0,0)=0;
+    m(0,1)=1;
+    m(1,0)=2;
+    m(1,1)=3;
+    std::cout << m << std::endl;
     return 0;
 }

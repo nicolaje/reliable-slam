@@ -30,12 +30,8 @@ std::vector<Vector3d> FastSLAM::drawSamples(int nb, ibex::IntervalVector box)
     std::uniform_real_distribution<> uniform(0,1);
     for(int i=0;i<nb;i++){
         Vector3d v;
-        for(int j=0;j<3;j++){
-            double d=uniform(generator);
-            std::cout << "D is: "<<d<<std::endl;
-            std::cout << "diam is: " << box[j].diam()<<std::endl;
-            v[j]=d*box[j].diam()+box[j].lb();
-        }
+        for(int j=0;j<3;j++)
+            v[j]=uniform(generator)*box[j].diam()+box[j].lb();
         samples.push_back(v);
     }
     return samples;
