@@ -1,6 +1,7 @@
 #include "resampling.h"
 #include <iostream>
 #include "fastslam.h"
+#include "../../General/Utils/utils.h"
 
 std::vector<Particle> ReSampling::resamplingRoulette(std::vector<Particle> particles)
 {
@@ -31,9 +32,21 @@ std::vector<Particle>  ReSampling::resamplingPercentil(std::vector<Particle> par
 
 std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particles, ibex::IntervalVector box)
 {
-    // First, remove non-consistent particles
-    for(int i=0;i<particles.size();i++)
-    {
+    std::vector<Particle> res;
+    std::uniform_real_distribution<double> d(0.0,1.0);
 
+
+    // Warning: a while loop with probability may (probably) lead to some long execution...
+    // TODO: remove the unconsistent particles, then draw from them consistent ones
+    while(res.size()<particles.size()){
+        double wsum=particles[0].getWeight(),wobj=d(FastSLAM::generator);
+        int idx=1;
+        while(wsum<wobj){
+            wsum+=particles[idx].getWeight();
+            idx++;
+        }
+        if(Utils::eigenVectorToIntervalVector(particles[idx-1].toVector()).is_subset(box))
+            res.push_back(particles[idx-1]);
     }
+    return res;
 }
