@@ -54,7 +54,7 @@ double Particle::getWeight()
 
 void Particle::shakeMap(std::vector<ibex::IntervalVector> mapBox)
 {
-    for(int i=0;i<this->landmarksKalmanFilters;i++){
+    for(int i=0;i<this->landmarksKalmanFilters.size();i++){
         KalmanFilter k=landmarksKalmanFilters[i];
         k.setMean(FastSLAM::drawSamples(1,mapBox[i])[0]);
         k.setCovariance(Utils::boxToCovarianceMatrix(mapBox[i],3));

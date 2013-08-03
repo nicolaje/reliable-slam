@@ -8,7 +8,7 @@
 #include "particle.h"
 #include "fastslam.h"
 
-#define PARTICLES_NB 1000
+#define PARTICLES_NB 500
 #define DT 0.1
 #define ERR_COV \
     0.5,0,0, \

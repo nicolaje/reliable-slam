@@ -32,8 +32,6 @@ std::vector<Particle>  ReSampling::resamplingPercentil(std::vector<Particle> par
 
 std::vector<Particle> ReSampling::resamplingHybrid(std::vector<Particle> particles, ibex::IntervalVector box)
 {
-    std::uniform_real_distribution<double> d(0.0,1.0);
-
     ibex::IntervalVector pos(3);
     ibex::IntervalVector orr(3);
     std::vector<ibex::IntervalVector> map;

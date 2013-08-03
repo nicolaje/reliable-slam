@@ -15,6 +15,7 @@ public:
 
     Eigen::Vector3d getMean();
     void setMean(Eigen::Vector3d mean);
+    void setCovariance(Eigen::Matrix3d covariance);
 
     /**
      * @brief update updates the Kalman filter

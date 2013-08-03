@@ -23,6 +23,8 @@ public:
     void predict(ibex::Interval dt);
     void update(ibex::IntervalVector data);
     void normalize();
+    Particle getBestParticle();
+    BESE *getBESE();
 private:
     BESE *beseEstimator;
     std::vector<Particle> particles;
@@ -35,6 +37,7 @@ private:
 
     void updateMap(std::vector<double> landmarksMeasurements);
     bool isConsistent(ibex::IntervalVector iVector, Eigen::VectorXd eVector);
+
 
     Eigen::Matrix3d positionCovariance;
     Eigen::Matrix3d orientationCovariance;

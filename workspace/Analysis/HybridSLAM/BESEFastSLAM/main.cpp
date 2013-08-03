@@ -11,7 +11,7 @@
 using namespace ibex;
 using namespace Eigen;
 
-#define PARTICLE_NB 2000
+#define PARTICLE_NB 500
 #define LM_COV \
     5,0,0,\
     0,5,0,\
@@ -94,4 +94,13 @@ int main(int argc, char *argv[])
         r=p.nextRecord()[0];
         estimator.update(r.getObservationsAsIntervalVector());
     }
+
+    Particle bestParticle=estimator.getBestParticle();
+    std::vector<Vector3d> map=bestParticle.getMap();
+
+    std::cout << "Best Particle with weight: " <<bestParticle.getWeight()<<std::endl;
+    for(uint i=0;i<map.size();i++)
+        std::cout << i+1 <<" : "<< map[i].transpose() <<std::endl;
+    std::cout << "Position: " << estimator.getBESE()->getPosition() << std::endl;
+    std::cout << "Map: " << estimator.getBESE()->getMap() << std::endl;
 }

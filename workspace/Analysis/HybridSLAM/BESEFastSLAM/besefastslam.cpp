@@ -158,3 +158,21 @@ bool BESEFastSLAM::isConsistent(IntervalVector iVector, VectorXd eVector)
 {
     return iVector.is_superset(Utils::eigenVectorToIntervalVector(eVector));
 }
+
+Particle BESEFastSLAM::getBestParticle()
+{
+    double w=0;
+    int idx=0;
+    for(int i=0;i<particleNb;i++){
+        if(particles[i].getWeight()>w){
+            w=particles[i].getWeight();
+            idx=i;
+        }
+    }
+    return particles[idx];
+}
+
+BESE *BESEFastSLAM::getBESE()
+{
+    return beseEstimator;
+}
