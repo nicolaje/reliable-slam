@@ -1,0 +1,14 @@
+Variables
+	pos[3],or[3],l1[3],l2[3],l3[3],l4[3],pos_measured[3],or_measured[3],linspeed_measured[3],orspeed_measured[3],distances[4];
+Constraints
+	pos(3)-pos_measured(3)=0;
+	// Landmark1
+	sqrt((pos(1)-l1(1))^2+(pos(2)-l1(2))^2+(pos(3)-l1(3))^2)-distances(1)=0;
+	// Landmark2
+	sqrt((pos(1)-l2(1))^2+(pos(2)-l2(2))^2+(pos(3)-l2(3))^2)-distances(2)=0;
+	// Landmark3
+	sqrt((pos(1)-l3(1))^2+(pos(2)-l3(2))^2+(pos(3)-l3(3))^2)-distances(3)=0;
+	// Landmark4
+	sqrt((pos(1)-l4(1))^2+(pos(2)-l4(2))^2+(pos(3)-l4(3))^2)-distances(4)=0;
+end
+	
