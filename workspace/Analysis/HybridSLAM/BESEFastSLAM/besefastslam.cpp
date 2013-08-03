@@ -172,6 +172,11 @@ Particle BESEFastSLAM::getBestParticle()
     return particles[idx];
 }
 
+std::vector<Particle> BESEFastSLAM::getParticles()
+{
+    return particles;
+}
+
 BESE *BESEFastSLAM::getBESE()
 {
     return beseEstimator;

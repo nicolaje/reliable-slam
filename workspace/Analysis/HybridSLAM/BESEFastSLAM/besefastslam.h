@@ -24,6 +24,7 @@ public:
     void update(ibex::IntervalVector data);
     void normalize();
     Particle getBestParticle();
+    std::vector<Particle> getParticles();
     BESE *getBESE();
 private:
     BESE *beseEstimator;

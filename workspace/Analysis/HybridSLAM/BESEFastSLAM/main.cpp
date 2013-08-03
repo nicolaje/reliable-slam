@@ -42,8 +42,12 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-//    QFile *out=new QFile("../Results/DeadReckoning3.res");
-//    if(!out->open(QIODevice::WriteOnly)){qDebug() << "Failed to open output file";return 1;}
+    std::vector<QFile*> particlesLogs;
+    for(int i=0;i<PARTICLE_NB;i++){
+        QFile *f=new QFile(QString("../Results/Particle_%1.res").arg(i));
+        if(!f->open(QIODevice::WriteOnly)){qDebug() << "Failed to open output file";return 1;}
+        particlesLogs.push_back(f);
+    }
 
 //    QFile *groundTruth=new QFile("../Results/BESE/GroundTruth3.res");
 //    if(!groundTruth->open(QIODevice::WriteOnly)){qDebug() << "Failed to open ground truth file";return 1;}
@@ -87,7 +91,19 @@ int main(int argc, char *argv[])
     Interval dt(0.1,0.11);
 
     int j=0;
-    while(p.hasDataLeft()){
+    while(j<1000){//p.hasDataLeft()){
+        std::vector<Particle> particles=estimator.getParticles();
+        for(int i=0;i<PARTICLE_NB;i++){
+            Particle particle=particles[i];
+            std::ostringstream line;
+            for(int k=0;k<3;k++)
+                line << particle.getPosition()[k]<<";";
+            for(int l=0;l<pLoader.getLandmarksNB();l++)
+                for(int k=0;k<3;k++)
+                    line << particle.getMap()[l][k]<<";";
+            particlesLogs[i]->write(line.str().c_str());
+            particlesLogs[i]->write("\n");
+        }
         j++;
         std::cout << j<<"th iteration"<<std::endl;
         estimator.predict(dt);
@@ -103,4 +119,6 @@ int main(int argc, char *argv[])
         std::cout << i+1 <<" : "<< map[i].transpose() <<std::endl;
     std::cout << "Position: " << estimator.getBESE()->getPosition() << std::endl;
     std::cout << "Map: " << estimator.getBESE()->getMap() << std::endl;
+    for(int i=0;i<PARTICLE_NB;i++)
+        particlesLogs[i]->close();
 }

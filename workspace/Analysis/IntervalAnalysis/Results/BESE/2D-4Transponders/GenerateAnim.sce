@@ -20,6 +20,8 @@ boxSize=[0.5 0.5 0.5]; // Size of ground truth boxes
 
 axes=gca();
 axes.data_bounds=[-40,-40,-30;40,40,30];
+axes.isoview="on"
+
 drawlater();
 robot_box=plotBox(data(1,1:6),'red');
 robot_box_center=plotMidBox(data(1,1:6),boxSize,'red');
