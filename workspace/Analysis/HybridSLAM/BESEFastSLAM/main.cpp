@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
         particlesLogs.push_back(f);
     }
 
-//    QFile *groundTruth=new QFile("../Results/BESE/GroundTruth3.res");
-//    if(!groundTruth->open(QIODevice::WriteOnly)){qDebug() << "Failed to open ground truth file";return 1;}
+    QFile *box=new QFile("../Results/box.res");
+    if(!box->open(QIODevice::WriteOnly)){qDebug() << "Failed to open ground truth file";return 1;}
 
     PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
     MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     Interval dt(0.1,0.11);
 
     int j=0;
-    while(j<1000){//p.hasDataLeft()){
+    while(p.hasDataLeft()){
         std::vector<Particle> particles=estimator.getParticles();
         for(int i=0;i<PARTICLE_NB;i++){
             Particle particle=particles[i];
@@ -104,6 +104,7 @@ int main(int argc, char *argv[])
             particlesLogs[i]->write(line.str().c_str());
             particlesLogs[i]->write("\n");
         }
+        box->write(estimator.getBESE()->toString().c_str());
         j++;
         std::cout << j<<"th iteration"<<std::endl;
         estimator.predict(dt);
@@ -121,4 +122,5 @@ int main(int argc, char *argv[])
     std::cout << "Map: " << estimator.getBESE()->getMap() << std::endl;
     for(int i=0;i<PARTICLE_NB;i++)
         particlesLogs[i]->close();
+    box->close();
 }

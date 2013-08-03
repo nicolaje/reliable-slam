@@ -11,15 +11,10 @@ using namespace ibex;
 int main(int argc, char *argv[])
 {
     QFile *out=new QFile("../Results/BESE/DeadReckoning3.res");
-    if(!out->open(QIODevice::WriteOnly)){
-        qDebug() << "Failed to open output file";
-        return 1;
-    }
+    if(!out->open(QIODevice::WriteOnly)){qDebug() << "Failed to open output file";return 1;}
+
     QFile *groundTruth=new QFile("../Results/BESE/GroundTruth3.res");
-    if(!groundTruth->open(QIODevice::WriteOnly)){
-        qDebug() << "Failed to open ground truth file";
-        return 1;
-    }
+    if(!groundTruth->open(QIODevice::WriteOnly)){qDebug() << "Failed to open ground truth file";return 1;}
 
     PositionLoader pLoader("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25.pos");
     MORSEDataParser p("/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Simulations/data/4-150_150_30_25_spirals.log",1,pLoader.getLandmarksNB());

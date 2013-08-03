@@ -1,7 +1,7 @@
-//funcprot(0);
-//clear;
-//xdel(winsid()); // close all previously opened windows
-//stacksize('max')
+funcprot(0);
+clear;
+xdel(winsid()); // close all previously opened windows
+stacksize('max')
 
 // Personal workstation (Linux)
 exec('/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-slam/workspace/Analysis/Plots/General/boxUtils.sce', -1)
@@ -12,12 +12,12 @@ path_out='/media/Documents/Etudes/ENSTA-Bretagne/Stages/ENSI3-UFRGS/reliable-sla
 PARTICLE_NB=500;
 LANDMARKS_NB=4;
 
-//particles=list();
+particles=list();
 
-//for i=0:1:PARTICLE_NB-1,
-//    raw_data=read_csv(path_in+sprintf('Particle_%i.res',i),';');
-//    particles(i)=evstr(raw_data);
-//end
+for i=0:1:PARTICLE_NB-1,
+    raw_data=read_csv(path_in+sprintf('Particle_%i.res',i),';');
+    particles(i)=evstr(raw_data);
+end
 
 fig=gcf();
 fig.figure_size=[1920,1024];
@@ -34,8 +34,11 @@ for i=1:LANDMARKS_NB,
     landmarks(i)=plotSwarm(particles,1,i+1,color_list(i));
 end
 
-drawlater();
 for i=1:size(particles(1),1),
-    
+    drawlater();
+    updateSwarm(robot,particles,i,1);
+    for j=1:LANDMARKS_NB,
+        updateSwarm(landmarks(j),particles,i,j+1);
+    end
+    drawnow();
 end
-drawnow();
