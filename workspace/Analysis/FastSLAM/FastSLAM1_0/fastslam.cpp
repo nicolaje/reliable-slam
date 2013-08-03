@@ -195,7 +195,6 @@ void FastSLAM::updateMap(std::vector<double> landmarksMeasurements)
         Vector3d v3d;
         v3d<<0,0,depth;
         std::vector<Vector3d> positions=FastSLAM::drawSamples(particleNb,v3d,positionCovariance);
-        for(int i=0;i<particleNb;i++){
-            particles[i].updateRobotDepth(positions[i][3]);
-        }
+        for(int i=0;i<particleNb;i++)
+            particles[i].updateRobotDepth(positions[i][2]);
     }
