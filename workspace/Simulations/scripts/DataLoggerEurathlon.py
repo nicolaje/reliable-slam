@@ -100,8 +100,10 @@ def run(win):
 	sub.loch_doppler_noisy.subscribe(update_loch_doppler_noisy)
 	
 	motorboat=simu.motorboat
-	motorboat.gps_pure.subscribe(update_gps_pure)
-	motorboat.gps_noisy.subscribe(update_gps_noisy)
+	motorboat.pose_pure.subscribe(update_gps_pure)
+	motorboat.pose_noisy.subscribe(update_gps_noisy)
+	motorboat.pose_pure.subscribe(update_gps_pure)
+	motorboat.pose_noisy.subscribe(update_gps_noisy)
 	#NEED TO SEE WHAT WE NEED!
 	while not readyToWrite:
 		sleep(0.1)
@@ -148,15 +150,15 @@ def run(win):
 				'pose_pure.yaw;pose_pure.pitch;pose_pure.roll;'\
 				'imu_pure.dtheta;imu_pure.dphi;imu_pure.dpsi;'\
 				'loch_doppler_pure.vx;loch_doppler_pure.vy;loch_doppler_pure.vz;'\
-				'imu_pure.ddx;imu_pure.ddy;imu_pure.ddz'+\
-				'gps_pure.x;gps_pure.y;gps_pure.z;' +\
+				'imu_pure.ddx;imu_pure.ddy;imu_pure.ddz;'+\
+				'gps_pure.x;gps_pure.y;gps_pure.z' +\
 				tp+';'\
 				'pose_noisy.x;pose_noisy.y;pose_noisy.z;'\
 				'pose_noisy.yaw;pose_noisy.pitch;pose_noisy.roll;'\
 				'imu_noisy.dtheta;imu_noisy.dphi;imu_noisy.dpsi;'\
 				'loch_doppler_noisy.vx;loch_doppler_noisy.vy;loch_doppler_noisy.vz;'\
-				'imu_noisy.ddx;imu_noisy.ddy;imu_noisy.ddz'+\
-				'gps_noisy.x;gps_noisy.y;gps_noisy.z;' +\
+				'imu_noisy.ddx;imu_noisy.ddy;imu_noisy.ddz;'+\
+				'gps_noisy.x;gps_noisy.y;gps_noisy.z' +\
 				tp+"\n"
 				
 			# Reference data
@@ -164,7 +166,7 @@ def run(win):
 			str(_pose_pure['roll'])+';'+str(_pose_pure['pitch'])+';'+str(_pose_pure['yaw'])+';'+\
 			str(angular_velocity_pure[0])+";"+str(angular_velocity_pure[1])+";"+str(angular_velocity_pure[2])+";"+\
 			str(loch_doppler_pure[0])+";"+str(loch_doppler_pure[1])+";"+str(loch_doppler_pure[2])+";"+\
-			str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])+\
+			str(linear_acceleration_pure[0])+";"+str(linear_acceleration_pure[1])+";"+str(linear_acceleration_pure[2])+";"+\
 			str(_gps_motorboat_pure['x'])+';'+str(_gps_motorboat_pure['y'])+';'+str(_gps_motorboat_pure['z'])
 			
 			for s in transponders_pure:
@@ -175,7 +177,7 @@ def run(win):
 			str(_pose_noisy['roll'])+';'+str(_pose_noisy['pitch'])+';'+str(_pose_noisy['yaw'])+';'+\
 			str(angular_velocity_noisy[0])+";"+str(angular_velocity_noisy[1])+";"+str(angular_velocity_noisy[2])+";"+\
 			str(loch_doppler_noisy[0])+";"+str(loch_doppler_noisy[1])+";"+str(loch_doppler_noisy[2])+";"+\
-			str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])+\
+			str(linear_acceleration_noisy[0])+";"+str(linear_acceleration_noisy[1])+";"+str(linear_acceleration_noisy[2])+";"+\
 			str(_gps_motorboat_noisy['x'])+';'+str(_gps_motorboat_noisy['y'])+';'+str(_gps_motorboat_noisy['z'])
 			
 			for s in transponders_noisy:
