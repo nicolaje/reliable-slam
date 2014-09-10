@@ -12,35 +12,35 @@ int main(int argc, char *argv[])
 {
     srand(time(NULL));
 
-    QVector <xyz> poseXYZ;
-    QVector <xyz> yawPitchRoll;
-    QVector <xyz> acelXYZ;
-    QVector <xyz> velAng;
-    QVector <xyz> velXYZ;
+    QVector <double> time;
+    QVector <xyz> realPosition;
+    QVector <xyz> gyrocompass;
+    QVector <xyz> gpsAUV;
+    QVector <xyz> gyroscope;
+    QVector <xyz> loch_doppler;
+    QVector <xyz> accelerometer;
     QVector < QVector <Landmark> > landmarksUsados;
 
     Dados d;
-    d.carregarArquivo(poseXYZ, yawPitchRoll, acelXYZ, velAng, velXYZ, landmarksUsados);
+    d.carregarArquivo(time,realPosition, gyrocompass,gpsAUV, gyroscope, loch_doppler, accelerometer, landmarksUsados);
 
     Robo robo;
-    clock_t time = 0;
-    for(int i=0; i<poseXYZ.size();i++)
+    for(int i=0; i<realPosition.size();i++)
     {
         cout << "Iteration: " << i << endl;
 
-        time += 0.1* CLOCKS_PER_SEC;
-
-        robo.setTruePose(poseXYZ[i]);
-        robo.setAccelerometer(acelXYZ[i]);
-        robo.setLinearVelocity(velXYZ[i]);
+        robo.mCurrentTime = time[i]*CLOCKS_PER_SEC;
+        robo.setTruePose(realPosition[i]);
+        robo.setAccelerometer(accelerometer[i]);
+        robo.setLinearVelocity(loch_doppler[i]);
         robo.setLandmarks(landmarksUsados[i]);
-        robo.setDeep(poseXYZ[i].z);
+        robo.setDeep(realPosition[i].z);
         if (i % 400 == 0)
-            robo.setGPS(poseXYZ[i]);
-        robo.setGyroscope(velAng[i]);
-        robo.setGyrocompass(yawPitchRoll[i]);
-        robo.mCurrentTime = time;
+            robo.setGPS(gpsAUV[i]);
+        robo.setGyroscope(gyroscope[i]);
+        robo.setGyrocompass(gyrocompass[i]);
 
+        cout << robo.toString() << endl;
         cout << "Starting hybrid method..." << endl;
         robo.findYourself();
         cout << "...Finished" << endl << endl;

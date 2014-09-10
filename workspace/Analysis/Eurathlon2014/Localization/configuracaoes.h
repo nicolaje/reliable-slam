@@ -3,7 +3,7 @@
 #pragma once
 
 
-#define DATASET "../trajetoriasDissertacao/1trans/traj01.csv";
+#define DATASET "../trajetoriasDissertacao/1trans/traj02.csv";
 #define DATASET_TRANSPONDERS "../trajetoriasDissertacao/2trans/default.pos"
 #define MAPA "../mapas/mapa1000x1000.bmp";
 #define PATH_RESULTS "../resultados/"
@@ -49,8 +49,6 @@ struct transponder{
 #define STD_VEL_DOPPLER 0.04    //desvio padrão dado na simulacao
 #define STD_DIST_TRANSP 0.3    //desvio padrão dado na simulacao
 
-#define ERRO_VELOCITY 1.
-#define ERRO_ACELERACAO 1
 #define ERRO_DEEP 2.
 #define ERRO_GPS 10.
 

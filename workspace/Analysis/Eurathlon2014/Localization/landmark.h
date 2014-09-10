@@ -10,6 +10,7 @@ class Landmark
 public:
     Landmark();
     xyz posicao;
+    xyz angle;
     Interval dist;
     int id;
     double time;

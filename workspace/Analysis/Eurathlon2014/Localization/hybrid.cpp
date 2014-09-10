@@ -103,9 +103,9 @@ void Hybrid::moveCaixa()
     double elapsedTime = mRobot->getElapsedTime();
     xyz linearVelocity = mRobot->getLinearVelocity();
 
-    Interval velocityX = Interval (linearVelocity.x*elapsedTime-ERRO_VELOCITY,linearVelocity.x*elapsedTime+ERRO_VELOCITY);
-    Interval velocityY = Interval (linearVelocity.y*elapsedTime-ERRO_VELOCITY,linearVelocity.y*elapsedTime+ERRO_VELOCITY);
-    Interval velocityZ = Interval (linearVelocity.z*elapsedTime-ERRO_VELOCITY,linearVelocity.z*elapsedTime+ERRO_VELOCITY);
+    Interval velocityX = Interval (linearVelocity.x*elapsedTime-SIGMA_FACTOR_VEL*STD_VEL_DOPPLER,linearVelocity.x*elapsedTime+SIGMA_FACTOR_VEL*STD_VEL_DOPPLER);
+    Interval velocityY = Interval (linearVelocity.y*elapsedTime-SIGMA_FACTOR_VEL*STD_VEL_DOPPLER,linearVelocity.y*elapsedTime+SIGMA_FACTOR_VEL*STD_VEL_DOPPLER);
+    Interval velocityZ = Interval (linearVelocity.z*elapsedTime-SIGMA_FACTOR_VEL*STD_VEL_DOPPLER,linearVelocity.z*elapsedTime+SIGMA_FACTOR_VEL*STD_VEL_DOPPLER);
 
     xyz gyrocompass = mRobot->getGyrocompass();
     Interval phi  (gyrocompass.x-(SIGMA_FACTOR_ORI*STD_ORIENTATION),gyrocompass.x+(SIGMA_FACTOR_ORI*STD_ORIENTATION));

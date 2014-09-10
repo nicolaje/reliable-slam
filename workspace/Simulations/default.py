@@ -71,6 +71,13 @@ loch_doppler_pure.add_stream('ros')
 sub.append(loch_doppler_pure)
 loch_doppler_pure.frequency(sensors_freq)
 
+#GPS Submarine
+gps_submarine_pure = GPS()
+gps_submarine_pure.add_stream('socket')
+gps_submarine_pure.add_stream('ros')
+sub.append(gps_submarine_pure)
+gps_submarine_pure.frequency(sensors_freq)
+
 #################
 # Noisy Sensors #
 #################
@@ -108,6 +115,13 @@ loch_doppler_noisy.add_stream('ros')
 sub.append(loch_doppler_noisy)
 #loch_doppler_noisy.frequency(sensors_freq)
 #loch_doppler_noisy.alter('', 'VelocityModifier.VelocityModifier')
+#GPS Submarine
+
+gps_submarine_noisy = GPS()
+gps_submarine_noisy.add_stream('socket')
+gps_submarine_noisy.add_stream('ros')
+sub.append(gps_submarine_noisy)
+gps_submarine_noisy.frequency(sensors_freq)
 
 
 

@@ -162,16 +162,18 @@ std::string Robo::toString()
 
     xyz accelerometer = this->getAccelerometer();
     xyz gps = this->getGPS();
+    xyz truePose = this->getTruePose();
     xyz gyrocompass = this->getGyrocompass();
     xyz gyroscope = this->getGyroscope();
     xyz linearVelocity = this->getLinearVelocity();
 
     oss
-            << accelerometer.x  << accelerometer.y  << accelerometer.z
-            << gps.x           << gps.y           << gps.z           << mGPSTime
-            << gyrocompass.x    << gyrocompass.y    << gyrocompass.z
-            << gyroscope.x      << gyroscope.y      << gyroscope.z
-            << linearVelocity.x << linearVelocity.y << linearVelocity.z
+            << truePose.x       << ", " << truePose.y       << ", " << truePose.z       << ", " << endl
+            << gyrocompass.x    << ", " << gyrocompass.y    << ", " << gyrocompass.z    << ", " << endl
+            << gps.x            << ", " << gps.y            << ", " << gps.z            << ", " << double(mCurrentTime - mGPSTime) / CLOCKS_PER_SEC << ", " << endl
+            << gyroscope.x      << ", " << gyroscope.y      << ", " << gyroscope.z      << ", " << endl
+            << linearVelocity.x << ", " << linearVelocity.y << ", " << linearVelocity.z << ", " << endl
+            << accelerometer.x  << ", " << accelerometer.y  << ", " << accelerometer.z  << ", " << endl
             << this->getDeep();
 
     return oss.str();
