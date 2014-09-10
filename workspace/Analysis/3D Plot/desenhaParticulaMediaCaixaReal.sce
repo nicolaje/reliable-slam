@@ -44,7 +44,8 @@ for i=1:size(data,1),
     //param3d1(data(i,1), data(i,2), list(data(i,3), -9));//melhor
     param3d1(data(i,13), data(i,14), list(data(i,15), -11));//media
     
-    param3d1(data2(i,1), data2(i,2), list(data2(i,3), -1));//real
+    param3d1(data2(i,1), data2(i,2), list(data2(i,3), -1));// AUV real
+    param3d1(data2(i,4), data2(i,5), list(data2(i,6), -1));// USV real
     
     drawlater();
     plotBox(data3(i,1:6),'green');
