@@ -52,8 +52,10 @@ struct transponder{
 #define ERRO_VELOCITY 1.
 #define ERRO_ACELERACAO 1
 #define ERRO_DEEP 2.
+#define ERRO_GPS 10.
+
+#define MAX_TIME_FOR_OLD_READING 2. //seconds
 
 #define TAMANHO_POPULACAO 1000
 #define DESVIO_PADRAO_PESO_PARTICULAS 25 //ou um desvio alto, ou usa soma nos pesos, ou um desvio baixo mas com uma população tamanho monstro
 
-#define USAR_DATASET 1//1 para dataset 0 para robo

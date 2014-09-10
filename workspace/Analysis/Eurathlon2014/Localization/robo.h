@@ -12,35 +12,37 @@ class Robo
 {
 public:
     QVector <xyz> mPose;
-    QVector <xyz> mGPS;
+    QVector <xyz> mTruePose;
     QVector <xyz> mGyrocompass;
     QVector <xyz> mLinearAcceleration;
     QVector <xyz> mAngularVelocity;
     QVector <xyz> mLinearVelocity;
     QVector <double> mDeep;
+
+    clock_t mGPSTime, mLandmarkTime;
+    QVector <xyz> mGPS;
     QVector < QVector <Landmark> > mLandmarks;
 
     clock_t mCurrentTime, mLastEstimation;
 
     Hybrid *mLocalizationSystem;
-    int curTime;
 
     Robo();
     ~Robo();
+    void setPose(xyz pose);
+    xyz getPose();
+
+    void setTruePose(xyz truePose);
+    xyz getTruePose();
+
     void setAccelerometer(xyz accelerometer);
     xyz getAccelerometer();
 
     void setLinearVelocity(xyz linearVelocity);
     xyz getLinearVelocity();
 
-    void setLandmarks(QVector <Landmark> landmarks);
-    QVector <Landmark> getLandmarks();
-
     void setDeep(double deep);
     double getDeep();
-
-    void setGPS(xyz gps);
-    QVector<double> getGPS();
 
     void setGyroscope(xyz gyroscope);
     xyz getGyroscope();
@@ -50,12 +52,19 @@ public:
 
     xyz getDeltaHeading();
 
+    void setLandmarks(QVector <Landmark> landmarks);
+    QVector <Landmark> getLandmarks();
+
+    // TODO: Consider the gps as a point with uncertainty
+    void setGPS(xyz gps);
+    xyz getGPS();
+
+    bool isGPSTooOld();
+    bool isLandmarkTooOld();
+
     double getElapsedTime();
 
-    void setSensors(xyz accelerometer,xyz linearVelocity,QVector <Landmark> landmarks, double deep,xyz gps,xyz gyroscope,xyz gyrocompass);
-
     std::string toString();
-    void runSimlutatedData();
     void findYourself();
 };
 

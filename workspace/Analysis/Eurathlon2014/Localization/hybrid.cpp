@@ -2,7 +2,7 @@
 
 Hybrid::Hybrid(Robo *robot):
     mRobot(robot),
-    ambienteInicial(3, Interval()), //definir a caixa que representa o ambiente inicial
+    ambienteInicial(3, Interval()),
     searchSpace(3, Interval()),
     logRealPosition("../resultados/logGPSPosition.csv"),
     logBoxes("../resultados/logHybridContractors.csv"),
@@ -70,6 +70,8 @@ void Hybrid::findWhereIAm()
 
     this->statistics();
     this->log();
+
+    mRobot->setPose(avgParticle.pose);
 }
 
 
@@ -131,32 +133,36 @@ void Hybrid::moveCaixa()
 
 void Hybrid::contractByDistance()
 {
-    cout << "    Contract boxes by distance" << endl;
-    QVector <Landmark> landmarks = mRobot->getLandmarks();
-    int N = landmarks.size();
-
-    if (N == 0)
+    if (mRobot->isLandmarkTooOld())
         return;
 
-    Interval boxX[N];
-    Interval boxY[N];
-    Interval boxZ[N];
-    Interval boxD[N];
+    cout << "    Contract boxes by distance" << endl;
+    QVector <Landmark> landmarks = mRobot->getLandmarks();
+    int numberOfLandmarks = landmarks.size();
 
-    for (int index=0; index<N; index++)
+    if (numberOfLandmarks == 0)
+        return ;
+
+    Interval boundX[numberOfLandmarks];
+    Interval boundY[numberOfLandmarks];
+    Interval boundZ[numberOfLandmarks];
+    Interval boundD[numberOfLandmarks];
+
+    // TODO: Maybe consider the surface robot position as a box (not a point)
+    for (int index=0; index<numberOfLandmarks; index++)
     {
-        boxX[index]=Interval(landmarks[index].posicao.x);
-        boxY[index]=Interval(landmarks[index].posicao.y);
-        boxZ[index]=Interval(landmarks[index].posicao.z);
-        boxD[index]=landmarks[index].dist;
+        boundX[index]=Interval(landmarks[index].posicao.x);
+        boundY[index]=Interval(landmarks[index].posicao.y);
+        boundZ[index]=Interval(landmarks[index].posicao.z);
+        boundD[index]=landmarks[index].dist;
     }
 
-    Array<Ctc> contractors(N);
+    Array<Ctc> contractors(numberOfLandmarks);
     Variable x(3);
 
-    for(int contractorIndex=0;contractorIndex<N;contractorIndex++)
+    for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
     {
-        Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boxX[contractorIndex])+sqr(x[1]-boxY[contractorIndex])+sqr(x[2]-boxZ[contractorIndex])) - boxD[contractorIndex])));
+        Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boundX[contractorIndex])+sqr(x[1]-boundY[contractorIndex])+sqr(x[2]-boundZ[contractorIndex])) - boundD[contractorIndex])));
         CtcFwdBwd *ar=new CtcFwdBwd(*constraintFunction);
         contractors.set_ref(contractorIndex,*ar);
     }
@@ -175,6 +181,19 @@ void Hybrid::contractByDepth()
 
 void Hybrid::contractByGPS()
 {
+    if (mRobot->isGPSTooOld())
+        return;
+
+    cout << "    Contract boxes by GPS" << endl;
+    xyz gps = mRobot->getGPS();
+    double bounds[3][2] = {
+        {gps.x - ERRO_GPS, gps.x + ERRO_GPS},
+        {gps.y - ERRO_GPS, gps.y + ERRO_GPS},
+        {gps.z - ERRO_GPS, gps.z + ERRO_GPS}
+    };
+
+    IntervalVector gpsBox(3,bounds);
+    this->searchSpace &= gpsBox;
 }
 
 void Hybrid::contractByAngleOfPinger()
@@ -276,6 +295,8 @@ void Hybrid::statistics()
         totalWeight += population[index].peso;
     }
 
+    if(totalWeight == 0)
+        totalWeight = 1; //Just to avoid the division by zero
     avgParticle.pose.x=weightedAverageX/totalWeight;
     avgParticle.pose.y=weightedAverageY/totalWeight;
     avgParticle.pose.z=weightedAverageZ/totalWeight;
@@ -316,11 +337,15 @@ void Hybrid::log()
             << Dados::stringalizar(searchSpace[2].ub()) << ";"
             << "\n";
 
-    QVector<double> position = mRobot->getGPS();
+    xyz position = mRobot->getTruePose();
+    QVector<Landmark> landmarks = mRobot->getLandmarks();
     logRealPosition
-            << Dados::stringalizar(position[0]) << ";"
-            << Dados::stringalizar(position[1]) << ";"
-            << Dados::stringalizar(position[2]) << ";"
+            << Dados::stringalizar(position.x) << ";"
+            << Dados::stringalizar(position.y) << ";"
+            << Dados::stringalizar(position.z) << ";"
+            << Dados::stringalizar(landmarks[0].posicao.x) << ";"
+            << Dados::stringalizar(landmarks[0].posicao.y) << ";"
+            << Dados::stringalizar(landmarks[0].posicao.z) << ";"
             << "\n";
 
 }
