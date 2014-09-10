@@ -1,0 +1,12 @@
+#ifndef PARTICLEFILTER_H
+#define PARTICLEFILTER_H
+
+class ParticleFilter
+{
+public:
+    ParticleFilter();
+    void executarFiltro(QVector <xyz> poseXYZ, QVector <xyz> yawPitchRoll,QVector <xyz> velXYZ,QVector <QVector<transponder> > transponders,QVector <Landmark> landmarksUsados);
+
+};
+
+#endif // PARTICLEFILTER_H
