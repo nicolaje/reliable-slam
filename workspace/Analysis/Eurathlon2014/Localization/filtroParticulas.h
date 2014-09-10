@@ -19,9 +19,6 @@ public:
     void executarFiltro(QVector <xyz> poseXYZ, QVector <xyz> yawPitchRoll,QVector <xyz> velXYZ,QVector <QVector<transponder> > transponders,QVector <Landmark> landmarksUsados, int idExec);
     void roleta( QVector <Particula> & populacao);
     void criarPopulacao(IntervalVector searchSpace, QVector <Particula> & populacao, xyz yawPitchRoll);
-
-
-
 };
 
 #endif // FILTROPARTICULAS_H

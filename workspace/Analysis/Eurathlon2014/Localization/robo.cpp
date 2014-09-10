@@ -1,9 +1,8 @@
 #include "robo.h"
-#include "dados.h"
 
 Robo::Robo(): mLastEstimation(NULL)
 {
-    mLocalizationSystem = new Hibrido(this);
+    mLocalizationSystem = new Hybrid(this);
     curTime = -1;
 }
 
@@ -162,6 +161,6 @@ std::string Robo::toString()
 void Robo::findYourself()
 {
     mCurrentTime = clock();
-    mLocalizationSystem->executarLocalizacaoHibridaContratores();
+    mLocalizationSystem->findWhereIAm();
     mLastEstimation = mCurrentTime;
 }

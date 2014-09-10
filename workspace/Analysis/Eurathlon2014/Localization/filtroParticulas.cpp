@@ -16,7 +16,6 @@ void FiltroParticulas::roleta( QVector <Particula> & populacao)
     for(int index=0;index<populacaoAux.size();index++)
     {
         double numeroRoleta = (double)rand()/RAND_MAX;
-        double original = numeroRoleta;
         int index=-1;
         do
         {
@@ -24,8 +23,6 @@ void FiltroParticulas::roleta( QVector <Particula> & populacao)
             if(index > populacaoAux.size()-1)
                 index = populacaoAux.size()-1;
             numeroRoleta -= populacaoAux[index].peso;
-
-            //cout << populacaoAux.size() << " " << index << " " << populacaoAux[index].peso << " " << numeroRoleta << " " << numeroRoleta << endl;
         } while(numeroRoleta>0);
 
         populacao.push_back(populacaoAux[index]);

@@ -39,7 +39,6 @@ double Particula::calcularPeso(QVector<Landmark> localizacaoLandmarks)
     for(int i=0;i<localizacaoLandmarks.size();i++)
     {
         //distancia entre a partícula e o transponder
-        //cout << localizacaoLandmarks[i].posicao.x << ", " << localizacaoLandmarks[i].posicao.y << ", " << localizacaoLandmarks[i].posicao.z << endl;
         double d=sqrt(pow(this->pose.x-localizacaoLandmarks[i].posicao.x,2)+pow(this->pose.y-localizacaoLandmarks[i].posicao.y,2)+pow(this->pose.z-localizacaoLandmarks[i].posicao.z,2));
 
         double gaussiana=(1/sqrt(2*M_PI*pow(desvio,2)))*(exp(-(pow(d-localizacaoLandmarks[i].dist.mid(),2)/(2*pow(desvio,2)))));

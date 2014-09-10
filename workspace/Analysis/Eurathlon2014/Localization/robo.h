@@ -2,11 +2,11 @@
 #define ROBO_H
 
 #include <iostream>
-#include "configuracaoes.h"
 #include <QVector>
+#include "configuracaoes.h"
 #include "landmark.h"
 
-class Hibrido;
+class Hybrid;
 
 class Robo
 {
@@ -22,7 +22,7 @@ public:
 
     clock_t mCurrentTime, mLastEstimation;
 
-    Hibrido *mLocalizationSystem;
+    Hybrid *mLocalizationSystem;
     int curTime;
 
     Robo();
@@ -59,6 +59,6 @@ public:
     void findYourself();
 };
 
-#include "hibrido.h"
+#include "hybrid.h"
 
 #endif // ROBO_H

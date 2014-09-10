@@ -11,23 +11,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    iboolean.cpp \
     dados.cpp \
     particula.cpp \
     landmark.cpp \
     filtroParticulas.cpp \
-    hibrido.cpp \
-    robo.cpp
+    robo.cpp \
+    hybrid.cpp
 
 HEADERS  += \
-    iboolean.h \
     dados.h \
     configuracaoes.h \
     particula.h \
     landmark.h \
     filtroParticulas.h \
-    hibrido.h \
-    robo.h
+    robo.h \
+    hybrid.h
 
 FORMS    +=
 

@@ -1,19 +1,15 @@
-#ifndef HIBRIDO_H
-#define HIBRIDO_H
-//#include "sivia.h"
-#include "configuracaoes.h"
-#include <time.h>
+#ifndef HYBRID_H
+#define HYBRID_H
 #include <ibex.h>
-#include "particula.h"
-#include "filtroParticulas.h"
-//#include "paletacores.h"
 #include <iostream>
+#include "filtroParticulas.h"
+#include "configuracaoes.h"
 #include "robo.h"
 
 using namespace  std;
 using namespace ibex;
 
-class Hibrido
+class Hybrid
 {
 public:
     Robo *mRobot;
@@ -27,20 +23,28 @@ public:
 
     ofstream logBoxes, logParticles, logRealPosition;
 
-    Hibrido(Robo *robot);
-    ~Hibrido();
+    Hybrid(Robo *robot);
+    ~Hybrid();
 
-    void executarLocalizacaoHibridaContratores();
+    void findWhereIAm();
+
     void createParticles();
+
     void moveParticles();
     void moveCaixa();
+
     void contractByDistance();
+    void contractByDepth();
+    void contractByGPS();
+    void contractByAngleOfPinger();
+    void contractBySonarLocalization();
+
     void discardParticlesOutsideBox();
-    void resamplingParticles();
     void weighParticles();
+    void resamplingParticles();
 
     void statistics();
     void log();
 };
 
-#endif // HIBRIDO_H
+#endif // HYBRID_H

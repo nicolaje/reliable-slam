@@ -1,6 +1,6 @@
-#include "hibrido.h"
+#include "hybrid.h"
 
-Hibrido::Hibrido(Robo *robot):
+Hybrid::Hybrid(Robo *robot):
     mRobot(robot),
     ambienteInicial(3, Interval()), //definir a caixa que representa o ambiente inicial
     searchSpace(3, Interval()),
@@ -8,9 +8,11 @@ Hibrido::Hibrido(Robo *robot):
     logBoxes("../resultados/logHybridContractors.csv"),
     logParticles("../resultados/logHybridParticles.csv")
 {
-    //**************************************************
-    //*        inicializa arquivos de log              *
-    //**************************************************
+    /******************************************
+     *                                        *
+     *        Initialize the log files        *
+     *                                        *
+     ******************************************/
     //logBoxes << "#minx;maxx;miny;maxy;minz;maxz\n";
     //logParticles << "#melhor.pose.x;melhor.pose.y;melhor.pose.z;melhor.ypr.x;melhor.ypr.y;melhor.ypr.z;pior.pose.x;pior.pose.y;pior.pose.z;pior.ypr.x;pior.ypr.y;pior.ypr.z;media.pose.x;media.pose.y;media.pose.z;media.ypr.x;media.ypr.y;media.ypr.z;\n";
 
@@ -18,7 +20,7 @@ Hibrido::Hibrido(Robo *robot):
     searchSpace[2] &= Interval::NEG_REALS;
 }
 
-Hibrido::~Hibrido()
+Hybrid::~Hybrid()
 {
     cout << "Deleting hybrid method" << endl;
     logBoxes.close();
@@ -26,103 +28,63 @@ Hibrido::~Hibrido()
 }
 
 
-void Hibrido::executarLocalizacaoHibridaContratores()
+void Hybrid::findWhereIAm()
 {
-
-    /*
-    Criar a população
-    Mover a população
-    Mover a caixa
-    Contrair a caixa pela distancia dos pingers
-    Contrair a caixa pela profundidade
-    Contrair a caixa pelo gps
-    Contrair a caixa pela angulação dos pingers
-    Contrair a caixa pelo sonar
-    Descartar particulas fora da caixa
-    Pesa e reamostra as particulas
-    Reamostragem das particulas
-    */
-
-    cout << "    Create particles" << endl;
     this->createParticles();
 
 
     /**************************************************
      *                                                *
-     *                 Mover população                *
+     *         Move the box and the particles         *
      *                                                *
      **************************************************/
-    //se tem velocidade e
-    //se tem tempo entre as leituras
-    //ou
-    //se tem aceleração e aceleração acumulada
-    //se tem tempo entre as leituras
-    cout << "    Move particles" << endl;
     this->moveParticles();
-    cout << "    Move boxes" << endl;
-//    cout << "Antes: "
-//         //<< searchSpace.lb() << searchSpace.ub()
-//         << searchSpace.mid() << searchSpace.mid()
-//         << mRobot->mGPS[mRobot->curTime].x << ", "
-//         << mRobot->mGPS[mRobot->curTime].y << ", "
-//         << mRobot->mGPS[mRobot->curTime].z << ", "
-//         << endl;
     this->moveCaixa();
-//    cout << "Depois: " << searchSpace.lb() << searchSpace.ub() << endl;
 
-    /**************************************************
-     *                                                *
-     *    Posiciona landmarks e realiza contratores   *
-     *                                                *
-     **************************************************/
-    //se tem markers
-
-    cout << "    Contract boxes" << endl;
-    this->contractByDistance();
-
-
-    /**************************************************
-     *                                                *
-     *       Filtro de Particulas dentro da caixa     *
-     *                                                *
+    /*************************************************
+     *                                               *
+     *    Reduce the box according to the readings   *
+     *                                               *
      *************************************************/
+    //Need to test if you have the information or not.
 
-    cout << "    Resampling particles: Discard" << endl;
+    this->contractByDepth();
+    this->contractByDistance();
+    this->contractByGPS();
+    this->contractByAngleOfPinger();
+    this->contractBySonarLocalization();
+
+
+    /******************************************************************
+     *                                                                *
+     *  Improve the localization with particle filter inside the box  *
+     *                                                                *
+     ******************************************************************/
     this->discardParticlesOutsideBox();
 
     if (mRobot->getLandmarks().size() > 0)
     {
-        cout << "    Resampling particles: Weight" << endl;
         this->weighParticles();
-        cout << "    Resampling particles: Resampling" << endl;
         this->resamplingParticles();
     }
 
-    cout << "    Computing the statistics" << endl;
     this->statistics();
     this->log();
 }
 
 
-void Hibrido::createParticles()
+void Hybrid::createParticles()
 {
-    //**************************************************
-    //* criar população de partículas no searchspace   *
-    //**************************************************
-    //se tem ambiente inicial < inf e
-    //se tem yawPitchRoll
-    IntervalVector *complementary = NULL;
-    this->searchSpace.complementary(complementary);
-
-    if(this->population.size()==0 && !complementary->is_empty())
+    if(this->population.size()==0 && !searchSpace.is_unbounded())
     {
-        cout << "Cria população" <<endl;
+        cout << "    Create particles" << endl;
         this->particleFilter.criarPopulacao(this->searchSpace, this->population, mRobot->getGyrocompass());
     }
 }
 
-void Hibrido::moveParticles()
+void Hybrid::moveParticles()
 {
+    cout << "    Move particles" << endl;
     xyz velocity = mRobot->getLinearVelocity();
     xyz deltaHeading = mRobot->getDeltaHeading();
 
@@ -133,8 +95,9 @@ void Hibrido::moveParticles()
     }
 }
 
-void Hibrido::moveCaixa()
+void Hybrid::moveCaixa()
 {
+    cout << "    Move boxes" << endl;
     double elapsedTime = mRobot->getElapsedTime();
     xyz linearVelocity = mRobot->getLinearVelocity();
 
@@ -158,16 +121,17 @@ void Hibrido::moveCaixa()
     J[2][1]= cos(theta)*sin(phi);
     J[2][2]= cos(theta)*cos(phi);
 
-    searchSpace[0]=searchSpace[0]+velocityX*J[0][0]+velocityY*J[0][1]+velocityZ*J[0][2];
-    searchSpace[1]=searchSpace[1]+velocityX*J[1][0]+velocityY*J[1][1]+velocityZ*J[1][2];
-    searchSpace[2]=searchSpace[2]+velocityX*J[2][0]+velocityY*J[2][1]+velocityZ*J[2][2];
+    searchSpace[0] += velocityX*J[0][0]+velocityY*J[0][1]+velocityZ*J[0][2];
+    searchSpace[1] += velocityX*J[1][0]+velocityY*J[1][1]+velocityZ*J[1][2];
+    searchSpace[2] += velocityX*J[2][0]+velocityY*J[2][1]+velocityZ*J[2][2];
 
-    searchSpace = searchSpace & ambienteInicial;
+    searchSpace &= ambienteInicial;
 }
 
 
-void Hibrido::contractByDistance()
+void Hybrid::contractByDistance()
 {
+    cout << "    Contract boxes by distance" << endl;
     QVector <Landmark> landmarks = mRobot->getLandmarks();
     int N = landmarks.size();
 
@@ -198,12 +162,32 @@ void Hibrido::contractByDistance()
     }
 
     CtcCompo composition(contractors);
-    CtcFixPoint fixPoint(composition);// O FIX POINT FICA CONTRAINDO ATÉ NÃO MUDAR MAIS SERIA COMO FAZER UM MONTE DE "comp.contract(array);"
+    CtcFixPoint fixPoint(composition);
     fixPoint.contract(this->searchSpace);
 }
 
-void Hibrido::discardParticlesOutsideBox()
+void Hybrid::contractByDepth()
 {
+    cout << "    Contract boxes by depth" << endl;
+    Interval depthBox(mRobot->getDeep() - ERRO_DEEP,mRobot->getDeep() + ERRO_DEEP);
+    this->searchSpace[2] &= depthBox;
+}
+
+void Hybrid::contractByGPS()
+{
+}
+
+void Hybrid::contractByAngleOfPinger()
+{
+}
+
+void Hybrid::contractBySonarLocalization()
+{
+}
+
+void Hybrid::discardParticlesOutsideBox()
+{
+    cout << "    Resampling particles: Discard" << endl;
     QVector <Particula> populationAux;
     std::swap(population,populationAux);
 
@@ -216,7 +200,6 @@ void Hibrido::discardParticlesOutsideBox()
 
         xyz gyrocompass = mRobot->getGyrocompass();
 
-        //testa se as partículas da população estão dentro do searchSpace, eliminar as que estão fora e repoe com uma aleatoria
         if (searchSpace.contains(Vector(3,posicao)))
         {
             population.push_back(populationAux[index]);
@@ -240,30 +223,31 @@ void Hibrido::discardParticlesOutsideBox()
     populationAux.clear();
 }
 
-void Hibrido::weighParticles()
+void Hybrid::weighParticles()
 {
+    cout << "    Resampling particles: Weight" << endl;
     double normalizador = 0.;
 
     for(int index=0;index<population.size();index++)
     {
         normalizador += population[index].calcularPeso(mRobot->getLandmarks());
-        //cout << normalizador << " " << population[index].peso<< endl;
     }
 
     for(int index=0;index<population.size();index++)
     {
         population[index].peso /= normalizador;
-        //cout << normalizador << " " << population[index].peso<< endl;
     }
 }
 
-void Hibrido::resamplingParticles()
+void Hybrid::resamplingParticles()
 {
+    cout << "    Resampling particles: Resampling" << endl;
     particleFilter.roleta(population);
 }
 
-void Hibrido::statistics()
+void Hybrid::statistics()
 {
+    cout << "    Computing the statistics" << endl;
     worstParticle.peso=-1;bestParticle.peso=-1;
 
     double weightedAverageX, weightedAverageY, weightedAverageZ, weightedAverageHeadingX, weightedAverageHeadingY, weightedAverageHeadingZ, totalWeight;
@@ -300,7 +284,7 @@ void Hibrido::statistics()
     avgParticle.yawPitchRoll.z=weightedAverageHeadingZ/totalWeight;
 }
 
-void Hibrido::log()
+void Hybrid::log()
 {
     logParticles
             << Dados::stringalizar(bestParticle.pose.x) << ";"
