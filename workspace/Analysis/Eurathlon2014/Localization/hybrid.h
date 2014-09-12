@@ -33,6 +33,14 @@ public:
     void moveParticles();
     void moveCaixa();
 
+
+    vector<Ctc*> composeContractorByDistance();
+    vector<Ctc*> composeContractorByGPS();
+    vector<Ctc*> composeContractorByDepth();
+    void contractUsingComposition(vector<Ctc*> contractors);
+
+    void contractByAllQIntersection();
+    void contractByAll();
     void contractByDistance();
     void contractByDepth();
     void contractByGPS();
