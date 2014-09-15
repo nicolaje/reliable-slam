@@ -10,8 +10,28 @@
 using namespace std;
 
 
+void testIbex()
+{
+    Interval t(1,3);
+    Variable x(1);
+    IntervalVector world(1,Interval(2,5));
+
+    Array<Ctc> contractors(1);
+    Function constraint(x,x-t);
+    CtcFwdBwd a(constraint);
+    contractors.set_ref(0,a);
+    CtcCompo comp(contractors);
+    CtcFixPoint fixPoint(comp);
+    fixPoint.contract(world);
+
+    cout << world[0] - t << endl;
+    cout << world << endl;
+    exit(0);
+}
+
 int main(int argc, char *argv[])
 {
+    //testIbex();
     srand(time(NULL));
 
 

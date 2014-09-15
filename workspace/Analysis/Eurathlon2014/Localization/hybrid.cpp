@@ -46,26 +46,23 @@ void Hybrid::findWhereIAm()
      *    Reduce the box according to the readings   *
      *                                               *
      *************************************************/
-    //Need to test if you have the information or not.
     contractors.clear();
 
     this->contractByDepth();
     this->contractByDistance();
     this->contractByGPS();
-    this->contractByAngleOfPinger();
+    //this->contractByAngleOfPinger(); //Need to implement atan2 at IBEX.
     this->contractBySonarLocalization();
 
-//    try
-//    {
+    //try
+    //{
         //this->contractAllQIntersection();//with CtcQInter
         this->contractAll();
-//    }catch(EmptyBoxException e)
-//    {
-//        cout << "EMPTY BOX!!!" << endl;
-//        searchSpace = allSpace;
-//    }
-
-    cout << searchSpace.lb() << searchSpace.ub() << endl;
+    //}catch(EmptyBoxException e)
+    //{
+    //    cout << "EMPTY BOX!!!" << endl;
+    //    searchSpace = allSpace;
+    //}
 
 
     /******************************************************************
@@ -236,6 +233,39 @@ void Hybrid::contractByGPS()
 
 void Hybrid::contractByAngleOfPinger()
 {
+    if (mRobot->isLandmarkTooOld())
+        return;
+
+    cout << "    Contract boxes by angle of the pinger" << endl;
+    QVector <Landmark> landmarks = mRobot->getLandmarks();
+    int numberOfLandmarks = landmarks.size();
+
+    if (numberOfLandmarks == 0)
+        return ;
+
+    Interval boundX[numberOfLandmarks];
+    Interval boundY[numberOfLandmarks];
+    Interval boundZ[numberOfLandmarks];
+    Interval boundA[numberOfLandmarks];
+
+    for (int index=0; index<numberOfLandmarks; index++)
+    {
+        boundX[index]=Interval(landmarks[index].posicao.x);
+        boundY[index]=Interval(landmarks[index].posicao.y);
+        boundZ[index]=Interval(landmarks[index].posicao.z);
+        boundA[index]=landmarks[index].angle.x;
+    }
+
+    Variable x(3);
+
+    //Need to implement atan2 at IBEX.
+    for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
+    {
+        Function *constraintFunction = new Function(x,
+                                                    (atan2(boundY[contractorIndex] - x[1],boundX[contractorIndex] - x[0]) - boundA[contractorIndex]));
+
+        contractors.push_back(new CtcFwdBwd(*constraintFunction));
+    }
 }
 
 void Hybrid::contractBySonarLocalization()
