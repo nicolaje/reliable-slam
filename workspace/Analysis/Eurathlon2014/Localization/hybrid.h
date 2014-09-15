@@ -13,11 +13,12 @@ class Hybrid
 {
 public:
     Robo *mRobot;
-    IntervalVector ambienteInicial;
+    IntervalVector allSpace;
     IntervalVector searchSpace;
 
     FiltroParticulas particleFilter;
     QVector<Particula> population;
+    vector <Ctc*> contractors;
 
     Particula worstParticle, bestParticle, avgParticle;
 
@@ -33,14 +34,9 @@ public:
     void moveParticles();
     void moveCaixa();
 
+    void contractAllQIntersection();
+    void contractAll();
 
-    vector<Ctc*> composeContractorByDistance();
-    vector<Ctc*> composeContractorByGPS();
-    vector<Ctc*> composeContractorByDepth();
-    void contractUsingComposition(vector<Ctc*> contractors);
-
-    void contractByAllQIntersection();
-    void contractByAll();
     void contractByDistance();
     void contractByDepth();
     void contractByGPS();

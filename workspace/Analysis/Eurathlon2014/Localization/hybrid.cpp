@@ -2,7 +2,7 @@
 
 Hybrid::Hybrid(Robo *robot):
     mRobot(robot),
-    ambienteInicial(3, Interval()),
+    allSpace(3, Interval()),
     searchSpace(3, Interval()),
     logRealPosition("../resultados/logGPSPosition.csv"),
     logBoxes("../resultados/logHybridContractors.csv"),
@@ -16,7 +16,7 @@ Hybrid::Hybrid(Robo *robot):
     //logBoxes << "#minx;maxx;miny;maxy;minz;maxz\n";
     //logParticles << "#melhor.pose.x;melhor.pose.y;melhor.pose.z;melhor.ypr.x;melhor.ypr.y;melhor.ypr.z;pior.pose.x;pior.pose.y;pior.pose.z;pior.ypr.x;pior.ypr.y;pior.ypr.z;media.pose.x;media.pose.y;media.pose.z;media.ypr.x;media.ypr.y;media.ypr.z;\n";
 
-    ambienteInicial[2] &= Interval::NEG_REALS;
+    allSpace[2] &= Interval::NEG_REALS;
     searchSpace[2] &= Interval::NEG_REALS;
 }
 
@@ -47,20 +47,25 @@ void Hybrid::findWhereIAm()
      *                                               *
      *************************************************/
     //Need to test if you have the information or not.
+    contractors.clear();
 
-    /*this->contractByDepth();
+    this->contractByDepth();
     this->contractByDistance();
     this->contractByGPS();
     this->contractByAngleOfPinger();
-    this->contractBySonarLocalization();*/
-    vector <Ctc*> contractors,aux1,aux2;
-    contractors=this->composeContractorByDepth();
-    aux1=this->composeContractorByDistance();
-    aux2=this->composeContractorByGPS();
-    contractors.insert(contractors.begin(), aux1.begin(),aux1.end());
-    contractors.insert(contractors.begin(),aux2.begin(),aux2.end());
-    this->contractUsingComposition(contractors);//com CtcQInter
+    this->contractBySonarLocalization();
 
+//    try
+//    {
+        //this->contractAllQIntersection();//with CtcQInter
+        this->contractAll();
+//    }catch(EmptyBoxException e)
+//    {
+//        cout << "EMPTY BOX!!!" << endl;
+//        searchSpace = allSpace;
+//    }
+
+    cout << searchSpace.lb() << searchSpace.ub() << endl;
 
 
     /******************************************************************
@@ -135,231 +140,35 @@ void Hybrid::moveCaixa()
     searchSpace[1] += velocityX*J[1][0]+velocityY*J[1][1]+velocityZ*J[1][2];
     searchSpace[2] += velocityX*J[2][0]+velocityY*J[2][1]+velocityZ*J[2][2];
 
-    searchSpace &= ambienteInicial;
+    searchSpace &= allSpace;
 }
 
-void Hybrid::contractByAllQIntersection()
+void Hybrid::contractAllQIntersection()
 {
-    Variable x(3);
-    vector<Ctc*> contractors;
+    int NumberOfMeasurementsToBeDiscarded = (int)round(contractors.size()*0.1);//10%
+    int NumberOfMeasurementsToBeUsed = contractors.size()-NumberOfMeasurementsToBeDiscarded;//number of correct measurement
 
-
-    if (mRobot->isLandmarkTooOld()){
-        cout<<"Only old data about landmark information"<<endl;
-    }else{
-
-        QVector <Landmark> landmarks = mRobot->getLandmarks();
-        int numberOfLandmarks = landmarks.size();
-
-        if (numberOfLandmarks == 0){
-
-        }else{
-            Interval boundX[numberOfLandmarks];
-            Interval boundY[numberOfLandmarks];
-            Interval boundZ[numberOfLandmarks];
-            Interval boundD[numberOfLandmarks];
-
-            // TODO: Maybe consider the surface robot position as a box (not a point)
-            for (int index=0; index<numberOfLandmarks; index++)
-            {
-                boundX[index]=Interval(landmarks[index].posicao.x);
-                boundY[index]=Interval(landmarks[index].posicao.y);
-                boundZ[index]=Interval(landmarks[index].posicao.z);
-                boundD[index]=landmarks[index].dist;
-            }
-
-            for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
-            {
-                Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boundX[contractorIndex])+sqr(x[1]-boundY[contractorIndex])+sqr(x[2]-boundZ[contractorIndex])) - boundD[contractorIndex])));
-                contractors.push_back(new CtcFwdBwd(*constraintFunction));
-            }
-        }
-    }
-    //---deep
-    Interval depthBox(mRobot->getDeep() - ERRO_DEEP,mRobot->getDeep() + ERRO_DEEP);
-
-    Function *constraintFunctionDepth = new Function(x,(x[2]-depthBox));
-    contractors.push_back(new CtcFwdBwd(*constraintFunctionDepth));
-
-    //---gps
-    if (mRobot->isGPSTooOld()){
-        cout<<"Only old data about GPS information"<<endl;
-    }else{
-        xyz gps = mRobot->getGPS();
-        double bounds[3][2] = {
-            {gps.x - ERRO_GPS, gps.x + ERRO_GPS},
-            {gps.y - ERRO_GPS, gps.y + ERRO_GPS},
-            {gps.z - ERRO_GPS, gps.z + ERRO_GPS}
-        };
-        IntervalVector gpsBox(3,bounds);
-        Function *constraintFunctionGPS = new Function(x,(x-gpsBox));
-        contractors.push_back(new CtcFwdBwd(*constraintFunctionGPS));
-    }
-
-    int discard=(int)round(contractors.size()*0.1);//numero de leituras a serem descartadas = 10%
-    int N=contractors.size()-discard;//number of correct measurement
-    //GPS, distance, deep
-
-    cout<<"discarded measures = "<<discard;
-    CtcQInter* q=new CtcQInter(contractors,N);
-    CtcFixPoint fixPoint(*q);
+    cout << "    Discarded measures = " << NumberOfMeasurementsToBeDiscarded << endl;
+    CtcQInter qIntersection(contractors.size(),Array<Ctc>(contractors),NumberOfMeasurementsToBeUsed);
+    CtcFixPoint fixPoint(qIntersection);
     fixPoint.contract(this->searchSpace);
-
+    qIntersection.contract(this->searchSpace);
 }
 
-vector<Ctc*> Hybrid::composeContractorByDistance(){
-    Variable x(3);
-    vector<Ctc*> contractors;
-
-    if (mRobot->isLandmarkTooOld()){
-        cout<<"Only old data about landmark information"<<endl;
-    }else{
-
-        QVector <Landmark> landmarks = mRobot->getLandmarks();
-        int numberOfLandmarks = landmarks.size();
-
-        if (numberOfLandmarks == 0)
-            return contractors;
-
-        Interval boundX[numberOfLandmarks];
-        Interval boundY[numberOfLandmarks];
-        Interval boundZ[numberOfLandmarks];
-        Interval boundD[numberOfLandmarks];
-
-        // TODO: Maybe consider the surface robot position as a box (not a point)
-        for (int index=0; index<numberOfLandmarks; index++)
-        {
-            boundX[index]=Interval(landmarks[index].posicao.x);
-            boundY[index]=Interval(landmarks[index].posicao.y);
-            boundZ[index]=Interval(landmarks[index].posicao.z);
-            boundD[index]=landmarks[index].dist;
-        }
-
-        for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
-        {
-            Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boundX[contractorIndex])+sqr(x[1]-boundY[contractorIndex])+sqr(x[2]-boundZ[contractorIndex])) - boundD[contractorIndex])));
-            contractors.push_back(new CtcFwdBwd(*constraintFunction));
-        }
-    }
-    return contractors;
-}
-
-vector<Ctc*> Hybrid::composeContractorByGPS(){
-
-    Variable x(3);
-    vector<Ctc*> contractors;
-
-    if (mRobot->isGPSTooOld()){
-        cout<<"Only old data about GPS information"<<endl;
-    }else{
-        xyz gps = mRobot->getGPS();
-        double bounds[3][2] = {
-            {gps.x - ERRO_GPS, gps.x + ERRO_GPS},
-            {gps.y - ERRO_GPS, gps.y + ERRO_GPS},
-            {gps.z - ERRO_GPS, gps.z + ERRO_GPS}
-        };
-        IntervalVector gpsBox(3,bounds);
-        Function *constraintFunctionGPS = new Function(x,(x-gpsBox));
-        contractors.push_back(new CtcFwdBwd(*constraintFunctionGPS));
-    }
-
-    return contractors;
-}
-
-vector<Ctc*> Hybrid::composeContractorByDepth(){
-
-    Variable x(3);
-    vector<Ctc*> contractors;
-
-    Interval depthBox(mRobot->getDeep() - ERRO_DEEP,mRobot->getDeep() + ERRO_DEEP);
-
-    Function *constraintFunctionDepth = new Function(x,(x[2]-depthBox));
-    contractors.push_back(new CtcFwdBwd(*constraintFunctionDepth));
-
-    return contractors;
-
-}
-
-void Hybrid::contractUsingComposition(vector<Ctc*> contractors){
-
-    int discard=(int)round(contractors.size()*0.1);//numero de leituras a serem descartadas = 10%
-    int N=contractors.size()-discard;//number of correct measurement
-    //GPS, distance, deep
-
-    cout<<"discarded measures = "<<discard;
-    CtcQInter* q=new CtcQInter(contractors,N);
-    CtcFixPoint fixPoint(*q);
-    fixPoint.contract(this->searchSpace);
-}
-
-void Hybrid::contractByAll()
+void Hybrid::contractAll()
 {
-    Variable x(3);
-    vector<Ctc*> contractors;
-
-    if (mRobot->isLandmarkTooOld()){
-        cout<<"Only old data about landmark information"<<endl;
-    }else{
-
-        QVector <Landmark> landmarks = mRobot->getLandmarks();
-        int numberOfLandmarks = landmarks.size();
-
-        if (numberOfLandmarks == 0)
-            return ;
-
-        Interval boundX[numberOfLandmarks];
-        Interval boundY[numberOfLandmarks];
-        Interval boundZ[numberOfLandmarks];
-        Interval boundD[numberOfLandmarks];
-
-        // TODO: Maybe consider the surface robot position as a box (not a point)
-        for (int index=0; index<numberOfLandmarks; index++)
-        {
-            boundX[index]=Interval(landmarks[index].posicao.x);
-            boundY[index]=Interval(landmarks[index].posicao.y);
-            boundZ[index]=Interval(landmarks[index].posicao.z);
-            boundD[index]=landmarks[index].dist;
-        }
-
-        for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
-        {
-            Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boundX[contractorIndex])+sqr(x[1]-boundY[contractorIndex])+sqr(x[2]-boundZ[contractorIndex])) - boundD[contractorIndex])));
-            contractors.push_back(new CtcFwdBwd(*constraintFunction));
-        }
-
-    }
-    //---deep
-    Interval depthBox(mRobot->getDeep() - ERRO_DEEP,mRobot->getDeep() + ERRO_DEEP);
-
-    Function *constraintFunctionDepth = new Function(x,(x[2]-depthBox));
-    contractors.push_back(new CtcFwdBwd(*constraintFunctionDepth));
-
-    //---gps
-    if (mRobot->isGPSTooOld()){
-        cout<<"Only old data about GPS information"<<endl;
-    }else{
-        xyz gps = mRobot->getGPS();
-        double bounds[3][2] = {
-            {gps.x - ERRO_GPS, gps.x + ERRO_GPS},
-            {gps.y - ERRO_GPS, gps.y + ERRO_GPS},
-            {gps.z - ERRO_GPS, gps.z + ERRO_GPS}
-        };
-        IntervalVector gpsBox(3,bounds);
-        Function *constraintFunctionGPS = new Function(x,(x-gpsBox));
-        contractors.push_back(new CtcFwdBwd(*constraintFunctionGPS));
-    }
-
-
     CtcCompo composition(contractors);
     CtcFixPoint fixPoint(composition);
     fixPoint.contract(this->searchSpace);
 }
 
-
 void Hybrid::contractByDistance()
 {
     if (mRobot->isLandmarkTooOld())
+    {
+        cout << "Only old data about landmark information" << endl;
         return;
+    }
 
     cout << "    Contract boxes by distance" << endl;
     QVector <Landmark> landmarks = mRobot->getLandmarks();
@@ -382,34 +191,36 @@ void Hybrid::contractByDistance()
         boundD[index]=landmarks[index].dist;
     }
 
-    Array<Ctc> contractors(numberOfLandmarks);
     Variable x(3);
 
     for(int contractorIndex=0; contractorIndex<numberOfLandmarks; contractorIndex++)
     {
         Function *constraintFunction = new Function(x,((sqrt(sqr(x[0]-boundX[contractorIndex])+sqr(x[1]-boundY[contractorIndex])+sqr(x[2]-boundZ[contractorIndex])) - boundD[contractorIndex])));
-        CtcFwdBwd *ar=new CtcFwdBwd(*constraintFunction);
-        contractors.set_ref(contractorIndex,*ar);
+        contractors.push_back(new CtcFwdBwd(*constraintFunction));
     }
-
-    CtcCompo composition(contractors);
-    CtcFixPoint fixPoint(composition);
-    fixPoint.contract(this->searchSpace);
 }
 
 void Hybrid::contractByDepth()
 {
     cout << "    Contract boxes by depth" << endl;
     Interval depthBox(mRobot->getDeep() - ERRO_DEEP,mRobot->getDeep() + ERRO_DEEP);
-    this->searchSpace[2] &= depthBox;
+
+    Variable x(3);
+    Function *constraintFunctionDepth = new Function(x,(x[2]-depthBox));
+
+    contractors.push_back(new CtcFwdBwd(*constraintFunctionDepth));
 }
 
 void Hybrid::contractByGPS()
 {
-    if (mRobot->isGPSTooOld())
-        return;
-
     cout << "    Contract boxes by GPS" << endl;
+
+    if (mRobot->isGPSTooOld())
+    {
+        cout << "        Only old data about GPS information" << endl;
+        return;
+    }
+
     xyz gps = mRobot->getGPS();
     double bounds[3][2] = {
         {gps.x - ERRO_GPS, gps.x + ERRO_GPS},
@@ -417,8 +228,10 @@ void Hybrid::contractByGPS()
         {gps.z - ERRO_GPS, gps.z + ERRO_GPS}
     };
 
+    Variable x(3);
     IntervalVector gpsBox(3,bounds);
-    this->searchSpace &= gpsBox;
+    Function *constraintFunctionGPS = new Function(x,(x-gpsBox));
+    contractors.push_back(new CtcFwdBwd(*constraintFunctionGPS));
 }
 
 void Hybrid::contractByAngleOfPinger()
